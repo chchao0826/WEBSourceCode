@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>看板 - 技术部</title>
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/JSInformation.css')}} ">
+
+</head>
+
+<body>
+    <div class="body" id="body">
+        <div class="div-nav">
+            <ul class="nav nav-pills nav-justified">
+                {% for i in salesGroupList %}
+                <!-- class="active" -->
+                <li role="presentation" class="border-left" name="liNav"><a href="#">{{i['sSalesGroupName']}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="content">
+            {% for i in returnData %}
+            <!-- <div class="row"> -->
+            <div class="col-md-3 float-left" id="{{i}}">
+                <div class="box-primary border-top">
+                    <div class="font text-center">
+                        <ul name="ul1">
+                            <li>{{i['sCardNo']}}</li>
+                            <li>{{i['sMaterialNo']}}</li>
+                            <li>{{i['tCardTime']}}</li>
+                            <li>{{i['sWorkingProcedureName']}}</li>
+                            <li>{{i['sSalesName']}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- </div> -->
+            {% endfor %}
+        </div>
+    </div>
+    <div id="title-div" hidden></div>
+    <div id="main-div" hidden></div>
+</body>
+
+<script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
+
+
+<script>
+    var _$ = function (id) {
+        return document.getElementsByClassName(id);
+    }
+
+    var $$ = function (id) {
+        return document.getElementById(id);
+    }
+
+    var __$ = function (id) {
+        return document.getElementsByName(id);
+    }
+
+    // 尺寸修改
+    var getScreen = function () {
+        var nWidth = document.body.clientWidth;
+        var nHeight = document.documentElement.clientHeight;
+        var content = $$('body')
+        content.style.width = nWidth + 'px'
+        content.style.height = nHeight + 'px'
+    }
+
+    // 部门轮播图信息
+    var slideShow = function () {
+        var liData = __$('liNav');
+        var iflag = undefined;
+        for (var i = 0; i < liData.length; i++) {
+            var className = liData[i].className;
+            if (className === 'active') {
+                iflag = i;
+            }
+        }
+        if (iflag == undefined) {
+            liData[0].className = 'active';
+            return liData[0].children[0].innerHTML;
+        }else if(iflag + 1 == liData.length){
+            liData[0].className = 'active';
+            liData[iflag].className = '';
+            return liData[0].children[0].innerHTML;
+        }else {
+            liData[iflag + 1].className = 'active';
+            liData[iflag].className = '';
+            return liData[iflag + 1].children[0].innerHTML;
+        }
+    }
+
+    // 部门数据更新
+    var updateGroup = function (){
+        $('#title-div').load('/KanBan/技术部/AJAXHEADER');
+        var liData = __$('liNav');
+        var liList = []
+        for (var i = 0; i < liData.length; i++){
+            liList.push(liData[i].children[0].innerHTML);
+        }
+        console.log(liList);
+    }
+
+    // 更新信息
+    var update = function () {
+        var sSalesGroupName = slideShow();
+        $('#main-div').load('/KanBan/技术部/AJAX/' + sSalesGroupName);
+    }
+
+
+    // 修改屏幕尺寸后进行div的更新
+    window.onresize = function () {
+        getScreen();
+    }
+</script>
+
+
+</html>
