@@ -74,7 +74,7 @@ def emStatus():
             TS_eq.append(dictVar)
         elif row[1] in ('DR03'):
             FB_eq.append(dictVar)
-        elif row[1] in ('LS02', 'LS01'):
+        elif row[1] in ('LS01', 'LS02'):
             SX_eq.append(dictVar)
         elif row[1] in ('LB03', 'LB04', 'LB05'):
             DX_eq1.append(dictVar)

@@ -140,21 +140,26 @@ def JSInformation():
 # AJAX
 @KanBan.route('/技术部/AJAX/<sSaleGroupName>')
 def JSDataAJAX(sSaleGroupName):
-    returnData = JSData(sSaleGroupName)
+    returnData = JSData(sSaleGroupName)[2]
     returnHTML = ''
-    print(returnData)
+    # print(returnData)
     for i in returnData:
+        print(i)
         returnHTML +='\
-        <div class="row"> \
-            <ul name = "ul2"> \
-                <li>%s</li> \
-                <li>%s</li> \
-                <li>%s</li> \
-                <li>%s-%s</li> \
-                <li>%s</li> \
-            </ul> \
-        </div>'%(i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sType'], i['sSaleName'])
-    returnHTML += '<script>getUpdate()</script>'
+            <div class="col-md-3 float-left" id="{{i}}"> \
+                <div class="box-primary border-top"> \
+                    <div class="font text-center"> \
+                        <ul name="ul1"> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                        </ul> \
+                    </div> \
+                </div> \
+            </div>'%(i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+    returnHTML += '<script>scroll();</script>'
     return returnHTML
 
 # AJAX 头部标题

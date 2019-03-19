@@ -111,6 +111,7 @@ body {
 .FP-ST-HT-road {
     height: 569px;
     line-height: 566px;
+    width: 50px;
 }
 
 .FP-font {
@@ -126,6 +127,7 @@ body {
 .store-FP{
     height: 266px;
     line-height: 80px;
+    width: 160px;
 }
 .store-ST-div{
     height: 295px;
@@ -134,10 +136,11 @@ body {
 .store-ST{
     height: 295px;
     line-height: 90px;
+    width: 160px;
 }
 
 .CH-store {
-    width: 110px;
+    width: 100px;
     height: 563px;
     line-height: 563px;
     font-size: 2em;

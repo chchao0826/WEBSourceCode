@@ -13,15 +13,16 @@
 
 <body>
     <div class="body" id="body">
-        <div class="div-nav">
-            <ul class="nav nav-pills nav-justified">
+
+        <div class="div-nav navbar-fixed-top">
+            <ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;">
                 {% for i in salesGroupList %}
                 <!-- class="active" -->
-                <li role="presentation" class="border-left" name="liNav"><a href="#">{{i['sSalesGroupName']}}</a></li>
+                <li role="presentation" name="liNav" style="font-size:25px;"><a href="#">{{i['sSalesGroupName']}}</a></li>
                 {% endfor %}
             </ul>
         </div>
-        <div class="content">
+        <div class="content" id="content" style="margin-top: 60px;">
             {% for i in returnData %}
             <!-- <div class="row"> -->
             <div class="col-md-3 float-left" id="{{i}}">
@@ -67,7 +68,7 @@
         var nHeight = document.documentElement.clientHeight;
         var content = $$('body')
         content.style.width = nWidth + 'px'
-        content.style.height = nHeight + 'px'
+        content.style.height = nHeight - 100 + 'px'
     }
 
     // 部门轮播图信息
@@ -83,11 +84,11 @@
         if (iflag == undefined) {
             liData[0].className = 'active';
             return liData[0].children[0].innerHTML;
-        }else if(iflag + 1 == liData.length){
+        } else if (iflag + 1 == liData.length) {
             liData[0].className = 'active';
             liData[iflag].className = '';
             return liData[0].children[0].innerHTML;
-        }else {
+        } else {
             liData[iflag + 1].className = 'active';
             liData[iflag].className = '';
             return liData[iflag + 1].children[0].innerHTML;
@@ -95,11 +96,11 @@
     }
 
     // 部门数据更新
-    var updateGroup = function (){
+    var updateGroup = function () {
         $('#title-div').load('/KanBan/技术部/AJAXHEADER');
         var liData = __$('liNav');
         var liList = []
-        for (var i = 0; i < liData.length; i++){
+        for (var i = 0; i < liData.length; i++) {
             liList.push(liData[i].children[0].innerHTML);
         }
         console.log(liList);
@@ -108,7 +109,52 @@
     // 更新信息
     var update = function () {
         var sSalesGroupName = slideShow();
-        $('#main-div').load('/KanBan/技术部/AJAX/' + sSalesGroupName);
+        $('#content').load('/KanBan/技术部/AJAX/' + sSalesGroupName);
+        
+    }
+
+    var scroll = function () {
+        document.documentElement.scrollTop = 0;
+        var height = document.body.clientHeight;
+        var number = 0; //控制结束累加器
+        var length = 0; //控制每次翻滚长度
+        var frequency = 120; //控制总时间
+        var scrollTopVar;
+        var scrollTopMax;
+        var time = setInterval(function () {
+            number += 1;
+            scrollTopVar = document.documentElement.scrollTop;
+            console.log(scrollTopVar);
+            console.log('1--------------')
+            if (scrollTopMax == undefined) {
+                scrollTopMax = scrollTopVar;
+                console.log(scrollTopMax);
+                console.log(scrollTopVar);
+            } else if (scrollTopVar > scrollTopMax) {
+                scrollTopMax = scrollTopVar
+                console.log(scrollTopMax);
+                console.log(scrollTopVar);
+            } else if (scrollTopVar <= scrollTopMax) {
+                console.log('12212121');
+                setTimeout(function(){
+                    update();
+                },3000)
+                updateGroup();
+                clearInterval(time);
+
+            }
+
+            length += height / frequency;
+            document.documentElement.scrollTop = length;
+        }, 100); //每隔1S翻滚
+        console.log(number)
+    }
+
+    window.onload = function (){
+        // timename1=setInterval("update();",10000);
+        getScreen();
+        update();
+
     }
 
 
