@@ -128,6 +128,9 @@
             $('#main-div').load('/KanBan/取样/AJAX/' + childValue);
             return;
         }
+        if (a == child.length){
+            AJAXMac();
+        }
     }
 
     // 判断超时与等待,文件目录
@@ -139,7 +142,7 @@
             return '超时';
         } else if (pattern2.test(value)) {
             return '稍后';
-        }else if (pattern3.test(value)) {
+        } else if (pattern3.test(value)) {
             return '异常';
         }
     }
@@ -170,7 +173,7 @@
     var main = function () {
         getScreen();
         setInterval(slideEvent, 10000);
-        setInterval(AJAXMac, 40000);
+        // setInterval(AJAXMac, 40000);
     }
     main()
 </script>

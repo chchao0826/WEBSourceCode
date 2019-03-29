@@ -93,8 +93,6 @@ def emStatus():
     return TJ_eq, MM_eq, Dye_eq1, Dye_eq2, Dye_eq3, Dye_eq4, Dye_eq5, Dye_eq6, PB_eq, DB_eq, TS_eq, FB_eq, SX_eq, DX_eq1, DX_eq2, DJ_eq, YB_eq
 
 # 仓库状态
-
-
 def StoreStatus():
     FPStore = []
     STAStore = []
@@ -138,8 +136,6 @@ def StoreStatus():
     return FPStore, STAStore, STCStore
 
 # 工段状态
-
-
 def wpStatus():
     TJWip = []
     SXWip = []
@@ -197,8 +193,6 @@ def wpStatus():
     return TJWip, SXWip, YDWip, DyeWip, CDWip, BZWip
 
 # 取样看板sql执行
-
-
 def DyeGetSample(*args):
     sEquipmentNo = ''.join(args)
     cursor = connect.cursor()
@@ -220,24 +214,24 @@ def DyeGetSample(*args):
         if re.match('超时', row[9], flags=1) is not None:
             sColor = '#DC143C'
         else:
-            sColor =''
+            sColor = ''
         varDict = {
-            'sEquipmentNo':row[0],
-            'sCardNo':row[1],
-            'nFactInputQty':row[2],
-            'sColorNo':row[3],
-            'sMaterialNo':row[4],
-            'sRemark':row[5],
-            'nNextCallTime':row[6],
-            'nRowNumber':row[7],
-            'sCustomerName':row[8],
-            'sType':row[9],
-            'tFactEndTime':row[10],
-            'sColor':sColor,
+            'sEquipmentNo': row[0],
+            'sCardNo': row[1],
+            'nFactInputQty': row[2],
+            'sColorNo': row[3],
+            'sMaterialNo': row[4],
+            'sRemark': row[5],
+            'nNextCallTime': row[6],
+            'nRowNumber': row[7],
+            'sCustomerName': row[8],
+            'sType': row[9],
+            'tFactEndTime': row[10],
+            'sColor': sColor,
         }
         DictEuipment = {
-            'sEuipmentNo':row[0],
-            'sColor':sColor
+            'sEuipmentNo': row[0],
+            'sColor': sColor
         }
         if sEquipmentNo == row[0]:
             activeRowNumber = row[7]
@@ -281,20 +275,20 @@ def JSData(*args):
     groupNameList = []
     while row:
         dDict = {
-            'sSalesName':row[0],
-            'sCardNo':row[1],
-            'sMaterialNo':row[2],
-            'tCardTime':row[3],
-            'sWorkingProcedureName':row[4],
-            'sTopColor':row[5],
-            'sSalesGroupName':row[6],
-            'tFactStartTime':row[7],
-            'tFactEndTime':row[8]
+            'sSalesName': row[0],
+            'sCardNo': row[1],
+            'sMaterialNo': row[2],
+            'tCardTime': row[3],
+            'sWorkingProcedureName': row[4],
+            'sTopColor': row[5],
+            'sSalesGroupName': row[6],
+            'tFactStartTime': row[7],
+            'tFactEndTime': row[8]
         }
         if sSalesGroupName != row[6]:
             sSalesGroupName = row[6]
             salesGroupDict = {
-                'sSalesGroupName':row[6]
+                'sSalesGroupName': row[6]
             }
             salesGroupList.append(salesGroupDict)
         dataList.append(dDict)
@@ -303,6 +297,7 @@ def JSData(*args):
         row = cursor.fetchone()
     cursor.close()
     return dataList, salesGroupList, groupNameList
+
 
 if __name__ == '__main__':
     emStatus()

@@ -69,7 +69,6 @@ def GetSample():
 # 取样看板机台信息更新
 @KanBan.route('/取样/AJAX')
 def GetSampleAJAX():
-    print('++++++'*12)
     sVar = DyeGetSample()
     euipmentList = sVar[1]
     AJAXData = ''
