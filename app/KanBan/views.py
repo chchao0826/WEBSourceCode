@@ -64,8 +64,6 @@ def GetSample():
     sVar = DyeGetSample()
     euipmentList = sVar[1]
     minList = sVar[5]
-    print(minList)
-
     return render_template('KanBan/GetSample.html',euipmentList = euipmentList, minList = minList)
 
 # 取样看板机台信息更新
@@ -76,7 +74,7 @@ def GetSampleAJAX():
     euipmentList = sVar[1]
     AJAXData = ''
     for var in euipmentList:
-        AJAXData += '<div class="all-mac-list text-center border-bottom "><span>%s</span></div>' % (var['sEuipmentNo'])
+        AJAXData += '<div class="all-mac-list text-center border-bottom " style="color:%s"><span>%s</span></div>' % (var['sColor'],var['sEuipmentNo'])
     return AJAXData
 
 # 取样看板按照机台更新信息
@@ -115,15 +113,31 @@ def GetSampleEquipment(sEquipmentNo):
                     <span> %s </span> \
                 </div> \
                 <div class="top-bottom text-center font-color"> \
-                    <span> %s </span> \
+                    <span>%s</span> \
+                    <sapn>%smin</span> \
                 </div> \
             </div> \
         </div> \
-        <audio src= "/static/KanBan/audio/%s.mp3" style="display:none" id="audio"></audio> \
+        <audio src= "/static/KanBan/audio/Equipment/%s.mp3" style="display:none" id="audio1"></audio> \
         <script> \
             getScreen(); \
-            document.getElementById(\'audio\').play()\
-        </script>'%(i['sEquipmentNo'], i['sCardNo'], i['sCustomerName'], i['sMaterialNo'], i['sColorNo'], i['nFactInputQty'], i['sRemark'], i['sEquipmentNo'])
+            var sVar = \"%s\"; \
+            var voide11 = voide1(sVar); \
+            var voide22 = voide2(sVar); \
+            console.log(voide11); \
+            console.log(voide22); \
+            var voideSrc = "/static/KanBan/audio/"+ voide11 + voide22 +".mp3"; \
+            console.log(voideSrc); \
+            var aud = document.getElementById(\'audio1\'); \
+            aud.play(); \
+            aud.onended = function(){ \
+                aud.src = voideSrc; \
+                aud.play(); \
+                aud.onended = function(){ \
+                    return; \
+                } \
+            } \
+        </script>'%(i['sEquipmentNo'], i['sCardNo'], i['sCustomerName'], i['sMaterialNo'], i['sColorNo'], i['nFactInputQty'], i['sType'], i['nNextCallTime'], i['sEquipmentNo'], i['sType'])
 
              
     return activeStr

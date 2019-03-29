@@ -6,6 +6,8 @@ A.sMaterialNo, \
 A.sRemark, \
 A.nNextCallTime, \
 A.nRowNumber, \
-A.sCustomerName \
+A.sCustomerName, \
+A.sType, \
+A.tPlanEndTime \
 FROM  [dbo].[pbCommonDataGetSample] A"
 

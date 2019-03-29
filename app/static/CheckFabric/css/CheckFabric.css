@@ -1,0 +1,54 @@
+body{
+    margin: 0 auto;
+    padding: 0;
+}
+ul{
+    list-style: none;
+}
+li{
+    float: left;
+    margin-left: 13px;
+}
+.float-left{
+    float: left;
+}
+.left, .right{
+    width: 50%;
+}
+
+.top-div{
+    height: 40px;
+}
+.border-bottom {
+    border-bottom: 1px solid #aaa;
+}
+.border-left{
+    border-left: 1px solid #aaa;
+}
+.border-right{
+    border-left: 1px solid #aaa;
+}
+.border-top{
+    border-left: 1px solid #aaa;
+}
+.left-top{
+    margin-top: 10px;
+}
+.margin-buttom-5{
+    margin-bottom: 5px;
+}
+.margin-top-5{
+    margin-top: 5px;
+}
+.margin-top-10{
+    margin-top: 10px;
+}
+.margin-left-30{
+    margin-left: 30px;
+}
+.right-top{
+    height: 50%;
+}
+.right-inner{
+    height: 45%;
+}

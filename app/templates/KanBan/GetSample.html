@@ -17,7 +17,7 @@
             <div class="slide float-left" id="slide">
                 <div class="float-left left-div border-right" id="main-div">
                     {% for i in minList %}
-                    <div class="left-top-div border-bottom" >
+                    <div class="left-top-div border-bottom">
                         <div class="float-left inner-left border-right text-center font-color">
                             <div class="mac-font border-bottom">
                                 <span> {{i['sEquipmentNo']}} </span>
@@ -40,8 +40,9 @@
                                 <span>重量:</span>
                                 <span>{{i['nFactInputQty']}}</span>
                             </div>
-                            <div class="top-bottom text-center font-color">
-                                <span>{{i['sRemark']}}</span>
+                            <div class="top-bottom text-center font-color" style="line-height:12px;">
+                                <span>{{i['sType']}}</span>
+                                <sapn>{{i['nNextCallTime']}}min</span>
                             </div>
                         </div>
                     </div>
@@ -49,7 +50,7 @@
                 </div>
                 <div class="float-left right-div" id="right-div">
                     {% for i in euipmentList %}
-                    <div class="all-mac-list text-center border-bottom ">
+                    <div class="all-mac-list text-center border-bottom " style="color:{{i['sColor']}};">
                         <span>{{i['sEuipmentNo']}}</span>
                     </div>
                     {% endfor %}
@@ -62,7 +63,6 @@
 <script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
 
 <script>
-    
     var _$ = function (id) {
         return document.getElementsByClassName(id);
     }
@@ -83,18 +83,17 @@
         var nLeftBottomHeight = nHeight - (nHeight - 3) * 0.7
         _$('inner-left')[0].style.width = (nLeftDivWidth - 3) * 0.6 + 'px';
         _$('inner-right')[0].style.width = (nLeftDivWidth - 3) * 0.4 + 'px';
-        _$('mac-font')[0].style.height = (nHeight - 3) * 0.6 +'px';
-        _$('card-font')[0].style.height = (nHeight - 3) * 0.2 +'px';
-        _$('card-font')[0].style.lineHeight = (nHeight - 3) * 0.2 +'px';
-        _$('cust-font')[0].style.lineHeight = (nHeight - 3) * 0.2 +'px';
-        _$('top-top')[0].style.lineHeight = (nHeight - 3) * 0.2 +'px';
-        _$('top-top')[1].style.lineHeight = (nHeight - 3) * 0.2 +'px';
-        _$('top-top')[2].style.lineHeight = (nHeight - 3) * 0.2 +'px';
-        _$('top-bottom')[0].style.lineHeight = (nHeight - 3) * 0.4 +'px';
+        _$('mac-font')[0].style.height = (nHeight - 3) * 0.6 + 'px';
+        _$('card-font')[0].style.height = (nHeight - 3) * 0.2 + 'px';
+        _$('card-font')[0].style.lineHeight = (nHeight - 3) * 0.2 + 'px';
+        _$('cust-font')[0].style.lineHeight = (nHeight - 3) * 0.2 + 'px';
+        _$('top-top')[0].style.lineHeight = (nHeight - 3) * 0.2 + 'px';
+        _$('top-top')[1].style.lineHeight = (nHeight - 3) * 0.2 + 'px';
+        _$('top-top')[2].style.lineHeight = (nHeight - 3) * 0.2 + 'px';
+        _$('top-bottom')[0].style.lineHeight = (nHeight - 3) * 0.4 + 'px';
         console.log('------------')
         console.log(nWidth)
         console.log(nHeight)
-        
     }
 
     // 浏览器界面大小拖放事件
@@ -126,20 +125,46 @@
             child[a].style.backgroundColor = 'green';
             var childValue = child[a].children[0].innerHTML;
             console.log(childValue);
-            $('#main-div').load('/KanBan/取样/AJAX/' + childValue );
+            $('#main-div').load('/KanBan/取样/AJAX/' + childValue);
             return;
         }
     }
 
+    // 判断超时与等待,文件目录
+    var voide1 = function (value) {
+        var pattern1 = /超时/;
+        var pattern2 = /等待/;
+        var pattern3 = /异常/;
+        if (pattern1.test(value)) {
+            return '超时';
+        } else if (pattern2.test(value)) {
+            return '稍后';
+        }else if (pattern3.test(value)) {
+            return '异常';
+        }
+    }
 
-    
+    // 判断出布,取样,温度,改动染程
+    var voide2 = function (value) {
+        var pattern1 = /出布/;
+        var pattern2 = /取样/;
+        var pattern3 = /染程/;
+        var pattern4 = /温度/;
+        if (pattern1.test(value)) {
+            return '出布';
+        } else if (pattern2.test(value)) {
+            return '取样';
+        } else if (pattern3.test(value)) {
+            return '染程';
+        } else if (pattern4.test(value)) {
+            return '温度';
+        }
+    }
 
     // AJAX机台信息
     var AJAXMac = function () {
         $('#right-div').load('/KanBan/取样/AJAX');
     }
-
-
 
     // 主程序
     var main = function () {

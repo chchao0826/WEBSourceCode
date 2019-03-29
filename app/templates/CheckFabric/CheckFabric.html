@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>半成品验布</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href=" {{url_for('static',filename='CheckFabric/css/CheckFabric.css')}} " />
+
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <!-- <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} "> -->
+</head>
+
+<body id="body">
+    <div class="container-fluid">
+        <div class="top-div border-bottom">
+            <ul>
+                <li> <button type="button" class="btn btn-default">验布</button> </li>
+                <li> <button type="button" class="btn btn-default">编辑</button> </li>
+                <li> <button type="button" class="btn btn-default">取消</button> </li>
+                <li> <button type="button" class="btn btn-default">保存</button> </li>
+                <li> <button type="button" class="btn btn-default">预览</button> </li>
+                <li> <button type="button" class="btn btn-default">关闭</button> </li>
+                <li> <button type="button" class="btn btn-default">完工</button> </li>
+            </ul>
+        </div>
+        <div class="left float-left">
+            <!-- 1 -->
+            <div class="left-top border-bottom ">
+                <!-- 1-1 -->
+                <div class="left-top-top">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">姓名</span>
+                                <form>
+                                    <select name="cars" class="form-control">
+                                        <option value="volvo">Volvo</option>
+                                        <option value="saab">Saab</option>
+                                        <option value="fiat">Fiat</option>
+                                        <option value="audi">Audi</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">班别</span>
+                                <form>
+                                    <select name="cars" class="form-control">
+                                        <option value="volvo">A</option>
+                                        <option value="saab">B</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">机台</span>
+                                <form>
+                                    <select name="cars" class="form-control">
+                                        <option value="volvo">A1</option>
+                                        <option value="saab">B2</option>
+                                        <option value="saab">B3</option>
+                                        <option value="saab">B4</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <button type="button" class="btn btn-default">查询</button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-addon">卡号</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">布车</span>
+                                <form>
+                                    <select name="cars" class="form-control">
+                                        <option value="volvo">A1</option>
+                                        <option value="saab">B2</option>
+                                        <option value="saab">B3</option>
+                                        <option value="saab">B4</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 1-1 -->
+                <!-- 1-2 -->
+                <div class="left-top-bottom margin-buttom-5">
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">订单号</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">胚布编号</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">胚布条码</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">客户名</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">色号</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">胚布幅宽</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 1-2 -->
+            </div>
+            <!-- 1 -->
+            <!-- 2 -->
+            <div class="left-inner border-bottom">
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-lg-12">
+                        <div class="input-group">
+                            <span class="input-group-addon">胚布</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-lg-8">
+                        <div class="input-group">
+                            <span class="input-group-addon">码长</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">等级</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-lg-8">
+                        <div class="input-group">
+                            <span class="input-group-addon">幅宽</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">主疵点</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">密度</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">左克重</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">中克重</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-buttom-5" style="margin-top:5px;">
+                    <div class="col-lg-12">
+                        <div class="input-group">
+                            <span class="input-group-addon">备注</span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 2 -->
+            <!-- 3 -->
+            <div class="left-buttom margin-top-5">
+                <table class="table table-striped">
+                    <tr>
+                        <th>验布时间</th>
+                        <th>批次</th>
+                        <th>码长</th>
+                        <th>米长</th>
+                        <th>等级</th>
+                        <th>幅宽</th>
+                        <th>主疵点</th>
+                        <th>备注</th>
+                    </tr>
+                    <tr>
+                        <td>January</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                    </tr>
+                    <tr>
+                        <td>January</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                    </tr>
+                    <tr>
+                        <td>January</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                        <td>$100</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- 3 -->
+        </div>
+        <div class="right float-left">
+            <div class="margin-left-30" id="right">
+                <div class="right-top margin-buttom-5 border-bottom">
+                    <div class="margin-top-10">
+                        <button type="button" class="btn btn-default">增加</button>
+                        <button type="button" class="btn btn-default">删除</button>
+                    </div>
+                    <div class="margin-top-5">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>序号</th>
+                                <th>疵点名称</th>
+                                <th>分数</th>
+                                <th>位置</th>
+                            </tr>
+                            <tr>
+                                <td>January</td>
+                                <td>$100</td>
+                                <td>$100</td>
+                                <td>$100</td>
+                            </tr>
+                            <tr>
+                                <td>January</td>
+                                <td>$100</td>
+                                <td>$100</td>
+                                <td>$100</td>
+                            </tr>
+                            <tr>
+                                <td>January</td>
+                                <td>$100</td>
+                                <td>$100</td>
+                                <td>$100</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="right-inner border-bottom">
+                    <div>
+                        <ul class="nav nav-tabs">
+                            <!-- class="active" -->
+                            <li role="presentation"><a href="#">织造</a></li>
+                            <li role="presentation"><a href="#">整理</a></li>
+                            <li role="presentation"><a href="#">染色</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-buttom">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li> <button type="button" class="btn btn-default">上页</button> </li>
+                            <li> <button type="button" class="btn btn-default">下页</button> </li>
+                            <li> <button type="button" class="btn btn-default">1</button> </li>
+                            <li> <button type="button" class="btn btn-default">2</button> </li>
+                            <li> <button type="button" class="btn btn-default">3</button> </li>
+                            <li> <button type="button" class="btn btn-default">4</button> </li>
+                            <li> <button type="button" class="btn btn-default">5</button> </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    window.onload = function () {
+        // fullScreen();
+        getScreen();
+    }
+    window.onresize = function () {
+        getScreen();
+    }
+
+    function fullScreen() {
+        window.open("http://198.168.6.56:5000/CheckFabric/", '新开验布界面', "channelmode=1", "fullscreen=1")
+    }
+
+    var _$ = function (id) {
+        return document.getElementsByClassName(id);
+    }
+
+    var $$ = function (id) {
+        return document.getElementById(id);
+    }
+
+    var __$ = function (id) {
+        return document.getElementsByName(id);
+    }
+
+    // 尺寸修改
+    var getScreen = function () {
+        var nWidth = document.body.clientWidth;
+        var nHeight = document.documentElement.clientHeight;
+        var content = $$('body');
+        content.style.width = nWidth + 'px'
+        content.style.height = nHeight - 100 + 'px'
+        var rightDiv = $$('right')
+        rightDiv.style.height = nHeight - 100 + 'px'
+    }
+</script>
+
+</html>

@@ -9,7 +9,7 @@ from app.sql.WorkingProcedureStatus import WorkingProcedureStatus
 from app.sql.storeStatus import storeStatus
 from app.sql.GetSample import GetSample
 from app.sql.JSInformation import JSInformation
-
+import re
 
 base = declarative_base()
 # 236
@@ -93,6 +93,8 @@ def emStatus():
     return TJ_eq, MM_eq, Dye_eq1, Dye_eq2, Dye_eq3, Dye_eq4, Dye_eq5, Dye_eq6, PB_eq, DB_eq, TS_eq, FB_eq, SX_eq, DX_eq1, DX_eq2, DJ_eq, YB_eq
 
 # 仓库状态
+
+
 def StoreStatus():
     FPStore = []
     STAStore = []
@@ -118,13 +120,12 @@ def StoreStatus():
             sOutColor = 'progress-bar-warning'
             sInnerColor = 'progress-bar-danger'
 
-
         dictVar = {
-            'sStoreName' : row[0],
-            'sPerinner' : sPerinner,
-            'sTDX' : row[2],
-            'sOutColor' : sOutColor,
-            'sInnerColor' : sInnerColor,
+            'sStoreName': row[0],
+            'sPerinner': sPerinner,
+            'sTDX': row[2],
+            'sOutColor': sOutColor,
+            'sInnerColor': sInnerColor,
         }
         if row[0] == '胚仓':
             FPStore.append(dictVar)
@@ -137,6 +138,8 @@ def StoreStatus():
     return FPStore, STAStore, STCStore
 
 # 工段状态
+
+
 def wpStatus():
     TJWip = []
     SXWip = []
@@ -187,13 +190,15 @@ def wpStatus():
         elif row[0] == '成定型':
             CDWip.append(dictVar)
         elif row[0] == '包装':
-            BZWip.append(dictVar)            
+            BZWip.append(dictVar)
         row = cursor.fetchone()
 
     cursor.close()
     return TJWip, SXWip, YDWip, DyeWip, CDWip, BZWip
-    
+
 # 取样看板sql执行
+
+
 def DyeGetSample(*args):
     sEquipmentNo = ''.join(args)
     cursor = connect.cursor()
@@ -210,7 +215,12 @@ def DyeGetSample(*args):
     prevList = []
     nextList = []
     minList = []
+    sColor = ''
     while row:
+        if re.match('超时', row[9], flags=1) is not None:
+            sColor = '#DC143C'
+        else:
+            sColor =''
         varDict = {
             'sEquipmentNo':row[0],
             'sCardNo':row[1],
@@ -218,11 +228,16 @@ def DyeGetSample(*args):
             'sColorNo':row[3],
             'sMaterialNo':row[4],
             'sRemark':row[5],
+            'nNextCallTime':row[6],
             'nRowNumber':row[7],
-            'sCustomerName':row[8]
+            'sCustomerName':row[8],
+            'sType':row[9],
+            'tFactEndTime':row[10],
+            'sColor':sColor,
         }
         DictEuipment = {
             'sEuipmentNo':row[0],
+            'sColor':sColor
         }
         if sEquipmentNo == row[0]:
             activeRowNumber = row[7]
