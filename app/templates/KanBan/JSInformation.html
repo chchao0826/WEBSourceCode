@@ -14,19 +14,21 @@
 <body>
     <div class="body" id="body">
 
-        <div class="div-nav navbar-fixed-top">
-            <ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;">
+        <div class="div-nav navbar-fixed-top" id="title">
+            <ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;" id="GroupUL">
                 {% for i in salesGroupList %}
                 <!-- class="active" -->
-                <li role="presentation" name="liNav" style="font-size:25px;"><a href="#">{{i['sSalesGroupName']}}</a></li>
+                <li role="presentation" name="liNav" style="font-size:25px;">
+                    <a href="#" onclick="onclickGroup()">{{i['sSalesGroupName']}}</a>
+                </li>
                 {% endfor %}
             </ul>
         </div>
         <div class="content" id="content" style="margin-top: 60px;">
             {% for i in returnData %}
             <!-- <div class="row"> -->
-            <div class="col-md-3 float-left" id="{{i}}">
-                <div class="box-primary border-top">
+            <div class="col-md-3 float-left" id="{{i['id']}}">
+                <div class="box-primary" style="border: 5px solid {{i['borderColor']}}">
                     <div class="font text-center">
                         <ul name="ul1">
                             <li>{{i['sCardNo']}}</li>
@@ -42,14 +44,14 @@
             {% endfor %}
         </div>
     </div>
-    <div id="title-div" hidden></div>
-    <div id="main-div" hidden></div>
 </body>
 
 <script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
 
 
 <script>
+    var time2;
+
     var _$ = function (id) {
         return document.getElementsByClassName(id);
     }
@@ -83,21 +85,24 @@
         }
         if (iflag == undefined) {
             liData[0].className = 'active';
+            // alert(liData[0])
             return liData[0].children[0].innerHTML;
         } else if (iflag + 1 == liData.length) {
             liData[0].className = 'active';
             liData[iflag].className = '';
+            // alert('--------')
             return liData[0].children[0].innerHTML;
         } else {
             liData[iflag + 1].className = 'active';
             liData[iflag].className = '';
+            // alert(iflag + 1)
             return liData[iflag + 1].children[0].innerHTML;
         }
     }
 
     // 部门数据更新
     var updateGroup = function () {
-        $('#title-div').load('/KanBan/技术部/AJAXHEADER');
+        $('#title').load('/KanBan/技术部/AJAXHEADER');
         var liData = __$('liNav');
         var liList = []
         for (var i = 0; i < liData.length; i++) {
@@ -109,10 +114,19 @@
     // 更新信息
     var update = function () {
         var sSalesGroupName = slideShow();
-        $('#content').load('/KanBan/技术部/AJAX/' + sSalesGroupName);
-        
+        // alert(sSalesGroupName);
+        var patt = /处/;
+        var patt2 = /返回/;
+        if (patt.test(sSalesGroupName)){
+            $('#content').load('/KanBan/技术部/AJAX/' + sSalesGroupName);
+        }else if (patt2.test(sSalesGroupName)){
+            window.location.reload();
+        }else{
+            $('#content').load('/KanBan/技术部/AJAX/sSalesName2/' + sSalesGroupName);
+        }
     }
 
+    // 滚动信息
     var scroll = function () {
         document.documentElement.scrollTop = 0;
         var height = document.body.clientHeight;
@@ -136,27 +150,50 @@
                 console.log(scrollTopVar);
             } else if (scrollTopVar <= scrollTopMax) {
                 console.log('12212121');
-                setTimeout(function(){
+                time2 = setTimeout(function () {
                     update();
-                },3000)
-                updateGroup();
+                }, 6000)
+                // updateGroup();
                 clearInterval(time);
-
             }
 
             length += height / frequency;
             document.documentElement.scrollTop = length;
-        }, 100); //每隔1S翻滚
+        }, 150); //每隔1S翻滚
         console.log(number)
     }
 
-    window.onload = function (){
+    // 点击部门
+    var onclickGroup = function () {
+        var obj_lis = document.getElementById("GroupUL").getElementsByTagName("li");
+        for (i = 0; i < obj_lis.length; i++) {
+            obj_lis[i].onclick = function () {
+                var sSaleGroupName = this.children[0].innerHTML;
+                $('#title').load('/KanBan/技术部/AJAX/sSaleGroupName/' + sSaleGroupName)
+            }
+        }
+    }
+
+    // 点击业务员
+    var onclickSale = function() {
+        window.clearInterval(time2);
+        var obj_lis = document.getElementById("GroupUL").getElementsByTagName("li");
+        for (i = 0; i < obj_lis.length; i++) {
+            obj_lis[i].onclick = function () {
+                var sSaleName = this.children[0].innerHTML;
+                this.className = 'active';
+                $('#content').load('/KanBan/技术部/AJAX/sSalesName/' + sSaleName);
+            }
+        }
+    }
+
+    // 页面初始
+    window.onload = function () {
         // timename1=setInterval("update();",10000);
         getScreen();
         update();
 
     }
-
 
     // 修改屏幕尺寸后进行div的更新
     window.onresize = function () {

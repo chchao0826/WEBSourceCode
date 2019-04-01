@@ -157,10 +157,10 @@ def JSDataAJAX(sSaleGroupName):
     returnHTML = ''
     # print(returnData)
     for i in returnData:
-        print(i)
+        # print(i)
         returnHTML +='\
             <div class="col-md-3 float-left" id="{{i}}"> \
-                <div class="box-primary border-top"> \
+                <div class="box-primary" style="border: 5px solid %s"> \
                     <div class="font text-center"> \
                         <ul name="ul1"> \
                             <li>%s</li> \
@@ -171,17 +171,96 @@ def JSDataAJAX(sSaleGroupName):
                         </ul> \
                     </div> \
                 </div> \
-            </div>'%(i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+            </div>'%(i['borderColor'], i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
     returnHTML += '<script>scroll();</script>'
     return returnHTML
 
 # AJAX 头部标题
 @KanBan.route('/技术部/AJAXHEADER')
 def JSDataAJAXHeader():
-    returnData = JSData()
-    print(returnData)
-    print('121211')
-    # return 123
+    returnData = JSData()[1]
+    returnHtml ='<ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;" id="GroupUL">'
+    for i in returnData:
+        returnHtml += '\
+            <li role="presentation" name="liNav" style="font-size:25px;"> \
+                <a href="#" onclick="onclickGroup()">%s</a> \
+            </li>'%(i['sSalesGroupName'])
+    returnHtml += '</ul>'
+    return returnHtml
 
+@KanBan.route('/技术部/AJAX/sSaleGroupName/<sSaleGroupName>')
+def JSDataAJAXSalesGroup(sSaleGroupName):
+    returnData = JSData(sSaleGroupName)[3]
+    returnHtml ='<ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;" id="GroupUL">'
+    for i in returnData:
+        returnHtml += '\
+            <li role="presentation" name="liNav" style="font-size:25px;"> \
+                <a href="#" onclick = "onclickSale()">%s</a> \
+            </li>'%(i['sSalesName'])
+    returnHtml += '\
+            <li role="presentation" name="liNav" style="font-size:25px;"> \
+                <a href="#" onclick="updateGroup()">返回上级</a> \
+            </li> \
+        </ul>' 
+    return returnHtml
+
+@KanBan.route('/技术部/AJAX/sSalesName2/<sSaleName>')
+def JSDateAJAXSale2(sSaleName):
+    returnData = JSData(sSaleName)[4]
+    returnHTML = ''
+    # print(returnData)
+    for i in returnData:
+        returnHTML +='\
+            <div class="col-md-3 float-left" id="{{i}}"> \
+                <div class="box-primary" style="border: 5px solid %s"> \
+                    <div class="font text-center"> \
+                        <ul name="ul1"> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                        </ul> \
+                    </div> \
+                </div> \
+            </div>'%(i['borderColor'], i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+    returnHTML += '<script>scroll();</script>'
+    return returnHTML
+
+@KanBan.route('/技术部/AJAX/sSalesName/<sSaleName>')
+def JSDateAJAXSale(sSaleName):
+    returnData = JSData(sSaleName)[4]
+    returnHTML = ''
+    # print(returnData)
+    for i in returnData:
+        returnHTML +='\
+            <div class="col-md-3 float-left" id="{{i}}"> \
+                <div class="box-primary" style="border: 5px solid %s"> \
+                    <div class="font text-center"> \
+                        <ul name="ul1"> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                            <li>%s</li> \
+                        </ul> \
+                    </div> \
+                </div> \
+            </div>'%(i['borderColor'], i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+        returnHTML += '\
+            <script>\
+                var second = 1; \
+                window.setInterval("interval();",1000);\
+                var interval = function() { \
+                    second++; \
+                    console.log(second); \
+                    if (second == 60){ \
+                        window.location.reload(); \
+                    } \
+                } \
+                scroll(); \
+            </script>'
+    return returnHTML
+    
 
 

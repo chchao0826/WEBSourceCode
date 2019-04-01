@@ -26,7 +26,7 @@
                                 <span>{{i['sCardNo']}}</span>
                             </div>
                             <div class="cust-font text-center">
-                                <span>perfect star(crystal martin)</span>
+                                <span>{{i['sCustomerName']}}</span>
                             </div>
                         </div>
                         <div class="float-left inner-right">
@@ -125,13 +125,21 @@
             child[a].style.backgroundColor = 'green';
             var childValue = child[a].children[0].innerHTML;
             console.log(childValue);
-            $('#main-div').load('/KanBan/取样/AJAX/' + childValue);
+            var patt = /处/
+            if (patt.test(childValue)){
+                $('#main-div').load('/KanBan/取样/AJAX/' + childValue);
+            }else{
+                $('#main-div').load('/KanBan/取样/AJAX/sSalesName/' + childValue);
+            }
             return;
         }
         if (a == child.length){
             AJAXMac();
         }
     }
+
+    // /技术部/AJAX/sSalesName/<sSaleName>
+
 
     // 判断超时与等待,文件目录
     var voide1 = function (value) {

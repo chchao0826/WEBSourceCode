@@ -265,7 +265,7 @@ def DyeGetSample(*args):
 
 # 研发看板sql执行
 def JSData(*args):
-    sGroupName = ''.join(args)
+    sVarArgs = ''.join(args)
     cursor = connect.cursor()
     cursor.execute(JSInformation)
     row = cursor.fetchone()
@@ -273,7 +273,18 @@ def JSData(*args):
     sSalesGroupName = ''
     salesGroupList = []
     groupNameList = []
+    salesList = []
+    salesValueList = []
     while row:
+        borderColor = ''
+        if row[9] == 1:
+            borderColor = '#FFFF00'
+            print('1111')
+            print('#FFFF00')
+        elif row[10] != None:
+            borderColor = '#FF0000'
+        else :
+            borderColor = '#FFFFFF'
         dDict = {
             'sSalesName': row[0],
             'sCardNo': row[1],
@@ -283,8 +294,12 @@ def JSData(*args):
             'sTopColor': row[5],
             'sSalesGroupName': row[6],
             'tFactStartTime': row[7],
-            'tFactEndTime': row[8]
+            'tFactEndTime': row[8],
+            'borderColor': borderColor,
+            'sKanBanRemark': row[10],
+            'ID': row[11]
         }
+        # 部门列表
         if sSalesGroupName != row[6]:
             sSalesGroupName = row[6]
             salesGroupDict = {
@@ -292,11 +307,21 @@ def JSData(*args):
             }
             salesGroupList.append(salesGroupDict)
         dataList.append(dDict)
-        if sGroupName == row[6]:
+        # 根据传入的部门
+        if sVarArgs == row[6]:
             groupNameList.append(dDict)
+            salesDict = {
+                'sSalesName':row[0]
+            }
+            if salesDict not in salesList:
+                salesList.append(salesDict)
+
+        # 根据传入的人名建立LIST
+        if sVarArgs == row[0]:
+            salesValueList.append(dDict)
         row = cursor.fetchone()
     cursor.close()
-    return dataList, salesGroupList, groupNameList
+    return dataList, salesGroupList, groupNameList, salesList, salesValueList
 
 
 if __name__ == '__main__':
