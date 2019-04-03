@@ -23,36 +23,21 @@ ul {
     border-bottom: 3px solid #ccc;
 }
 
-.row {
-    margin-left: 30px;
-}
-
 .box-primary {
-    margin-top: 15px;
+    margin-top: 10px;
     background-color: #fff;
-}
-
-.col-md-3 {
-    width: 20%;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 15px;
-    position: relative;
 }
 
 .text-center {
     text-align: center;
 }
 
-.font {
-    font-size: 2vw;
-}
-
-.border-top {
-    border-top: 5px solid green;
-}
-
 li {
     border-bottom: 1px solid #ccc;
     height: 20%;
+}
+
+.var-box-title {
+    font-size: 24px !important;
+    font-weight: 800 !important;
 }

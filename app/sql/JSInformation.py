@@ -11,4 +11,6 @@ sSalesName \
 ,sISKanBanRush \
 ,sKanBanRemark \
 ,ID \
+,nCount \
+,nSaleCount \
 FROM [dbo].[pbCommonDataJSKanBan]"

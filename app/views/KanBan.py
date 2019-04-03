@@ -285,6 +285,11 @@ def JSData(*args):
             borderColor = '#FF0000'
         else :
             borderColor = '#FFFFFF'
+        
+        sKanBanRemark = row[10]
+        if sKanBanRemark != None:
+            sKanBanRemark = sKanBanRemark.replace(' ','')
+            
         dDict = {
             'sSalesName': row[0],
             'sCardNo': row[1],
@@ -296,14 +301,15 @@ def JSData(*args):
             'tFactStartTime': row[7],
             'tFactEndTime': row[8],
             'borderColor': borderColor,
-            'sKanBanRemark': row[10],
+            'sKanBanRemark': sKanBanRemark,
             'ID': row[11]
         }
         # 部门列表
         if sSalesGroupName != row[6]:
             sSalesGroupName = row[6]
             salesGroupDict = {
-                'sSalesGroupName': row[6]
+                'sSalesGroupName': row[6],
+                'nCount':row[12]
             }
             salesGroupList.append(salesGroupDict)
         dataList.append(dDict)
@@ -311,7 +317,8 @@ def JSData(*args):
         if sVarArgs == row[6]:
             groupNameList.append(dDict)
             salesDict = {
-                'sSalesName':row[0]
+                'sSalesName':row[0],
+                'nSaleCount': row[13]
             }
             if salesDict not in salesList:
                 salesList.append(salesDict)

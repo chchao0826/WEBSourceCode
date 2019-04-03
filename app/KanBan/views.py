@@ -151,7 +151,7 @@ def JSInformation():
     return render_template('KanBan/JSInformation.html',returnData = cardDate, salesGroupList = salesGroupList)
 
 # AJAX
-@KanBan.route('/技术部/AJAX/<sSaleGroupName>')
+@KanBan.route('/技术部/AJAX/sSaleGroupName2/<sSaleGroupName>')
 def JSDataAJAX(sSaleGroupName):
     returnData = JSData(sSaleGroupName)[2]
     returnHTML = ''
@@ -159,19 +159,26 @@ def JSDataAJAX(sSaleGroupName):
     for i in returnData:
         # print(i)
         returnHTML +='\
-            <div class="col-md-3 float-left" id="{{i}}"> \
-                <div class="box-primary" style="border: 5px solid %s"> \
-                    <div class="font text-center"> \
-                        <ul name="ul1"> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                        </ul> \
+            <div class="col-md-2" style="height:240px;"> \
+                <div class="box direct-chat" style="height:220px; border-top: 6px solid %s"> \
+                    <div class="box-header text-center"> \
+                        <h3 class="box-title" style="font-size: 30px; font-weight: 900;">%s</h3> \
+                    </div> \
+                    <div class="box-body" style="margin-top:-8px;"> \
+                        <div class="direct-chat-messages"> \
+                            <ul class="text-center" style="font-size:26px; font-weight: 500;"> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                            </ul> \
+                        </div> \
+                        <div class="direct-chat-contacts" style="font-size: 30px; height:172px;" name="remark"> \
+                            %s \
+                        </div> \
                     </div> \
                 </div> \
-            </div>'%(i['borderColor'], i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+            </div>'%(i['borderColor'], i['sMaterialNo'], i['sCardNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'], i['sKanBanRemark'])
     returnHTML += '<script>scroll();</script>'
     return returnHTML
 
@@ -183,8 +190,11 @@ def JSDataAJAXHeader():
     for i in returnData:
         returnHtml += '\
             <li role="presentation" name="liNav" style="font-size:25px;"> \
-                <a href="#" onclick="onclickGroup()">%s</a> \
-            </li>'%(i['sSalesGroupName'])
+                <a href="#" onclick="onclickGroup()"> \
+                    <span>%s</span> \
+                    <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow" style="font-size:20px; margin-top:-5px; border-radius:20px;"> %s </span> \
+                </a> \
+            </li>'%(i['sSalesGroupName'], i['nCount'])
     returnHtml += '</ul>'
     return returnHtml
 
@@ -195,11 +205,16 @@ def JSDataAJAXSalesGroup(sSaleGroupName):
     for i in returnData:
         returnHtml += '\
             <li role="presentation" name="liNav" style="font-size:25px;"> \
-                <a href="#" onclick = "onclickSale()">%s</a> \
-            </li>'%(i['sSalesName'])
+                <a href="#" onclick = "onclickSale()"> \
+                <span> %s </span> \
+                <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow" style="font-size:20px; margin-top:-5px; border-radius:20px;"> %s </span> \
+                </a> \
+            </li>'%(i['sSalesName'], i['nSaleCount'])
     returnHtml += '\
             <li role="presentation" name="liNav" style="font-size:25px;"> \
-                <a href="#" onclick="updateGroup()">返回上级</a> \
+                <a href="#" onclick="updateGroup()"> \
+                <span> 返回上级 </span> \
+                </a> \
             </li> \
         </ul>' 
     return returnHtml
@@ -208,45 +223,61 @@ def JSDataAJAXSalesGroup(sSaleGroupName):
 def JSDateAJAXSale2(sSaleName):
     returnData = JSData(sSaleName)[4]
     returnHTML = ''
-    # print(returnData)
+    print('-----------------')
     for i in returnData:
         returnHTML +='\
-            <div class="col-md-3 float-left" id="{{i}}"> \
-                <div class="box-primary" style="border: 5px solid %s"> \
-                    <div class="font text-center"> \
-                        <ul name="ul1"> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                        </ul> \
+            <div class="col-md-2" style="height:240px;"> \
+                <div class="box direct-chat" style="height:220px; border-top: 6px solid %s"> \
+                    <div class="box-header text-center"> \
+                        <h3 class="box-title" style="font-size: 30px; font-weight: 900;">%s</h3> \
+                    </div> \
+                    <div class="box-body" style="margin-top:-8px;"> \
+                        <div class="direct-chat-messages"> \
+                            <ul class="text-center" style="font-size:26px; font-weight: 500;"> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                            </ul> \
+                        </div> \
+                        <div class="direct-chat-contacts" style="font-size: 30px; height:172px;" name="remark"> \
+                            %s \
+                        </div> \
                     </div> \
                 </div> \
-            </div>'%(i['borderColor'], i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+            </div>'%(i['borderColor'], i['sMaterialNo'], i['sCardNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'], i['sKanBanRemark'])
     returnHTML += '<script>scroll();</script>'
     return returnHTML
 
 @KanBan.route('/技术部/AJAX/sSalesName/<sSaleName>')
 def JSDateAJAXSale(sSaleName):
+    print('11111')
     returnData = JSData(sSaleName)[4]
+    print(sSaleName)
     returnHTML = ''
     # print(returnData)
     for i in returnData:
         returnHTML +='\
-            <div class="col-md-3 float-left" id="{{i}}"> \
-                <div class="box-primary" style="border: 5px solid %s"> \
-                    <div class="font text-center"> \
-                        <ul name="ul1"> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                            <li>%s</li> \
-                        </ul> \
+            <div class="col-md-2" style="height:240px;"> \
+                <div class="box direct-chat" style="height:220px; border-top: 6px solid %s"> \
+                    <div class="box-header text-center"> \
+                        <h3 class="box-title" style="font-size: 30px; font-weight: 900;">%s</h3> \
+                    </div> \
+                    <div class="box-body" style="margin-top:-8px;"> \
+                        <div class="direct-chat-messages"> \
+                            <ul class="text-center" style="font-size:26px; font-weight: 500;"> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                                <li>%s</li> \
+                            </ul> \
+                        </div> \
+                        <div class="direct-chat-contacts" style="font-size: 30px; height:172px;" name="remark"> \
+                            %s \
+                        </div> \
                     </div> \
                 </div> \
-            </div>'%(i['borderColor'], i['sCardNo'], i['sMaterialNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'])
+            </div>'%(i['borderColor'], i['sMaterialNo'], i['sCardNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'], i['sKanBanRemark'])
         returnHTML += '\
             <script>\
                 var second = 1; \
