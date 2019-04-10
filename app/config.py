@@ -21,3 +21,15 @@ engine = create_engine("mssql+pymssql://{}:{}@{}:{}/{}?charset=utf8".format(USER
 
 
 connect = pymssql.connect(HOSTNAME, USERNAME, PASSWORD, DATANAME)
+
+
+HOSTNAME_253 = '198.168.6.253'
+PORT_253 = '1433'
+DATANAME_253 = 'HSWarpERP_NJYY'
+USERNAME_253 = 'fabrictrade'
+PASSWORD_253 = 'fabric@2015'
+
+engine_253 = create_engine("mssql+pymssql://{}:{}@{}:{}/{}?charset=utf8".format(HOSTNAME_253,PASSWORD_253,HOSTNAME_253,PORT_253,DATANAME_253),deprecate_large_types=True)
+
+
+connect_253 = pymssql.connect(HOSTNAME_253, USERNAME_253, PASSWORD_253, DATANAME_253)

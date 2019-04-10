@@ -3,7 +3,6 @@ from . import KanBan
 from flask import render_template, Flask, request
 from app.views.KanBan import emStatus, wpStatus, StoreStatus, DyeGetSample, JSData
 
-
 import json
 
 # 主页
@@ -223,7 +222,7 @@ def JSDataAJAXSalesGroup(sSaleGroupName):
 def JSDateAJAXSale2(sSaleName):
     returnData = JSData(sSaleName)[4]
     returnHTML = ''
-    print('-----------------')
+    # print('-----------------')
     for i in returnData:
         returnHTML +='\
             <div class="col-md-2" style="height:240px;"> \
@@ -251,9 +250,9 @@ def JSDateAJAXSale2(sSaleName):
 
 @KanBan.route('/技术部/AJAX/sSalesName/<sSaleName>')
 def JSDateAJAXSale(sSaleName):
-    print('11111')
+    # print('11111')
     returnData = JSData(sSaleName)[4]
-    print(sSaleName)
+    # print(sSaleName)
     returnHTML = ''
     # print(returnData)
     for i in returnData:
@@ -293,5 +292,3 @@ def JSDateAJAXSale(sSaleName):
             </script>'
     return returnHTML
     
-
-
