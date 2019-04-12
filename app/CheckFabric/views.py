@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 from . import CheckFabric
 from flask import render_template, Flask, request
-from app.views.CheckFabric import GetDetail, GETFabricIn, GetEquipment
+from app.views.CheckFabric import GetDetail, GETFabricIn, GetEquipment, GetDefectType, GetDefect
 
 import json
 
@@ -9,7 +9,9 @@ import json
 @CheckFabric.route('/')
 def index():
     # returnDetail = GetDetail('\'C190301643\'')
-    return render_template('CheckFabric/CheckFabric.html')
+    returnDefectType = GetDefectType()
+    returnGetDefect = GetDefect("'22'")
+    return render_template('CheckFabric/CheckFabric.html', returnDefectType = returnDefectType, returnGetDefect = returnGetDefect)
 
 # AJAX
 @CheckFabric.route('/AJAX/Detail/<sCardNo>/')
@@ -58,3 +60,12 @@ def AJAXEquipment():
     sEquipment = GetEquipment()
     return render_template('CheckFabric/Equipment.html', sEquipment = sEquipment)
 
+# 根据疵点类别获取疵点
+@CheckFabric.route('/AJAX/defectType/<typeID>/')
+def AJAXDefectType(typeID):
+    ReturnGetDefect = GetDefect(typeID)
+    retrunHtml = '<div class="btn-group" role="group">'
+    for i in ReturnGetDefect:
+        retrunHtml += '<button type="button" class="btn btn-default btn-defectType" onclick="clickDefect(\'%s\')">%s</button>' %(i['sDefectNameCN'], i['sDefectNameCN'])
+    retrunHtml += '</div>'
+    return retrunHtml

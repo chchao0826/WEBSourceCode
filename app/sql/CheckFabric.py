@@ -27,7 +27,7 @@ def GETFabric(sCardNo):
 
 # 遍历疵点类型
 def GETDefectType():
-    return "SELECT A.iID,A.sDefectTypeName FROM dbo.qmInspectDefectType A"
+    return "SELECT A.iID,A.sDefectTypeName FROM dbo.qmInspectDefectType A WHERE A.iID NOT IN ('25','27','28','29','30')"
 
 # 根据疵点类型查询疵点
 def GETDefect(iqmInspectDefectTypeID):

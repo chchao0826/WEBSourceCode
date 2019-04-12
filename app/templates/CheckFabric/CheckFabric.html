@@ -11,6 +11,14 @@
 
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
     <!-- <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} "> -->
+
+    <style>
+        .btn-defectType{
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+
 </head>
 
 <body id="body">
@@ -167,13 +175,17 @@
                     <div class="col-lg-8">
                         <div class="input-group">
                             <span class="input-group-addon">码长</span>
-                            <input type="text" class="form-control">
+                            <div id="nLength">
+                                <input type="text" class="form-control" onblur="tableUpdata('nLength')">
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-group">
                             <span class="input-group-addon">等级</span>
-                            <input type="text" class="form-control">
+                            <div id="sGrade">
+                                <input type="text" class="form-control" onblur="tableUpdata('sGrade')">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,33 +193,51 @@
                     <div class="col-lg-8">
                         <div class="input-group">
                             <span class="input-group-addon">幅宽</span>
-                            <input type="text" class="form-control">
+                            <div id="nWidth">
+                                <input type="text" class="form-control" onblur="tableUpdata('nWidth')">
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-group">
                             <span class="input-group-addon">主疵点</span>
-                            <input type="text" class="form-control">
+                            <div id="sDefect">
+                                <input type="text" class="form-control" onblur="tableUpdata('sDefect')">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top:5px;">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="input-group">
                             <span class="input-group-addon">密度</span>
-                            <input type="text" class="form-control">
+                            <div id="nDensity">
+                                <input type="text" class="form-control">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="input-group">
                             <span class="input-group-addon">左克重</span>
-                            <input type="text" class="form-control">
+                            <div id="nGMWTLeft">
+                                <input type="text" class="form-control">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="input-group">
                             <span class="input-group-addon">中克重</span>
-                            <input type="text" class="form-control">
+                            <div id="nGMWTInner">
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="input-group">
+                            <span class="input-group-addon">右克重</span>
+                            <div id="nGMWTRight">
+                                <input type="text" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -215,7 +245,9 @@
                     <div class="col-lg-12">
                         <div class="input-group">
                             <span class="input-group-addon">备注</span>
-                            <input type="text" class="form-control">
+                            <div id="sRemark">
+                                <input type="text" class="form-control" onblur="tableUpdata('sRemark')">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -223,7 +255,7 @@
             <!-- 2 -->
             <!-- 3 -->
             <div class="left-buttom margin-top-5">
-                <table class="table table-striped">
+                <table class="table table-striped" id="CheckData">
                     <tr>
                         <th>验布时间</th>
                         <th>批次</th>
@@ -234,7 +266,6 @@
                         <th>主疵点</th>
                         <th>备注</th>
                     </tr>
-
                 </table>
             </div>
             <!-- 3 -->
@@ -242,15 +273,28 @@
         <div class="right float-left">
             <div class="margin-left-30" id="right">
                 <div class="right-top margin-buttom-5 border-bottom">
+                    <div style="margin-top: 10px;">
+                        <button type="button" class="btn btn-default">增加</button>
+                        <button type="button" class="btn btn-default">删除</button>
+                    </div>
                     <div class="margin-top-5">
-                        <table class="table table-striped">
+                        <table class="table" id="defectTable">
                             <tr>
                                 <th>序号</th>
                                 <th>疵点名称</th>
                                 <th>分数</th>
                                 <th>位置</th>
                             </tr>
-
+                        </table>
+                    </div>
+                    <div>
+                        <table class="table" id="totalScore">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td name="totalScore"></td>
+                                <td></td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -258,10 +302,17 @@
                     <div>
                         <ul class="nav nav-tabs">
                             <!-- class="active" -->
-                            <li role="presentation"><a href="#">织造</a></li>
-                            <li role="presentation"><a href="#">整理</a></li>
-                            <li role="presentation"><a href="#">染色</a></li>
+                            {% for i in returnDefectType %}
+                            <li role="presentation" id="{{i['ID']}}" name="defectType" onclick="ActiveLiType({{i['ID']}})"><a href="#">{{i['sDefectTypeName']}}</a></li>
+                            {% endfor %}
                         </ul>
+                    </div>
+                    <div id="defectType">
+                        <div class="btn-group" role="group" aria-label="...">
+                            {% for i in returnGetDefect %}
+                            <button type="button" class="btn btn-default btn-defectType" onclick="clickDefect('{{i['sDefectNameCN']}}')">{{i['sDefectNameCN']}}</button>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
                 <div class="right-buttom">
@@ -299,7 +350,6 @@
         </div><!-- /.modal -->
     </div>
 
-
 </body>
 
 <script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
@@ -333,6 +383,29 @@
         rightDiv.style.height = nHeight - 100 + 'px';
     }
 
+    // 日期判断字符长度是否正确
+    var length = function(value) {
+        var strValue = value.toString();
+        if (strValue.length < 2){
+            return '0' + value ; 
+        }else{
+            return value;
+        }
+    }
+    
+    // 获得日期
+    var getDate = function () {
+        var myDate = new Date();
+        var year = myDate.getFullYear();
+        var month = length(myDate.getMonth());
+        var date = length(myDate.getDate());
+        var hour = length(myDate.getHours());
+        var min = length(myDate.getMinutes());
+        var sec = length(myDate.getSeconds());
+        var returnDate = year + '-' + month + '-' + date + ' ' + hour + ':'+ min + ':' + sec
+        return returnDate
+    }
+
     // 页面初始
     window.onload = function () {
         getScreen();
@@ -346,8 +419,12 @@
 </script>
 
 <script>
+
+    var defectID = 1
+
     // 根据卡号搜索详细信息
     var searchCardNo = function () {
+        defectID = 1
         var sVarCardNo = document.getElementById('sCardNo').value;
         // console.log(sVarCardNo);
         var VarDetail = document.getElementsByName('detail');
@@ -394,6 +471,7 @@
             OpenWarn('布车为空');
             return;
         }
+        AddCheck('3');
     }
 
     // 打开新标签页获得班别
@@ -437,11 +515,132 @@
         document.getElementsByTagName('body')[0].classList = '';
     }
 
-    
+    // 新增验布信息
+    var AddCheck = function(sMaterialLot){
+        var dDate = getDate();
+        var nLength = $$('nLength').children[0].value;
+        var sGrade = $$('sGrade').children[0].value;
+        var nWidth = $$('nWidth').children[0].value;
+        var sDefect = $$('sDefect').children[0].value;
+        var sRemark = $$('sRemark').children[0].value;
+        var TableData = $$('CheckData').children[0].children;
+        for (var i = 0; i < TableData.length; i++){
+            TableData[i].className = '';
+        }
+        $('#CheckData').append("<tr class='active'> \
+                                    <td name='dDate'>"+ dDate +"</td> \
+                                    <td name='sMaterialLot'>"+ sMaterialLot +"</td> \
+                                    <td name='nLength'>"+ nLength +"</td> \
+                                    <td name='nMeter'>"+"</td> \
+                                    <td name='sGrade'>"+ sGrade +"</td> \
+                                    <td name='nWidth'>"+ nWidth +"</td> \
+                                    <td name='sDefect'>"+ sDefect +"</td> \
+                                    <td name='sRemark'>"+ sRemark +"</td> \
+                                </tr>")
+    }
 
+    // 修改table
+    var tableUpdata = function(ID){
+        var inputValue = $$(ID).children[0].value;
+        var TableData = $$('CheckData').children[0].children;
+        for (var i = 0; i < TableData.length; i++){
+            if (TableData[i].className == 'active'){
+                var tdData = TableData[i].children;
+                for (var a = 0; a < tdData.length; a++){
+                    var tdName = tdData[a].attributes.name.nodeValue;
+                    if (tdName == ID){
+                        tdData[a].innerHTML = inputValue;
+                    }
+                }
+            }
+        }
+    }
+
+    // 类别标签激活
+    var ActiveLiType = function(ID){
+        var defectTypeList = __$('defectType');
+        for (var i = 0; i < defectTypeList.length; i++){
+            defectTypeList[i].className = '';
+        }
+        var defectTypeActive = $$(ID);
+        defectTypeActive.className = 'active';
+        GetDefectType(ID);
+    }
+
+    // AJAX 疵点信息 defectType
+    var GetDefectType = function(TypeID){
+        $('#defectType').load('/CheckFabric/AJAX/defectType/' + TypeID);
+    }
+
+    // 判断Table中有无激活的TD
+    var HasActive = function(tableData){
+        var iFlag = 0;
+        for (var i = 0; i < tableData.length; i++){
+            if (tableData[i].className == 'active'){
+                iFlag = 1
+            }
+        }
+        return iFlag
+    }
+
+    // 查询Table中指定TD的值
+    var returnTdValue = function(tdName, tableData){
+        for (var i = 0; i < tableData.length; i++){
+            if (tableData[i].className == 'active'){
+                var TdData = tableData[i].children;
+                for (var a = 0; a < TdData.length; a++){
+                    if (TdData[a].attributes.name.nodeValue == tdName){
+                        return TdData[a].children[0].value;
+                    }
+                }
+            }
+        }
+    }
+
+    // 点击疵点按钮增加疵点
+    var clickDefect = function(defect){
+        var TableData = $$('CheckData').children[0].children;
+        var iFlag = HasActive(TableData);
+        if (iFlag == 1){
+            var defectTableData = $$('defectTable').children[0].children;
+            var iFlag2 = HasActive(defectTableData);
+            var ScoreValue = returnTdValue('nScore', defectTableData)
+            if (iFlag2 == 1){
+                if (ScoreValue == ''){
+                    for (var i = 0; i < defectTableData.length; i++){
+                        if (defectTableData[i].className == 'active'){
+                            var TdData = defectTableData[i].children;
+                            for (var a = 0; a < TdData.length; a++){
+                                if (TdData[a].attributes.name.nodeValue == 'sDefectName'){
+                                    TdData[a].innerHTML = defect;
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    for (var i = 0; i < defectTableData.length; i++){
+                        defectTableData[i].className = '';
+                    }
+                    $('#defectTable').append("<tr class='active'> \
+                                    <td name='ID'>"+ defectID +"</td> \
+                                    <td name='sDefectName'>"+ defect +"</td> \
+                                    <td name='nScore'><input type='text'></td> \
+                                    <td name='nSite'><input type='text'></td> \
+                                </tr>")
+                    defectID ++;
+                }
+            }else{
+                $('#defectTable').append("<tr class='active'> \
+                                    <td name='ID'>"+ defectID +"</td> \
+                                    <td name='sDefectName'>"+ defect +"</td> \
+                                    <td name='nScore'><input type='text'></td> \
+                                    <td name='nSite'><input type='text'></td> \
+                                </tr>")
+                defectID ++;
+            }
+
+        }
+    }
 
 </script>
-
-
-
 </html>

@@ -27,12 +27,12 @@ def GetDetail(sCardNo):
     while row:
         # print(row)
         dictVar = {
-            'sOrderNo':row[0],
-            'sMaterialNo':row[1],
-            'sCustomerName':row[2],
-            'sColorNo':row[3],
-            'sProductWidth':row[4],
-            'sLocation':row[5],
+            'sOrderNo': row[0],
+            'sMaterialNo': row[1],
+            'sCustomerName': row[2],
+            'sColorNo': row[3],
+            'sProductWidth': row[4],
+            'sLocation': row[5],
         }
         returnData.append(dictVar)
         row = cursor.fetchone()
@@ -53,12 +53,12 @@ def GETFabricIn(sCardNo):
     while row:
         # print(row)
         dictVar = {
-            'sFabricNo':row[0],
-            'sMaterialNo':row[1],
-            'sMaterialName':row[2],
-            'sMaterialLot':row[3],
-            'nFactInputQty':row[4],
-            'nFactInputLen':row[5],
+            'sFabricNo': row[0],
+            'sMaterialNo': row[1],
+            'sMaterialName': row[2],
+            'sMaterialLot': row[3],
+            'nFactInputQty': row[4],
+            'nFactInputLen': row[5],
         }
         returnData.append(dictVar)
         row = cursor.fetchone()
@@ -79,10 +79,54 @@ def GetEquipment():
     while row:
         # print(row)
         dictVar = {
-            'sEquipmentNo':row[0],
-            'sEquipmentName':row[1]
+            'sEquipmentNo': row[0],
+            'sEquipmentName': row[1]
         }
         returnData.append(dictVar)
         row = cursor.fetchone()
     cursor.close()
     return returnData
+
+# 查询疵点类别
+def GetDefectType():
+    returnData = []
+    SQL = GETDefectType()
+    # print(SQL)
+    cursor = connect_253.cursor()
+    # 创建一个游标对象,python里的sql语句都要通过cursor来执行
+    cursor.execute(SQL)
+    # 执行sql语句
+    row = cursor.fetchone()
+    # 读取查询结果
+    while row:
+        # print(row)
+        dictVar = {
+            'ID':row[0],
+            'sDefectTypeName':row[1]
+        }
+        returnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return returnData
+
+# 根据疵点类别获取疵点
+def GetDefect(sTypeID):
+    returnData = []
+    SQL = GETDefect(sTypeID)
+    # print(SQL)
+    cursor = connect_253.cursor()
+    # 创建一个游标对象,python里的sql语句都要通过cursor来执行
+    cursor.execute(SQL)
+    # 执行sql语句
+    row = cursor.fetchone()
+    # 读取查询结果
+    while row:
+        # print(row)
+        dictVar = {
+            'sDefectNameCN':row[0],
+        }
+        returnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return returnData
+
