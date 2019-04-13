@@ -13,7 +13,7 @@
     <!-- <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} "> -->
 
     <style>
-        .btn-defectType{
+        .btn-defectType {
             padding: 10px;
             margin: 10px;
         }
@@ -28,7 +28,7 @@
                 <li> <button type="button" class="btn btn-default">验布</button> </li>
                 <li> <button type="button" class="btn btn-default">编辑</button> </li>
                 <li> <button type="button" class="btn btn-default">取消</button> </li>
-                <li> <button type="button" class="btn btn-default">保存</button> </li>
+                <li> <button type="button" class="btn btn-default" onclick="SaveHdr()">保存</button> </li>
                 <li> <button type="button" class="btn btn-default">预览</button> </li>
                 <li> <button type="button" class="btn btn-default">关闭</button> </li>
                 <li> <button type="button" class="btn btn-default">完工</button> </li>
@@ -44,11 +44,10 @@
                             <div class="input-group">
                                 <span class="input-group-addon">姓名</span>
                                 <form>
-                                    <select name="cars" class="form-control">
-                                        <option value="volvo">Volvo</option>
-                                        <option value="saab">Saab</option>
-                                        <option value="fiat">Fiat</option>
-                                        <option value="audi">Audi</option>
+                                    <select name="cars" class="form-control" id="sUserName">
+                                        {% for i in sUserName %}
+                                        <option value="{{i['sUserName']}}">{{i['sUserName']}}</option>
+                                        {% endfor %}
                                     </select>
                                 </form>
                             </div>
@@ -186,6 +185,9 @@
                             <div id="sGrade">
                                 <input type="text" class="form-control" onblur="tableUpdata('sGrade')">
                             </div>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="GetGradePage()">查询</button>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -204,6 +206,9 @@
                             <div id="sDefect">
                                 <input type="text" class="form-control" onblur="tableUpdata('sDefect')">
                             </div>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="GetDefectPage()">查询</button>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -303,14 +308,16 @@
                         <ul class="nav nav-tabs">
                             <!-- class="active" -->
                             {% for i in returnDefectType %}
-                            <li role="presentation" id="{{i['ID']}}" name="defectType" onclick="ActiveLiType({{i['ID']}})"><a href="#">{{i['sDefectTypeName']}}</a></li>
+                            <li role="presentation" id="{{i['ID']}}" name="defectType"
+                                onclick="ActiveLiType({{i['ID']}})"><a href="#">{{i['sDefectTypeName']}}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div id="defectType">
                         <div class="btn-group" role="group" aria-label="...">
                             {% for i in returnGetDefect %}
-                            <button type="button" class="btn btn-default btn-defectType" onclick="clickDefect('{{i['sDefectNameCN']}}')">{{i['sDefectNameCN']}}</button>
+                            <button type="button" class="btn btn-default btn-defectType"
+                                onclick="clickDefect('{{i['sDefectNameCN']}}')">{{i['sDefectNameCN']}}</button>
                             {% endfor %}
                         </div>
                     </div>
@@ -341,7 +348,8 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <span id="warn_field"></span>
+                    <span id="warn_field" style="color: red; font-size: 20px;"></span>
+                    <span id="warn_field">为空</span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CloseWarn()">关闭</button>
@@ -360,14 +368,17 @@
         return;
     }
 
+    // ClassName
     var _$ = function (id) {
         return document.getElementsByClassName(id);
     }
 
+    // ID
     var $$ = function (id) {
         return document.getElementById(id);
     }
 
+    // Name
     var __$ = function (id) {
         return document.getElementsByName(id);
     }
@@ -384,15 +395,15 @@
     }
 
     // 日期判断字符长度是否正确
-    var length = function(value) {
+    var length = function (value) {
         var strValue = value.toString();
-        if (strValue.length < 2){
-            return '0' + value ; 
-        }else{
+        if (strValue.length < 2) {
+            return '0' + value;
+        } else {
             return value;
         }
     }
-    
+
     // 获得日期
     var getDate = function () {
         var myDate = new Date();
@@ -402,7 +413,7 @@
         var hour = length(myDate.getHours());
         var min = length(myDate.getMinutes());
         var sec = length(myDate.getSeconds());
-        var returnDate = year + '-' + month + '-' + date + ' ' + hour + ':'+ min + ':' + sec
+        var returnDate = year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec
         return returnDate
     }
 
@@ -419,7 +430,6 @@
 </script>
 
 <script>
-
     var defectID = 1
 
     // 根据卡号搜索详细信息
@@ -451,7 +461,7 @@
         var sVarCardNo = document.getElementById('sCardNo').value;
         window.open("http://198.168.6.56:5000/CheckFabric/AJAX/FabricIn/" + sVarCardNo, '胚布配检资料',
             'height=500, width=900, top=270%, left=400%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
-            )
+        )
     }
 
     // AJAX传回胚布批号
@@ -462,13 +472,13 @@
         var sEquipment = $$('sEquipment').childNodes[0].value;
         var sLocation = $$('sLocation').childNodes[0].value;
         if (sVarGroup == undefined || sVarGroup == '') {
-            OpenWarn('班组为空');
+            OpenWarn('班组');
             return;
-        }else if (sEquipment == undefined || sEquipment == ''){
-            OpenWarn('机台为空');
+        } else if (sEquipment == undefined || sEquipment == '') {
+            OpenWarn('机台');
             return;
-        }else if (sLocation == undefined || sLocation == ''){
-            OpenWarn('布车为空');
+        } else if (sLocation == undefined || sLocation == '') {
+            OpenWarn('布车');
             return;
         }
         AddCheck('3');
@@ -478,7 +488,7 @@
     var GetGroupPage = function () {
         window.open("http://198.168.6.56:5000/CheckFabric/AJAX/Group/", '班别',
             'height=300, width=220, top=270%, left=600%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
-            )
+        )
     }
 
     // AJAX传回班别
@@ -487,11 +497,37 @@
         $('#sGroup').load('/CheckFabric/AJAX/sFabricNo/' + sGroupVal);
     }
 
+    // 打开新标签页获得等级
+    var GetGradePage = function () {
+        window.open("http://198.168.6.56:5000/CheckFabric/AJAX/Grade/", '等级',
+            'height=600, width=280, top=170%, left=600%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
+        )
+    }
+
+    // 返回等级
+    var GetGrade = function (Grade) {
+        var sGradeVal = 'sGrade_' + Grade
+        $('#sGrade').load('/CheckFabric/AJAX/sFabricNo/' + sGradeVal);
+    }
+
+    // 打开新标签页获得异常
+    var GetDefectPage = function () {
+        window.open("http://198.168.6.56:5000/CheckFabric/AJAX/Defect/", '异常',
+            'height=900, width=1800, top=170%, left=600%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
+        )
+    }
+
+    // 返回异常
+    var GetDefect = function (Defect) {
+        var sDefectVal = 'sDefect_' + Defect
+        $('#sDefect').load('/CheckFabric/AJAX/sFabricNo/' + sDefectVal);
+    }
+
     // 打开新标签页获得机台
     var GetEquipmentPage = function () {
         window.open("http://198.168.6.56:5000/CheckFabric/AJAX/Equipment/", '机台',
             'height=400, width=320, top=270%, left=600%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
-            )
+        )
     }
 
     // AJAX传回机台信息
@@ -501,7 +537,7 @@
     }
 
     // 警告框开启
-    var OpenWarn = function(sField){
+    var OpenWarn = function (sField) {
         $$('warn_field').innerHTML = sField;
         $$('myModal').classList = 'modal fade in';
         $$('myModal').style.cssText = 'display: block';
@@ -509,47 +545,56 @@
     }
 
     // 警告框关闭
-    var CloseWarn = function(){
+    var CloseWarn = function () {
         $$('myModal').classList = 'modal fade';
         $$('myModal').style.cssText = 'display: none;';
         document.getElementsByTagName('body')[0].classList = '';
     }
 
     // 新增验布信息
-    var AddCheck = function(sMaterialLot){
+    var AddCheck = function (sMaterialLot) {
         var dDate = getDate();
         var nLength = $$('nLength').children[0].value;
+        var nMeter = nLength * 0.9144;
         var sGrade = $$('sGrade').children[0].value;
         var nWidth = $$('nWidth').children[0].value;
         var sDefect = $$('sDefect').children[0].value;
         var sRemark = $$('sRemark').children[0].value;
         var TableData = $$('CheckData').children[0].children;
-        for (var i = 0; i < TableData.length; i++){
+        for (var i = 0; i < TableData.length; i++) {
             TableData[i].className = '';
         }
         $('#CheckData').append("<tr class='active'> \
-                                    <td name='dDate'>"+ dDate +"</td> \
-                                    <td name='sMaterialLot'>"+ sMaterialLot +"</td> \
-                                    <td name='nLength'>"+ nLength +"</td> \
-                                    <td name='nMeter'>"+"</td> \
-                                    <td name='sGrade'>"+ sGrade +"</td> \
-                                    <td name='nWidth'>"+ nWidth +"</td> \
-                                    <td name='sDefect'>"+ sDefect +"</td> \
-                                    <td name='sRemark'>"+ sRemark +"</td> \
+                                    <td name='dDate'>" + dDate + "</td> \
+                                    <td name='sMaterialLot'>" + sMaterialLot + "</td> \
+                                    <td name='nLength'>" + nLength + "</td> \
+                                    <td name='nMeter'>" + nMeter + "</td> \
+                                    <td name='sGrade'>" + sGrade + "</td> \
+                                    <td name='nWidth'>" + nWidth + "</td> \
+                                    <td name='sDefect'>" + sDefect + "</td> \
+                                    <td name='sRemark'>" + sRemark + "</td> \
                                 </tr>")
     }
 
     // 修改table
-    var tableUpdata = function(ID){
+    var tableUpdata = function (ID, inputVar) {
         var inputValue = $$(ID).children[0].value;
+        console.log(inputVar);
+        if (inputVar){
+            inputValue = inputVar;
+        }
         var TableData = $$('CheckData').children[0].children;
-        for (var i = 0; i < TableData.length; i++){
-            if (TableData[i].className == 'active'){
+        for (var i = 0; i < TableData.length; i++) {
+            if (TableData[i].className == 'active') {
                 var tdData = TableData[i].children;
-                for (var a = 0; a < tdData.length; a++){
+                for (var a = 0; a < tdData.length; a++) {
                     var tdName = tdData[a].attributes.name.nodeValue;
-                    if (tdName == ID){
+                    if (tdName == ID) {
                         tdData[a].innerHTML = inputValue;
+                        if (tdName == 'nLength') {
+                            var nMeter = inputValue * 0.9144;
+                            tdData[a + 1].innerHTML = nMeter;
+                        }
                     }
                 }
             }
@@ -557,9 +602,9 @@
     }
 
     // 类别标签激活
-    var ActiveLiType = function(ID){
+    var ActiveLiType = function (ID) {
         var defectTypeList = __$('defectType');
-        for (var i = 0; i < defectTypeList.length; i++){
+        for (var i = 0; i < defectTypeList.length; i++) {
             defectTypeList[i].className = '';
         }
         var defectTypeActive = $$(ID);
@@ -568,15 +613,15 @@
     }
 
     // AJAX 疵点信息 defectType
-    var GetDefectType = function(TypeID){
+    var GetDefectType = function (TypeID) {
         $('#defectType').load('/CheckFabric/AJAX/defectType/' + TypeID);
     }
 
     // 判断Table中有无激活的TD
-    var HasActive = function(tableData){
+    var HasActive = function (tableData) {
         var iFlag = 0;
-        for (var i = 0; i < tableData.length; i++){
-            if (tableData[i].className == 'active'){
+        for (var i = 0; i < tableData.length; i++) {
+            if (tableData[i].className == 'active') {
                 iFlag = 1
             }
         }
@@ -584,12 +629,12 @@
     }
 
     // 查询Table中指定TD的值
-    var returnTdValue = function(tdName, tableData){
-        for (var i = 0; i < tableData.length; i++){
-            if (tableData[i].className == 'active'){
+    var returnTdValue = function (tdName, tableData) {
+        for (var i = 0; i < tableData.length; i++) {
+            if (tableData[i].className == 'active') {
                 var TdData = tableData[i].children;
-                for (var a = 0; a < TdData.length; a++){
-                    if (TdData[a].attributes.name.nodeValue == tdName){
+                for (var a = 0; a < TdData.length; a++) {
+                    if (TdData[a].attributes.name.nodeValue == tdName) {
                         return TdData[a].children[0].value;
                     }
                 }
@@ -598,49 +643,110 @@
     }
 
     // 点击疵点按钮增加疵点
-    var clickDefect = function(defect){
+    var clickDefect = function (defect) {
         var TableData = $$('CheckData').children[0].children;
         var iFlag = HasActive(TableData);
-        if (iFlag == 1){
+        if (iFlag == 1) {
             var defectTableData = $$('defectTable').children[0].children;
             var iFlag2 = HasActive(defectTableData);
             var ScoreValue = returnTdValue('nScore', defectTableData)
-            if (iFlag2 == 1){
-                if (ScoreValue == ''){
-                    for (var i = 0; i < defectTableData.length; i++){
-                        if (defectTableData[i].className == 'active'){
+            if (iFlag2 == 1) {
+                if (ScoreValue == '') {
+                    for (var i = 0; i < defectTableData.length; i++) {
+                        if (defectTableData[i].className == 'active') {
                             var TdData = defectTableData[i].children;
-                            for (var a = 0; a < TdData.length; a++){
-                                if (TdData[a].attributes.name.nodeValue == 'sDefectName'){
+                            for (var a = 0; a < TdData.length; a++) {
+                                if (TdData[a].attributes.name.nodeValue == 'sDefectName') {
                                     TdData[a].innerHTML = defect;
                                 }
                             }
                         }
                     }
-                }else{
-                    for (var i = 0; i < defectTableData.length; i++){
+                } else {
+                    for (var i = 0; i < defectTableData.length; i++) {
                         defectTableData[i].className = '';
                     }
                     $('#defectTable').append("<tr class='active'> \
-                                    <td name='ID'>"+ defectID +"</td> \
-                                    <td name='sDefectName'>"+ defect +"</td> \
+                                    <td name='ID'>" + defectID + "</td> \
+                                    <td name='sDefectName'>" + defect + "</td> \
                                     <td name='nScore'><input type='text'></td> \
                                     <td name='nSite'><input type='text'></td> \
                                 </tr>")
-                    defectID ++;
+                    defectID++;
                 }
-            }else{
+            } else {
                 $('#defectTable').append("<tr class='active'> \
-                                    <td name='ID'>"+ defectID +"</td> \
-                                    <td name='sDefectName'>"+ defect +"</td> \
+                                    <td name='ID'>" + defectID + "</td> \
+                                    <td name='sDefectName'>" + defect + "</td> \
                                     <td name='nScore'><input type='text'></td> \
                                     <td name='nSite'><input type='text'></td> \
                                 </tr>")
-                defectID ++;
+                defectID++;
             }
 
         }
     }
-
 </script>
+
+<script>
+
+    // 字段转中文
+    var GetField = function(sField) {
+        switch (sField){
+            case 'dDate':
+                return '时间';
+            case 'sMaterialLot':
+                return '批号';
+            case 'sMaterialLot':
+                return '批号';
+            case 'nLength':
+                return '码长';
+            case 'nMeter':
+                return '米长';
+            case 'sGrade':
+                return '等级';
+            case 'nWidth':
+                return '幅宽';
+            case 'sDefect':
+                return '主疵点';
+            case 'sRemark':
+                return '备注';
+        }
+
+    }
+
+    // 得到验布表中非空的字段
+    var GetTableTd = function () {
+        var TableData = $$('CheckData').children[0].children;
+        for (var i = 0; i < TableData.length; i++) {
+            if (TableData[i].className == 'active') {
+                var TableDataActive = TableData[i].children;
+                for (var i = 0; i < TableDataActive.length; i++) {
+                    if (TableDataActive[i].innerHTML == undefined || TableDataActive[i].innerHTML == ''){
+                        return GetField(TableDataActive[i].attributes.name.nodeValue);
+                    };
+                }
+            }
+        }
+    }
+
+    // 保存按钮
+
+    // 保存主表
+    var SaveHdr = function () {
+        var sUserName = $$('sUserName').value;
+        var sGroup = $$('sGroup').children[0].value;
+        var sEquipment = $$('sEquipment').children[0].value;
+        var sCardNo = $$('sCardNo').value;
+        var bFlag = GetTableTd();
+        if (bFlag && bFlag != '备注'){
+            OpenWarn(bFlag);
+        }else{
+            
+        }
+    }
+</script>
+
+
+
 </html>

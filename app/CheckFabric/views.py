@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 from . import CheckFabric
 from flask import render_template, Flask, request
-from app.views.CheckFabric import GetDetail, GETFabricIn, GetEquipment, GetDefectType, GetDefect
+from app.views.CheckFabric import GetDetail, GETFabricIn, GetEquipment, GetDefectType, GetDefect, GetUserName
 
 import json
 
@@ -11,7 +11,8 @@ def index():
     # returnDetail = GetDetail('\'C190301643\'')
     returnDefectType = GetDefectType()
     returnGetDefect = GetDefect("'22'")
-    return render_template('CheckFabric/CheckFabric.html', returnDefectType = returnDefectType, returnGetDefect = returnGetDefect)
+    sUserName = GetUserName()
+    return render_template('CheckFabric/CheckFabric.html', returnDefectType = returnDefectType, returnGetDefect = returnGetDefect, sUserName = sUserName)
 
 # AJAX
 @CheckFabric.route('/AJAX/Detail/<sCardNo>/')
@@ -60,6 +61,11 @@ def AJAXEquipment():
     sEquipment = GetEquipment()
     return render_template('CheckFabric/Equipment.html', sEquipment = sEquipment)
 
+# 等级
+@CheckFabric.route('/AJAX/Grade/')
+def AJAXGrade():
+    return render_template('CheckFabric/Grade.html')
+
 # 根据疵点类别获取疵点
 @CheckFabric.route('/AJAX/defectType/<typeID>/')
 def AJAXDefectType(typeID):
@@ -69,3 +75,10 @@ def AJAXDefectType(typeID):
         retrunHtml += '<button type="button" class="btn btn-default btn-defectType" onclick="clickDefect(\'%s\')">%s</button>' %(i['sDefectNameCN'], i['sDefectNameCN'])
     retrunHtml += '</div>'
     return retrunHtml
+
+# 等级
+@CheckFabric.route('/AJAX/Defect/')
+def AJAXPageDefect():
+    returnDefectType = GetDefectType()
+    returnGetDefect = GetDefect("'22'")
+    return render_template('CheckFabric/Defect.html', returnDefectType = returnDefectType, returnGetDefect = returnGetDefect)

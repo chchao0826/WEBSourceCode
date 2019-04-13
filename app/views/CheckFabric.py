@@ -4,7 +4,7 @@ from sqlalchemy import or_, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
-from app.sql.CheckFabric import GETMaterial, GETFabric, GETDefectType, GETDefect, GETEquipment
+from app.sql.CheckFabric import GETMaterial, GETFabric, GETDefectType, GETDefect, GETEquipment, GETUserName
 import re
 
 base = declarative_base()
@@ -130,3 +130,24 @@ def GetDefect(sTypeID):
     cursor.close()
     return returnData
 
+
+def GetUserName():
+    returnData = []
+    SQL = GETUserName()
+    # print(SQL)
+    cursor = connect_253.cursor()
+    # 创建一个游标对象,python里的sql语句都要通过cursor来执行
+    cursor.execute(SQL)
+    # 执行sql语句
+    row = cursor.fetchone()
+    # 读取查询结果
+    while row:
+        # print(row)
+        dictVar = {
+            'sUserID':row[0],
+            'sUserName':row[1],
+        }
+        returnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return returnData

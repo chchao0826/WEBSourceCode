@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>班别</title>
+    <style>
+        .btn {
+            padding: 25px 130px;
+            text-align: center;
+            font-size: 25px;
+            width: 250px;
+        }
+    </style>
+    <!-- <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} "> -->
+
+</head>
+
+<body>
+    <button class="btn btn-default btn-lg btn-lg" onclick="dbclick('A')">A</button>
+    <button class="btn btn-default btn-lg btn-lg" onclick="dbclick('B')">B</button>
+    <button class="btn btn-default" onclick="dbclick('B1')">B1</button>
+    <button class="btn btn-default" onclick="dbclick('C')">C</button>
+    <button class="btn btn-default" onclick="dbclick('C1')">C1</button>
+    <button class="btn btn-default" onclick="dbclick('废布')">废布</button>
+</body>
+
+<script>
+    var dbclick = function (value) {
+        console.log(value);
+        window.opener.GetGrade(value);
+        window.opener.tableUpdata('sGrade',value);
+        window.close();
+    }
+</script>
+
+</html>

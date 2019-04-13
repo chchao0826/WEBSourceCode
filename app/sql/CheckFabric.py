@@ -39,3 +39,15 @@ def GETEquipment():
     return "SELECT sEquipmentNo,sEquipmentName \
     FROM emEquipment \
     WHERE upbWorkCentreGUID = 'FAD3E6F4-2B72-4256-AD71-A46100B5F9A4' AND uemEquipmentModelGUID = 'B0AF3F1E-6292-4D51-8A78-A4C101788801'"
+
+# 获得用户名称
+def GETUserName():
+    f = open('D:/ERP/huansi.ini', 'r')
+    value = f.read()
+    value_list = value.split('\n')
+    sUserName = ''
+    for i in value_list:
+        if (i.find('DefaultUser') == 0):
+            sUserName = i.split('=')[1]
+    f.close()
+    return "SELECT sUserID,sUserName FROM [dbo].[smUser] WHERE sUserID = \'%s\'" %(sUserName)
