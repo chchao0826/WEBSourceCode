@@ -130,7 +130,7 @@ def GetDefect(sTypeID):
     cursor.close()
     return returnData
 
-
+# 得到用户姓名
 def GetUserName():
     returnData = []
     SQL = GETUserName()

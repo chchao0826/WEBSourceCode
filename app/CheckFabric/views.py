@@ -2,8 +2,9 @@
 from . import CheckFabric
 from flask import render_template, Flask, request
 from app.views.CheckFabric import GetDetail, GETFabricIn, GetEquipment, GetDefectType, GetDefect, GetUserName
-
+from app.models.CheckFabric import ses, InspectHdr, InspectDtl, ReturnHdrID, ReturnDtlID, InspectDefect
 import json
+import time
 
 # 主页
 @CheckFabric.route('/')
@@ -82,3 +83,87 @@ def AJAXPageDefect():
     returnDefectType = GetDefectType()
     returnGetDefect = GetDefect("'22'")
     return render_template('CheckFabric/Defect.html', returnDefectType = returnDefectType, returnGetDefect = returnGetDefect)
+
+# 主表保存按钮
+@CheckFabric.route('/AJAX/SaveData/HDR/', methods = ['GET','POST'])
+def AJAXSaveDataHDR():
+    data = request.get_json()
+    sUserName = ''
+    sGroup = ''
+    sCardNo = ''
+    sEquipment = ''
+    datetime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    for i in data:
+        sUserName = str(i['sUserName'])
+        sGroup = str(i['sGroup'])
+        sCardNo = str(i['sCardNo'])
+        sEquipment = str(i['sEquipment'])
+    InspectHdr_var = InspectHdr(sGroupNo = sGroup, sCardNo = sCardNo, sEquipmentName = sEquipment, sCreator = sUserName, tCreateTime = datetime, sUpdateMan = sUserName, tUpdateTime = datetime)
+
+    ses.add(InspectHdr_var)
+    ses.commit()
+    ses.close()
+
+# DTL表保存
+@CheckFabric.route('/AJAX/SaveData/DTL/', methods = ['GET','POST'])
+def AJAXSaveDataDTL():
+    data = request.get_json()
+    sFabricNo = ''
+    nLengthYard = ''
+    nWidth = ''
+    sGrade = ''
+    sMainDefectName = ''
+    nDensity = ''
+    nGMWTLeft = ''
+    nGMWTInner = ''
+    nGMWTRight = ''
+    sRemark = ''
+    sCardNo = ''
+    for i in data:
+        sFabricNo = i['sFabricNo'],
+        nLengthYard = float(i['nLength']),
+        nWidth = float(i['nWidth']),
+        sGrade = i['sGrade'],
+        sMainDefectName = i['sDefect'],
+        nDensity = float(i['nDensity']),
+        nGMWTLeft = float(i['nGMWTLeft']),
+        nGMWTInner = float(i['nGMWTInner']),
+        nGMWTRight = float(i['nGMWTRight']),
+        sRemark = i['sRemark'],
+        sCardNo = i['sCardNo'],
+        tInspectTime = i['tTime']
+    HdrID = ReturnHdrID(sCardNo)[0]['ID']
+    InspectDtl_var = InspectDtl(tInspectTime = tInspectTime, sFabricNo = sFabricNo, nLengthYard = nLengthYard, nWidth = nWidth, sGrade = sGrade, sMainDefectName = sMainDefectName,nDensity = nDensity, nGMWTLeft = nGMWTLeft, nGMWTInner = nGMWTInner, nGMWTRight = nGMWTRight, sRemark = sRemark, ipbCommonDataHalfInspectHdrID = HdrID)
+    ses.add(InspectDtl_var)
+    ses.commit()
+    ses.close()
+
+# 疵点表保存
+@CheckFabric.route('/AJAX/SaveData/Defect/', methods = ['GET','POST'])
+def AJAXSaveDataDefect():
+    data = request.get_json()
+    iNo = ''
+    sDefectName = ''
+    nScore = ''
+    nSite = ''
+    tCheckTime = ''
+    ipbCommonDataHalfInspectDtlID = ''
+    for i in data:
+        tCheckTime = i['tCheckTime']
+        iNo = i['ID'],
+        sDefectName = i['sDefectName'],
+        nScore = float(i['nScore']),
+        nSite = i['nSite']
+
+        ipbCommonDataHalfInspectDtlID = ReturnDtlID(tCheckTime)[0]['ID']
+        print(ipbCommonDataHalfInspectDtlID)
+        InspectDefect_var = InspectDefect(iNumber = iNo, sDefectTypeName = sDefectName, nScore = nScore, nSite = nSite, ipbCommonDataHalfInspectDtlID = ipbCommonDataHalfInspectDtlID)
+        ses.add(InspectDefect_var)
+        ses.commit()
+        ses.close()
+
+
+# 预览界面
+@CheckFabric.route('/CheckView/', methods = ['GET','POST'])
+def CheckView():
+    return render_template('CheckFabric/CheckView.html')

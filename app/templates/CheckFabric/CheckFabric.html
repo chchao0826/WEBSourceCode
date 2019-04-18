@@ -29,7 +29,7 @@
                 <li> <button type="button" class="btn btn-default">编辑</button> </li>
                 <li> <button type="button" class="btn btn-default">取消</button> </li>
                 <li> <button type="button" class="btn btn-default" onclick="SaveHdr()">保存</button> </li>
-                <li> <button type="button" class="btn btn-default">预览</button> </li>
+                <li> <button type="button" class="btn btn-default" onclick="CheckView()">预览</button> </li>
                 <li> <button type="button" class="btn btn-default">关闭</button> </li>
                 <li> <button type="button" class="btn btn-default">完工</button> </li>
             </ul>
@@ -357,7 +357,6 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-
 </body>
 
 <script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
@@ -580,7 +579,7 @@
     var tableUpdata = function (ID, inputVar) {
         var inputValue = $$(ID).children[0].value;
         console.log(inputVar);
-        if (inputVar){
+        if (inputVar) {
             inputValue = inputVar;
         }
         var TableData = $$('CheckData').children[0].children;
@@ -689,10 +688,9 @@
 </script>
 
 <script>
-
     // 字段转中文
-    var GetField = function(sField) {
-        switch (sField){
+    var GetField = function (sField) {
+        switch (sField) {
             case 'dDate':
                 return '时间';
             case 'sMaterialLot':
@@ -722,7 +720,7 @@
             if (TableData[i].className == 'active') {
                 var TableDataActive = TableData[i].children;
                 for (var i = 0; i < TableDataActive.length; i++) {
-                    if (TableDataActive[i].innerHTML == undefined || TableDataActive[i].innerHTML == ''){
+                    if (TableDataActive[i].innerHTML == undefined || TableDataActive[i].innerHTML == '') {
                         return GetField(TableDataActive[i].attributes.name.nodeValue);
                     };
                 }
@@ -730,23 +728,221 @@
         }
     }
 
-    // 保存按钮
+    // 获得验布的时间
+    var GetCheckTime = function () {
+        var TableData = $$('CheckData').children[0].children;
+        for (var i = 0; i < TableData.length; i++) {
+            if (TableData[i].className == 'active') {
+                var TableDataActive = TableData[i].children;
+                for (var i = 0; i < TableDataActive.length; i++) {
+                    if (TableDataActive[i].attributes.name.nodeValue == 'dDate') {
+                        return TableDataActive[i].innerHTML;
+                    };
+                }
+            }
+        }
+    }
 
-    // 保存主表
+    // 返回激活的Dtl是第几个
+    var IsInsertHdr = function () {
+        var TableData = $$('CheckData').children[0].children;
+        // 专门设置i = 1,因为标题栏去除
+        for (var i = 1; i < TableData.length; i++) {
+            if (TableData[i].className == 'active') {
+                return i;
+            }
+        }
+    }
+
+    // 返回JSON数据HDR
+    var JsonHdr = function () {
+        var JsonData = [];
+        var sUserName = $$('sUserName').children[0].value;
+        var sGroup = $$('sGroup').children[0].value;
+        var sEquipment = $$('sEquipment').children[0].value;
+        var sCardNo = $$('sCardNo').value;
+        var sLocation = $$('sLocation').children[0].value;
+        var row1 = {
+            'sUserName': sUserName,
+            'sGroup': sGroup,
+            'sEquipment': sEquipment,
+            'sCardNo': sCardNo,
+            'sLocation': sLocation,
+        }
+        JsonData.push(row1);
+        return JsonData;
+    }
+
+    // 返回JSON数据DTL
+    var JsonDtl = function () {
+        var sFabricNo = $$('sFabricNo2').children[0].value;
+        var nLength = $$('nLength').children[0].value;
+        var sGrade = $$('sGrade').children[0].value;
+        var nWidth = $$('nWidth').children[0].value;
+        var sDefect = $$('sDefect').children[0].value;
+        var nDensity = $$('nDensity').children[0].value;
+        var nGMWTLeft = $$('nGMWTLeft').children[0].value;
+        var nGMWTInner = $$('nGMWTInner').children[0].value;
+        var nGMWTRight = $$('nGMWTRight').children[0].value;
+        var sRemark = $$('sRemark').children[0].value;
+        var sCardNo = $$('sCardNo').value;
+        var tCheckTime = GetCheckTime();
+        var JsonData = [];
+        var row1 = {
+            'tTime': tCheckTime,
+            'sCardNo': sCardNo,
+            'sFabricNo': sFabricNo,
+            'nLength': nLength,
+            'sGrade': sGrade,
+            'nWidth': nWidth,
+            'sDefect': sDefect,
+            'nDensity': nDensity,
+            'nGMWTLeft': nGMWTLeft,
+            'nGMWTInner': nGMWTInner,
+            'nGMWTRight': nGMWTRight,
+            'sRemark': sRemark,
+        };
+        JsonData.push(row1);
+        return JsonData
+    }
+
+    // 返回JSON数据Defect
+    var JsonDefect = function () {
+        var JsonData = [];
+        var TableData = $$('defectTable').children[0].children;
+        for (var i = 0; i < TableData.length; i++) {
+            var TableTd = TableData[i].children;
+            var Dict = {};
+            var tCheckTime = GetCheckTime();
+            for (var a = 0; a < TableTd.length; a++) {
+                // console.log(TableTd[a].tagName)
+                if (TableTd[a].tagName == 'TD') {
+                    // console.log(TableTd[a].attributes.name.nodeValue)
+                    var TdName = TableTd[a].attributes.name.nodeValue;
+                    var Tdvalue = TableTd[a].innerHTML;
+                    Dict.tCheckTime = tCheckTime;
+                    if (TdName == 'nScore' || TdName == 'nSite') {
+                        Tdvalue = TableTd[a].children[0].value;
+                    }
+                    switch (TdName) {
+                        case 'sDefectName':
+                            Dict.sDefectName = Tdvalue;
+                            break;
+                        case 'nScore':
+                            Dict.nScore = Tdvalue;
+                            break;
+                        case 'nSite':
+                            Dict.nSite = Tdvalue;
+                            break;
+                        case 'ID':
+                            Dict.ID = Tdvalue;
+                            break;
+                    }
+                }
+            }
+            // console.log(JSON.stringify(Dict));
+            if (JSON.stringify(Dict) != '{}') {
+                JsonData.push(Dict);
+            }
+        }
+        // console.log(JsonData);
+        return JsonData
+    }
+
+    // 清除填写的内容
+    var Clear = function () {
+        $$('sFabricNo2').children[0].value = '';
+        $$('nLength').children[0].value = '';
+        $$('sGrade').children[0].value = '';
+        $$('sDefect').children[0].value = '';
+        $$('nDensity').children[0].value = '';
+        $$('nGMWTLeft').children[0].value = '';
+        $$('nGMWTInner').children[0].value = '';
+        $$('nGMWTRight').children[0].value = '';
+        $$('sRemark').children[0].value = '';
+        // 去除时list会缩小,所以采用先去除大的开始
+        var trList = $$('defectTable').children[0].children;
+        var trList_length = $$('defectTable').children[0].children.length;
+        for (var i = trList_length - 1; i >= 1; i--) {
+            var tr = trList[i];
+            tr.parentNode.removeChild(tr);
+        }
+        defectID = 1;
+    }
+
+    // 保存按钮
     var SaveHdr = function () {
         var sUserName = $$('sUserName').value;
         var sGroup = $$('sGroup').children[0].value;
         var sEquipment = $$('sEquipment').children[0].value;
         var sCardNo = $$('sCardNo').value;
         var bFlag = GetTableTd();
-        if (bFlag && bFlag != '备注'){
+        // 判断填入的资料是否为空
+        if (bFlag && bFlag != '备注') {
+            // 为空报错
             OpenWarn(bFlag);
-        }else{
-            
+        } else {
+            // 不为空判断验布时间是第几个,第一个增加Hdr,不是不增加
+            var DtlRow = IsInsertHdr();
+            var HdrData = JsonHdr();
+            var DtlData = JsonDtl();
+            var DefectData = JsonDefect();
+            // Dtl的数量只有在1的时候才加Hdr
+            if (DtlRow == 1) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX/SaveData/HDR/',
+                    data: JSON.stringify(HdrData),
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    success: function (data) {},
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX/SaveData/DTL/',
+                    data: JSON.stringify(DtlData),
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    success: function (data) {},
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX/SaveData/Defect/',
+                    data: JSON.stringify(DefectData),
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    success: function (data) {},
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX/SaveData/DTL/',
+                    data: JSON.stringify(DtlData),
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    success: function (data) {},
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX/SaveData/Defect/',
+                    data: JSON.stringify(DefectData),
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    success: function (data) {},
+                });
+            }
         }
+        Clear();
     }
+
 </script>
 
 
+<script>
+    // 预览按钮
+    var CheckView = function(){
+        window.open("http://198.168.6.56:5000/CheckFabric/CheckView/", '预览界面', "channelmode=1", "fullscreen=1")
+    }
+</script>
 
 </html>

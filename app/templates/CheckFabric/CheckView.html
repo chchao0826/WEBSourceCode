@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>预览打印</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap-theme.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='CheckFabric/css/CheckView.css')}} ">
+
+    <style media="print">
+        @page {
+            /* size: portrait; */
+            size: A4 landscape;
+            margin: 0mm 10mm 0mm 10mm;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="margin-left-10">
+        <button class="btn btn-default btn-xs" type="submit" onclick="btnPrint()">打印</button>
+        <button class="btn btn-default btn-xs" type="submit">关闭</button>
+    </div>
+    <div class="text-center">
+        <h3>常州裕源灵泰面料科技有限公司</h3>
+        <h5>yuyuang lingtai</h5>
+        <h5>四点制成品检查表</h5>
+    </div>
+
+
+    <table class="al" border="1">
+        <caption>
+            <div>
+                <div style="float: left;">
+                    <label>工程卡号:</label>
+                    <input type="text" name="with_blood_department" value="科室" readonly class="inp2" />
+                </div>
+                <div style="float: left;">
+                    <label>胚布编号:</label>
+                    <input type="text" name="with_blood_department" value="科室" readonly class="inp2" />
+                </div>
+                <div style="float: left;">
+                    <label>客户:</label>
+                    <input type="text" name="with_blood_department" value="科室" readonly class="inp2" />
+                </div>
+            </div>
+            <div>
+                <div style="float: left;">
+                    <label>客户品名:</label>
+                    <input type="text" name="with_blood_department" value="科室" readonly class="inp2" />
+                </div>
+                <div style="float: left;">
+                    <label>颜色:</label>
+                    <input type="text" name="with_blood_department" value="科室" readonly class="inp2" />
+                </div>
+                <div style="float: right;">
+                    <label>客户订单号:</label>
+                    <input type="text" name="with_blood_department" value="科室" readonly class="inp2" />
+                </div>
+            </div>
+        </caption>
+
+        <tr>
+            <th align="center">患者<br />姓名</th>
+            <td colspan="2" width="20%"> <input type="text" value="姓名" readonly /></td>
+            <th align="center" width="10%">性别</th>
+            <td colspan="2" width="8%"> <input type="text" value="男" readonly /></td>
+            <th align="center" width="10%">年龄</th>
+            <td colspan="2" width="8%"> <input type="text" value="12" readonly /></td>
+            <th align="center">住院号</th>
+            <td colspan="2" width="25%"> <input type="text" value="7898" readonly /></td>
+        </tr>
+
+    </table>
+</body>
+
+<script>
+    var btnPrint = function () {
+        print()
+    }
+</script>
+
+</html>

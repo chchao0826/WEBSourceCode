@@ -1,0 +1,13 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.text-center{
+    text-align: center;
+}
+.margin-left-10{
+    margin-left: 10px;
+}
+.float-left{
+    float: left;
+}
