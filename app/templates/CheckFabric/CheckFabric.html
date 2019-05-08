@@ -31,7 +31,7 @@
                 <li> <button type="button" class="btn btn-default" onclick="SaveHdr()">保存</button> </li>
                 <li> <button type="button" class="btn btn-default" onclick="CheckView()">预览</button> </li>
                 <li> <button type="button" class="btn btn-default">关闭</button> </li>
-                <li> <button type="button" class="btn btn-default">完工</button> </li>
+                <li> <button type="button" class="btn btn-default" onclick="Finishclick()">完工</button> </li>
             </ul>
         </div>
         <div class="left float-left">
@@ -119,7 +119,7 @@
                         <div class="col-lg-4">
                             <div class="input-group">
                                 <span class="input-group-addon">胚布条码</span>
-                                <div id="sFabricNo1" name="detail">
+                                <div id="sFabricNo1">
                                     <input type="text" class="form-control" readonly>
                                 </div>
                             </div>
@@ -148,6 +148,23 @@
                                 <div id="sProductWidth" name="detail">
                                     <input type="text" class="form-control" readonly>
                                 </div>
+                            </div>
+                        </div>
+                        <div hidden>
+                            <div id="uppTrackJobGUID" name="detail">
+                                <input type="text" class="form-control" readonly>
+                            </div>
+                            <div id="usdOrderLotGUID" name="detail">
+                                <input type="text" class="form-control" readonly>
+                            </div>
+                            <div id="ummMaterialGUID" name="detail">
+                                <input type="text" class="form-control" readonly>
+                            </div>
+                            <div id="utmColorGUID" name="detail">
+                                <input type="text" class="form-control" readonly>
+                            </div>
+                            <div id="upsWorkFlowCardGUID" name="detail">
+                                <input type="text" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -260,7 +277,7 @@
             <!-- 2 -->
             <!-- 3 -->
             <div class="left-buttom margin-top-5">
-                <table class="table table-striped" id="CheckData">
+                <table class="table table-hover" id="CheckData">
                     <tr>
                         <th>验布时间</th>
                         <th>批次</th>
@@ -360,6 +377,7 @@
 </body>
 
 <script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
+<!-- <script type="text/javascript" src="/eel.js"></script> -->
 
 <script>
     function fullScreen() {
@@ -431,21 +449,84 @@
 <script>
     var defectID = 1
 
+
+    var Begin = function () {
+        defectID = 1
+        var sVarCardNo = document.getElementById('sCardNo').value;
+        var VarDetail = document.getElementsByName('detail');
+        var iFlag;
+        for (var i = 0; i < VarDetail.length; i++) {
+            var ID = VarDetail[i].id;
+            var sVar = sVarCardNo + '_' + ID;
+            $('#' + ID).load('/CheckFabric/AJAX/Detail/' + sVar);
+        }
+    }
+
     // 根据卡号搜索详细信息
     var searchCardNo = function () {
         defectID = 1
         var sVarCardNo = document.getElementById('sCardNo').value;
-        // console.log(sVarCardNo);
         var VarDetail = document.getElementsByName('detail');
-        console.log(VarDetail.length);
-        for (var i = 0; i < VarDetail.length; i++) {
-            console.log(VarDetail[i]);
-            var ID = VarDetail[i].id;
-            var sVar = sVarCardNo + '_' + ID;
-            // console.log(sVar);
-            $('#' + ID).load('/CheckFabric/AJAX/Detail/' + sVar);
-        }
+        var iFlag;
+        $.ajax({
+            type: 'GET',
+            url: "/CheckFabric/popUp/BeginOrSearch/" + sVarCardNo,
+            data: {},
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 1) {
+                    console.log('有两个');
+                    window.open("http://198.168.6.56:5000/CheckFabric/popUp/windows/search/", '选择哪个资料',
+                        'height=500, width=900, top=270%, left=400%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
+                    )
+                } else {
+                    if (data[0]['iFlag0'] == '已完成') {
+                        Begin();
+                        SearchIsDouble();
+                    } else if (data[0]['iFlag0'] == '待开工') {
+                        for (var i = 0; i < VarDetail.length; i++) {
+                            var ID = VarDetail[i].id;
+                            var sVar = sVarCardNo + '_' + ID;
+                            $('#' + ID).load('/CheckFabric/AJAX/Detail/' + sVar);
+                        }
+                    }
+                    else{
+                        Begin();
+                    }
+                }
+            },
+        });
+        // if (iFlag.length > 1){
+        //     console.log('2222222222222')
+        // }
+        console.log(iFlag)
+        // console.log(VarDetail.length);
     }
+
+
+    var SearchIsDouble = function () {
+        var sVarCardNo = document.getElementById('sCardNo').value;
+        $.ajax({
+            type: 'GET',
+            url: "/CheckFabric/popUp/SearchFlag/" + sVarCardNo,
+            data2: {},
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json',
+            success: function (data2) {
+                if (data2.length > 1) {
+                    window.open(
+                        "http://198.168.6.56:5000/CheckFabric/popUp/windows/" +
+                        sVarCardNo, '选择哪个资料',
+                        'height=650, width=900, top=270%, left=400%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
+                    )
+                } else {
+                    console.log('返回一个数据')
+                }
+            }
+        })
+    }
+
 
     // 回车也可以进行搜索
     var CheckInfo = function () {
@@ -486,7 +567,7 @@
     // 打开新标签页获得班别
     var GetGroupPage = function () {
         window.open("http://198.168.6.56:5000/CheckFabric/AJAX/Group/", '班别',
-            'height=300, width=220, top=270%, left=600%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
+            'height=310, width=220, top=270%, left=600%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no'
         )
     }
 
@@ -685,6 +766,48 @@
 
         }
     }
+
+    //清除Hdr信息
+    var clearHdr = function(){
+        $$('sCardNo').value = '';
+        $$('sLocation').children[0].value = '';
+        $$('sOrderNo').children[0].value = '';
+        $$('sMaterialNo').children[0].value = '';
+        $$('sFabricNo1').children[0].value = '';
+        $$('sCustomerName').children[0].value = '';
+        $$('sColorNo').children[0].value = '';
+        $$('sProductWidth').children[0].value = '';
+    }
+
+    //清楚Dtl Table 信息
+    var clearDtl = function(){
+        var DtlTable = $$('CheckData').children[0];
+        for (var i = DtlTable.length; i > 0; i++){
+            if (DtlTable[i].tagName != 'tr'){
+                DtlTable.deleteRow(i);
+                i -= 1;
+            }
+        }
+    }
+    
+    //清楚Defect table信息
+    var clearDefect = function() {
+        var DtlTable = $$('defectTable').children[0];
+        for (var i = DtlTable.length; i > 0; i++){
+            if (DtlTable[i].tagName != 'tr'){
+                DtlTable.deleteRow(i);
+                i -= 1;
+            }
+        }
+    }
+
+    // 完工按钮
+    var Finishclick = function(){
+        Clear();
+        clearHdr();
+        clearDtl();
+        clearDefect();
+    }
 </script>
 
 <script>
@@ -762,12 +885,22 @@
         var sEquipment = $$('sEquipment').children[0].value;
         var sCardNo = $$('sCardNo').value;
         var sLocation = $$('sLocation').children[0].value;
+        var uppTrackJobGUID = $$('uppTrackJobGUID').children[0].value;
+        var usdOrderLotGUID = $$('usdOrderLotGUID').children[0].value;
+        var ummMaterialGUID = $$('ummMaterialGUID').children[0].value;
+        var utmColorGUID = $$('utmColorGUID').children[0].value;
+        var upsWorkFlowCardGUID = $$('upsWorkFlowCardGUID').children[0].value;
         var row1 = {
             'sUserName': sUserName,
             'sGroup': sGroup,
             'sEquipment': sEquipment,
             'sCardNo': sCardNo,
             'sLocation': sLocation,
+            'uppTrackJobGUID': uppTrackJobGUID,
+            'usdOrderLotGUID': usdOrderLotGUID,
+            'ummMaterialGUID': ummMaterialGUID,
+            'utmColorGUID': utmColorGUID,
+            'upsWorkFlowCardGUID': upsWorkFlowCardGUID,
         }
         JsonData.push(row1);
         return JsonData;
@@ -787,6 +920,7 @@
         var sRemark = $$('sRemark').children[0].value;
         var sCardNo = $$('sCardNo').value;
         var tCheckTime = GetCheckTime();
+        var uppTrackJobGUID = $$('uppTrackJobGUID').children[0].value;
         var JsonData = [];
         var row1 = {
             'tTime': tCheckTime,
@@ -801,6 +935,7 @@
             'nGMWTInner': nGMWTInner,
             'nGMWTRight': nGMWTRight,
             'sRemark': sRemark,
+            'uppTrackJobGUID': uppTrackJobGUID,
         };
         JsonData.push(row1);
         return JsonData
@@ -876,6 +1011,7 @@
         var sGroup = $$('sGroup').children[0].value;
         var sEquipment = $$('sEquipment').children[0].value;
         var sCardNo = $$('sCardNo').value;
+
         var bFlag = GetTableTd();
         // 判断填入的资料是否为空
         if (bFlag && bFlag != '备注') {
@@ -931,17 +1067,46 @@
                     success: function (data) {},
                 });
             }
+            Clear();
         }
-        Clear();
     }
 
+    var UpdateField = ['sFabricNo2', 'sCustomerName', 'sColorNo', 'sProductWidth', 'nLength', 'sGrade',
+        'nWidth', 'sDefect', 'nDensity', 'nGMWTLeft', 'nGMWTInner', 'nGMWTRight', 'sRemark'
+    ]
+
+    var UpdateFinish = function (ID) {
+        for (var i in UpdateField) {
+            var VarValue = UpdateField[i] + '_' + ID
+            // /AJAX/INPUT/
+            $('#CheckData').load('/CheckFabric/AJAX/TABLE/' + VarValue);
+            // console.log('UpdateField')
+        }
+    }
+
+    // 点击DTL
+    var ClickDTL = function (ID) {
+        var AllTr = $$(ID).parentNode.childNodes;
+        for (var i = 0; i < AllTr.length; i++) {
+            AllTr[i].className = '';
+        }
+        $$(ID).className = 'active';
+        for (var i = 0; i < UpdateField.length; i++) {
+            var VarValue = UpdateField[i] + '_' + ID
+            var Field = UpdateField[i]
+            $('#' + Field).load('/CheckFabric/AJAX/INPUT/' + VarValue);
+        }
+        $('#defectTable').load('/CheckFabric/AJAX/TABLEDefect/' + ID);
+    }
 </script>
 
-
 <script>
-    // 预览按钮
-    var CheckView = function(){
-        window.open("http://198.168.6.56:5000/CheckFabric/CheckView/", '预览界面', "channelmode=1", "fullscreen=1")
+    var CheckView = function () {
+        // 预览按钮
+        var sCardNoInput = $$('sCardNo').value;
+        var url = "http://198.168.6.56:5000/CheckFabric/CheckView/" + sCardNoInput + "/";
+        console.log(url);
+        window.open(url, '预览界面', "channelmode=1", "fullscreen=1")
     }
 </script>
 

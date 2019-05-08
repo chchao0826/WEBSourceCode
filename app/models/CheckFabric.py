@@ -21,9 +21,11 @@ class InspectHdr(base):
     tCreateTime = Column(DateTime, nullable = True)
     sUpdateMan = Column(String(40), nullable = True)
     tUpdateTime = Column(DateTime, nullable = True)
-    uemEquipmentGUID = Column(Unicode, nullable = True)
+    uppTrackJobGUID = Column(Unicode, nullable = True)
+    usdOrderLotGUID = Column(Unicode, nullable = True)
+    ummMaterialGUID = Column(Unicode, nullable = True)
+    utmColorGUID = Column(Unicode, nullable = True)
     upsWorkFlowCardGUID = Column(Unicode, nullable = True)
-    upsWorkFlowCardInputGUID = Column(Unicode, nullable = True)
     
     def __str__(self):
         return self.id

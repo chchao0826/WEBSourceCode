@@ -41,3 +41,10 @@ li {
     font-size: 24px !important;
     font-weight: 800 !important;
 }
+
+.footer {
+    height: 20px;
+    background-color: #ddd;
+    position: fixed;
+    bottom: 0;
+}
