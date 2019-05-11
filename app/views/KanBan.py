@@ -275,6 +275,8 @@ def JSData(*args):
     groupNameList = []
     salesList = []
     salesValueList = []
+    sWorkingProcedureDataList = []
+    sWorkingProcedureList = []
     while row:
         borderColor = ''
         if row[9] == 1:
@@ -313,6 +315,14 @@ def JSData(*args):
             }
             salesGroupList.append(salesGroupDict)
         dataList.append(dDict)
+
+        sWorkingDict = {
+            'sWorkingProcedureName':row[14],
+            'nWorkingProcedureCount': row[15]
+        }
+        if sWorkingDict not in sWorkingProcedureList:
+            sWorkingProcedureList.append(sWorkingDict)
+
         # 根据传入的部门
         if sVarArgs == row[6]:
             groupNameList.append(dDict)
@@ -322,13 +332,14 @@ def JSData(*args):
             }
             if salesDict not in salesList:
                 salesList.append(salesDict)
-
+        if sVarArgs == row[14]:
+            sWorkingProcedureDataList.append(dDict)
         # 根据传入的人名建立LIST
         if sVarArgs == row[0]:
             salesValueList.append(dDict)
         row = cursor.fetchone()
     cursor.close()
-    return dataList, salesGroupList, groupNameList, salesList, salesValueList
+    return dataList, salesGroupList, groupNameList, salesList, salesValueList, sWorkingProcedureList, sWorkingProcedureDataList
 
 
 if __name__ == '__main__':

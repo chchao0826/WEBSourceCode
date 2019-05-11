@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>看板 - 技术部</title>
+    <title>看板-技术部-工段</title>
+
     <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/bootstrap.min.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/AdminLTE.min.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/JSInformation.css')}} ">
@@ -20,13 +21,14 @@
     <div class="body" id="body">
         <div class="div-nav navbar-fixed-top" id="title">
             <ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;" id="GroupUL">
-                {% for i in salesGroupList %}
+                {% for i in workingProcedureList %}
                 <!-- class="active" -->
                 <li role="presentation" name="liNav" style="font-size:25px;">
-                    <a href="#" onclick="onclickGroup()">
-                        <span>{{i['sSalesGroupName']}}</span>
+                    <a href="#" onclick="onclickProcedure('{{i['sWorkingProcedureName']}}')">
+                        <span>{{i['sWorkingProcedureName']}}</span>
                         <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow"
-                            style="font-size:20px; margin-top:-5px; border-radius:20px;"> {{i['nCount']}} </span>
+                            style="font-size:20px; margin-top:-5px; border-radius:20px;">
+                            {{i['nWorkingProcedureCount']}} </span>
                     </a>
                 </li>
                 {% endfor %}
@@ -34,7 +36,7 @@
         </div>
         <div class="wrapper">
             <div class="content" id="content" style="margin-top: 76px;">
-                {% for i in returnData %}
+                {% for i in getList %}
                 <div class="col-md-2" style="height:240px; margin-top: -7px;" onclick="turnOver()">
                     <div class="box direct-chat" style="height:220px; border-top: 6px solid {{i['borderColor']}}"
                         id="box{{i['id']}}">
@@ -59,14 +61,120 @@
                 {% endfor %}
             </div>
         </div>
-        <div id="footer" class="footer float-left text-center" onmouseover="overShow()" onmouseout="overHide()"
-            onclick="ToWork()" >
+        <div id="footer" class="footer float-left text-center" onmouseover="overShow()" onmouseout="overHide()" onclick="ToSale()">
             <span class="glyphicon glyphicon-menu-up" aria-hidden="true" style="display: none; font-size: 30px;"></span>
         </div>
     </div>
 </body>
 
 <script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
+
+<script>
+    // 部门轮播图信息
+    var slideShow = function () {
+        var liData = __$('liNav');
+        var iflag = undefined;
+        for (var i = 0; i < liData.length; i++) {
+            var className = liData[i].className;
+            if (className === 'active') {
+                iflag = i;
+            }
+        }
+        if (iflag == undefined) {
+            liData[0].className = 'active';
+            console.log(liData[0].children[0].children[0].innerHTML)
+            return liData[0].children[0].children[0].innerHTML;
+        } else if (iflag + 1 == liData.length) {
+            liData[0].className = 'active';
+            liData[iflag].className = '';
+            return liData[0].children[0].children[0].innerHTML;
+        } else {
+            liData[iflag + 1].className = 'active';
+            liData[iflag].className = '';
+            return liData[iflag + 1].children[0].children[0].innerHTML;
+        }
+    }
+
+    // 更新信息
+    var update = function () {
+        var sWorkingProcedureName = slideShow().replace(' ', '');
+        console.log(sWorkingProcedureName)
+        $('#content').load('/KanBan/技术部/sWorkingProcedureName/AJAX/' + sWorkingProcedureName);
+    }
+
+    // 滚动信息
+    var scroll = function () {
+        document.documentElement.scrollTop = 0;
+        var height = document.body.clientHeight;
+        var number = 0; //控制结束累加器
+        var length = 0; //控制每次翻滚长度
+        var frequency = 120; //控制总时间
+        var scrollTopVar;
+        var scrollTopMax;
+        var time = setInterval(function () {
+            number += 1;
+            scrollTopVar = document.documentElement.scrollTop;
+            if (scrollTopMax == undefined) {
+                scrollTopMax = scrollTopVar;
+            } else if (scrollTopVar > scrollTopMax) {
+                scrollTopMax = scrollTopVar
+            } else if (scrollTopVar <= scrollTopMax) {
+                time2 = setTimeout(function () {
+                    update();
+                }, 8000)
+                clearInterval(time);
+            }
+            length += height / frequency;
+            document.documentElement.scrollTop = length;
+        }, 150); //每隔1S翻滚
+        console.log(number)
+    }
+
+    var UpdateActive = function () {
+        var obj_lis = document.getElementById("GroupUL").getElementsByTagName("li");
+        for (i = 0; i < obj_lis.length; i++) {
+            obj_lis[i].onclick = function () {
+                var sSaleName = this.children[0].children[0].innerHTML;
+                sSaleName = sSaleName.replace(' ', '');
+                for (var i = 0; i < this.parentNode.children.length; i++) {
+                    this.parentNode.children[i].className = ''
+                }
+                this.className = 'active';
+            }
+        }
+    }
+
+
+    var onclickProcedure = function (sWorkingProcedureName) {
+        UpdateActive();
+        console.log(sWorkingProcedureName);
+        // var sWorkingProcedureName = slideShow().replace(' ', '');
+        // console.log(sWorkingProcedureName)
+        $('#content').load('/KanBan/技术部/sWorkingProcedureName/AJAX/' + sWorkingProcedureName);
+
+        time5 = setTimeout(function () {
+            window.location.reload();
+        }, 6000)
+    }
+
+    var turnOver = function () {
+        var remarkArray = __$('remark');
+        for (var i in remarkArray) {
+            var sFlag = /open/;
+            var dict = remarkArray[i].innerHTML;
+            var str = dict.replace(/^\s*|\s*$/g, "");
+            var remarkParent = remarkArray[i].parentNode.parentNode;
+            if (str != 'None' && sFlag.test(remarkParent.className) == false) {
+                remarkParent.className += ' direct-chat-contacts-open';
+            } else if (str != 'None' && sFlag.test(remarkParent.className) == true) {
+                remarkParent.className = 'box direct-chat';
+            }
+        }
+    }
+
+
+</script>
+
 
 <script>
     var time2;
@@ -95,149 +203,12 @@
         $$('footer').style.width = nWidth + 'px';
     }
 
-    // 部门轮播图信息
-    var slideShow = function () {
-        var liData = __$('liNav');
-        var iflag = undefined;
-        for (var i = 0; i < liData.length; i++) {
-            var className = liData[i].className;
-            if (className === 'active') {
-                iflag = i;
-            }
-        }
-        if (iflag == undefined) {
-            liData[0].className = 'active';
-            console.log(liData[0].children[0].children[0].innerHTML)
-            return liData[0].children[0].children[0].innerHTML;
-        } else if (iflag + 1 == liData.length) {
-            liData[0].className = 'active';
-            liData[iflag].className = '';
-            return liData[0].children[0].children[0].innerHTML;
-        } else {
-            liData[iflag + 1].className = 'active';
-            liData[iflag].className = '';
-            return liData[iflag + 1].children[0].children[0].innerHTML;
-        }
-    }
-
-    // 部门数据更新
-    var updateGroup = function () {
-        $('#title').load('/KanBan/技术部/AJAXHEADER');
-        var liData = __$('liNav');
-        var liList = []
-        for (var i = 0; i < liData.length; i++) {
-            liList.push(liData[i].children[0].children[0].innerHTML);
-        }
-        console.log(liList);
-    }
-
-    // 更新信息
-    var update = function () {
-        var sSalesGroupName = slideShow().replace(' ', '');
-        // alert(sSalesGroupName);
-        var patt = /处/;
-        var patt2 = /返回/;
-        if (patt.test(sSalesGroupName)) {
-            $('#content').load('/KanBan/技术部/AJAX/sSaleGroupName2/' + sSalesGroupName);
-        } else if (patt2.test(sSalesGroupName)) {
-            window.location.reload();
-        } else {
-            // console.log('222222222222222222');
-            // console.log('/KanBan/技术部/AJAX/sSalesName2/' + sSalesGroupName);
-
-            $('#content').load('/KanBan/技术部/AJAX/sSalesName2/' + sSalesGroupName);
-        }
-    }
-
-    // 滚动信息
-    var scroll = function () {
-        document.documentElement.scrollTop = 0;
-        var height = document.body.clientHeight;
-        var number = 0; //控制结束累加器
-        var length = 0; //控制每次翻滚长度
-        var frequency = 120; //控制总时间
-        var scrollTopVar;
-        var scrollTopMax;
-        var time = setInterval(function () {
-            number += 1;
-            scrollTopVar = document.documentElement.scrollTop;
-            if (scrollTopMax == undefined) {
-                scrollTopMax = scrollTopVar;
-            } else if (scrollTopVar > scrollTopMax) {
-                scrollTopMax = scrollTopVar
-            } else if (scrollTopVar <= scrollTopMax) {
-                time2 = setTimeout(function () {
-                    update();
-                }, 6000)
-                // var time3 = setTimeout(function () {
-                //     turnOver();
-                // }, 3000)
-
-                // clearInterval(time3);
-                clearInterval(time);
-            }
-            length += height / frequency;
-            document.documentElement.scrollTop = length;
-        }, 150); //每隔1S翻滚
-        console.log(number)
-    }
-
-    // 点击部门
-    var onclickGroup = function () {
-        var obj_lis = document.getElementById("GroupUL").getElementsByTagName("li");
-        for (i = 0; i < obj_lis.length; i++) {
-            obj_lis[i].onclick = function () {
-                var sSaleGroupName = this.children[0].children[0].innerHTML.replace(' ', '');
-                // console.log(sSaleGroupName);
-                $('#title').load('/KanBan/技术部/AJAX/sSaleGroupName/' + sSaleGroupName)
-                $('#content').load('/KanBan/技术部/AJAX/sSaleGroupName2/' + sSaleGroupName);
-            }
-        }
-    }
-
-    // 点击业务员
-    var onclickSale = function () {
-        window.clearInterval(time2);
-        var obj_lis = document.getElementById("GroupUL").getElementsByTagName("li");
-        for (i = 0; i < obj_lis.length; i++) {
-            obj_lis[i].onclick = function () {
-                var sSaleName = this.children[0].children[0].innerHTML;
-                sSaleName = sSaleName.replace(' ', '');
-                for (var i = 0; i < this.parentNode.children.length; i++) {
-                    this.parentNode.children[i].className = ''
-                }
-                // console.log(this.parentNode.children.length);
-                this.className = 'active';
-                // console.log(sSaleName);
-                $('#content').load('/KanBan/技术部/AJAX/sSalesName/' + sSaleName);
-                // var time3 = setTimeout(function () {
-                //     turnOver();
-                // }, 3000)
-            }
-        }
-    }
-
-    // 进行备注的翻页
-    var turnOver = function () {
-        var remarkArray = __$('remark');
-        for (var i in remarkArray) {
-            var sFlag = /open/;
-            var dict = remarkArray[i].innerHTML;
-            var str = dict.replace(/^\s*|\s*$/g, "");
-            var remarkParent = remarkArray[i].parentNode.parentNode;
-            if (str != 'None' && sFlag.test(remarkParent.className) == false) {
-                remarkParent.className += ' direct-chat-contacts-open';
-            } else if (str != 'None' && sFlag.test(remarkParent.className) == true) {
-                remarkParent.className = 'box direct-chat';
-            }
-        }
-    }
-
     // 页面初始
     window.onload = function () {
         // timename1=setInterval("update();",10000);
         getScreen();
-        update();
+        scroll();
+
     }
 
     // 修改屏幕尺寸后进行div的更新
@@ -254,8 +225,8 @@
         $$('footer').children[0].style.display = "none";
     }
 
-    var ToWork = function () {
-        window.location.href = "http://198.168.6.56:5000/KanBan/技术部/sWorkingProcedureName/";
+    var ToSale = function () {
+        window.location.href = "http://127.0.0.1:5000/KanBan/技术部/";
     }
 </script>
 

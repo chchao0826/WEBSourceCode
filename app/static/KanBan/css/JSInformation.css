@@ -43,8 +43,9 @@ li {
 }
 
 .footer {
-    height: 20px;
-    background-color: #ddd;
+    height: 30px;
+    /* background-color: #ddd; */
     position: fixed;
-    bottom: 0;
+    bottom: 12;
+    margin-bottom: -10px;
 }

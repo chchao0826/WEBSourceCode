@@ -13,4 +13,6 @@ sSalesName \
 ,ID \
 ,nCount \
 ,nSaleCount \
+,sWorkingProcedureName2 \
+,nWorkingProcedureCount \
 FROM [dbo].[pbCommonDataJSKanBan]"

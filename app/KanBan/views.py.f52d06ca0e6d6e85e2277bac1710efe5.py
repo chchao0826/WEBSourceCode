@@ -158,7 +158,7 @@ def JSDataAJAX(sSaleGroupName):
     for i in returnData:
         # print(i)
         returnHTML +='\
-            <div class="col-md-2" style="height:240px;" onclick="turnOver()"> \
+            <div class="col-md-2" style="height:240px;"> \
                 <div class="box direct-chat" style="height:220px; border-top: 6px solid %s"> \
                     <div class="box-header text-center"> \
                         <h3 class="box-title" style="font-size: 30px; font-weight: 900;">%s</h3> \
@@ -227,7 +227,7 @@ def JSDateAJAXSale2(sSaleName):
     # print('-----------------')
     for i in returnData:
         returnHTML +='\
-            <div class="col-md-2" style="height:240px;" onclick="turnOver()"> \
+            <div class="col-md-2" style="height:240px;"> \
                 <div class="box direct-chat" style="height:220px; border-top: 6px solid %s"> \
                     <div class="box-header text-center"> \
                         <h3 class="box-title" style="font-size: 30px; font-weight: 900;">%s</h3> \
@@ -298,24 +298,31 @@ def JSDateAJAXSale(sSaleName):
 # 技术部工段
 @KanBan.route('/技术部/sWorkingProcedureName/')
 def JSPro():
-    # print('12222')
+    print('12222')
     returnData = JSData()
+    
     getDataAll = returnData[0]
     workingProcedureList = returnData[5]
     getList = returnData[6]
+    
     if getList == []:
         getList = getDataAll
+
+    print(workingProcedureList)
+    print(getList)
     return render_template('KanBan/JSsWorkingProcedure.html', workingProcedureList = workingProcedureList,getList = getList)
 
 # 技术部 工段页面
 @KanBan.route('/技术部/sWorkingProcedureName/AJAX/<sWorkingProcedureName>')
 def JSProAJAX(sWorkingProcedureName):
     returnData = JSData(sWorkingProcedureName)[6]
+    print(returnData)
+
     returnHTML = ''
     # print(returnData)
     for i in returnData:
         returnHTML +='\
-            <div class="col-md-2" style="height:240px;" onclick="turnOver()"> \
+            <div class="col-md-2" style="height:240px;"> \
                 <div class="box direct-chat" style="height:220px; border-top: 6px solid %s"> \
                     <div class="box-header text-center"> \
                         <h3 class="box-title" style="font-size: 30px; font-weight: 900;">%s</h3> \
@@ -335,6 +342,18 @@ def JSProAJAX(sWorkingProcedureName):
                     </div> \
                 </div> \
             </div>'%(i['borderColor'], i['sMaterialNo'], i['sCardNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'], i['sKanBanRemark'])
-    returnHTML += '<script>scroll();</script>'
+        returnHTML += '\
+            <script>\
+                var second = 1; \
+                window.setInterval("interval();",1000);\
+                var interval = function() { \
+                    second++; \
+                    console.log(second); \
+                    if (second == 60){ \
+                        window.location.reload(); \
+                    } \
+                } \
+                scroll(); \
+            </script>'
     return returnHTML
 
