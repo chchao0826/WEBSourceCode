@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>整理课排单</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/dragslot.css')}} ">
+    <!-- <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/bootstrap_var.css')}} "> -->
+    <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/Scheduling.css')}} ">
+    <style type="text/css">
+        .currentli {
+            color: #186ecc;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body id="body" class="">
+    <div class="main_var">
+        <div class="outer_div">
+            <div class="htmleaf-container">
+                <form action="" method="POST">
+                    <section class="">
+                        <div id="dragslot" class="">
+                            <div class="top-div" id="top-div">
+                                {% for equipment in ReturnEquipment %}
+                                <div class="section_var">
+                                    <ul id=" Ul_{{equipment.ID}} " class="" name="Ul_{{equipment.ID}}">
+                                        <div class="">
+                                            <input class="title_var" type="text" readOnly="true"
+                                                name="{{equipment.sEquipmentNo}}" id="{{equipment.sEquipmentNo}}"
+                                                value={{equipment.sEquipmentNo}}>
+                                        </div>
+                                        <div class="float-left">
+                                            {% for sCardNo in ReturnDtlData %}
+                                            {% if sCardNo.nHDRID == equipment.ID %}
+                                            <li class="slot-item"
+                                                style="border-left:5px solid {{sCardNo.sBorderColor}}; border-right:5px solid {{sCardNo.sColorBorder}};">
+                                                <div class="clearfix">
+                                                    <div class="hover" style="width:100%;">
+                                                        <tr class="tr_var">
+                                                            <td class="">
+                                                                <input class="input_var" type="text" readOnly="true"
+                                                                    name="{{sCardNo.sCardNo}}" id="{{sCardNo.sCardNo}}"
+                                                                    value="{{sCardNo.sCardNo}}">
+                                                                <div style="z-index:10" class="ex">
+                                                        <tr>
+                                                            <td>{{sCardNo.sCardNo}}</td><br>
+                                                            <td class="td_var">{{sCardNo.sMaterialNo}}</td><br>
+                                                            <td class="td_var">{{sCardNo.sMaterialLot}}</td><br>
+                                                            <td class="td_var">{{sCardNo.sColorNo}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nFactInPutQty}}</td><br>
+                                                            <td class="td_var">{{sCardNo.sCustomerName}}</td><br>
+                                                            <td class="td_var">{{sCardNo.sSalesGroupName}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nPSTime}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nSETime}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nPSSpeed}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nSESpeed}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nPS2Temp}}</td><br>
+                                                            <td class="td_var">{{sCardNo.nSETemp}}</td>
+                                                        </tr>
+                                                    </div>
+                                                    </td>
+                                                    </tr>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                </div>
+                                </ul>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="bottom-div ">
+                            <div class="section_var2 float-left">
+                                <ul id="" class="">
+                                    <div class="">
+                                        <input class="title_var2" type="text" readOnly="true" name="" id=""
+                                            value='网布克重低于130g'>
+                                    </div>
+                                    {% for i in ReturnData_NET %}
+                                    <div class="float-left">
+                                        <li class="slot-item"
+                                            style="border-left:5px solid {{i.sBorderColor}}; border-right:5px solid {{i.sColorBorder}}; width: 280px;">
+                                            <div class="clearfix">
+                                                <tr class="tr_var2">
+                                                    <td class="">
+                                                        <input class="input_var2 text-center" type="text"
+                                                            readOnly="true" name="{{i.sCardNo}}" id="{{i.sCardNo}}"
+                                                            value="{{i.sCardNo}}"><br>
+                                                    </td>
+                                                </tr>
+                                            </div>
+                                        </li>
+                                    </div>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="section_var2 float-left">
+                                <ul id="" class="">
+                                    <div class="">
+                                        <input class="title_var2" type="text" readOnly="true" name="" id=""
+                                            value='平布黑白'>
+                                    </div>
+                                    {% for i in ReturnData_BW %}
+                                    <div class="float-left card-padding">
+                                        <li class="slot-item"
+                                            style="border-left:5px solid {{i.sBorderColor}}; border-right:5px solid {{i.sColorBorder}};">
+                                            <div class="clearfix">
+                                                <tr class="tr_var2">
+                                                    <td class="">
+                                                        <input class="input_var2 text-center" type="text"
+                                                            readOnly="true" name="{{i.sCardNo}}" id="{{i.sCardNo}}"
+                                                            value={{i.sCardNo}}><br>
+                                                    </td>
+                                                </tr>
+                                            </div>
+                                        </li>
+                                    </div>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="section_var2 float-left">
+                                <ul id="" class="">
+                                    <div class="">
+                                        <input class="title_var2" type="text" readOnly="true" name="" id=""
+                                            value='平布其他'>
+                                    </div>
+                                    {% for i in ReturnData_Other %}
+                                    <div class="float-left">
+                                        <li class="slot-item"
+                                            style="border-left:5px solid {{i.sBorderColor}}; border-right:5px solid {{i.sColorBorder}}; width: 280px;">
+                                            <div class="clearfix">
+                                                <tr class="tr_var2">
+                                                    <td class="">
+                                                        <input class="input_var2 text-center" type="text"
+                                                            readOnly="true" name="{{i.sCardNo}}" id="{{i.sCardNo}}"
+                                                            value={{i.sCardNo}}><br>
+                                                    </td>
+                                                </tr>
+                                            </div>
+                                        </li>
+                                    </div>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+            </div>
+            </section>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+    <script>
+        window.jQuery || document.write('<script src="../static/Scheduling/js/jquery-1.11.0.min.js"><\/script>')
+    </script>
+    <script type="text/javascript" src="/static/Scheduling/js/dragslot.js"></script>
+
+    <script>
+        // ClassName
+        var _$ = function (id) {
+            return document.getElementsByClassName(id);
+        }
+
+        // ID
+        var $$ = function (id) {
+            return document.getElementById(id);
+        }
+
+        // Name
+        var __$ = function (id) {
+            return document.getElementsByName(id);
+        }
+
+        // 尺寸修改
+        var getScreen = function () {
+            var nWidth = document.body.clientWidth;
+            var nHeight = document.documentElement.clientHeight;
+            var content = $$('body');
+            $$('top-div').style.height = nHeight / 2 + 'px';
+            $$('top-div').style.nWidth = nWidth + 'px';
+            $$('dragslot').style.nWidth = nWidth + 'px';
+
+
+            content.style.width = nWidth + 'px';
+            content.style.height = nHeight - 5 + 'px';
+        }
+
+        // 页面初始
+        window.onload = function () {
+            getScreen();
+            // fullScreen();
+        }
+
+        // 修改屏幕尺寸后进行div的更新
+        window.onresize = function () {
+            getScreen();
+        }
+    </script>
+
+    <script>
+        jQuery(function ($) {
+            $('#dragslot').dragslot({
+                dropCallback: function (el) {
+                    //	alert(el);
+                }
+
+            });
+
+        });
+    </script>
+
+
+</body>
+
+</html>

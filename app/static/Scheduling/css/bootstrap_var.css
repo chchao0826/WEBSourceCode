@@ -1,0 +1,120 @@
+.outer_div {
+    height: 800px;
+    width: 1800px;
+    margin-left: 10px;
+    margin-right: auto;
+    margin-top: 20px;
+    background: #1e11;
+}
+
+.section_var {
+    position: relative;
+    margin: 0 auto;
+    margin-left: -22px;
+    float: left;
+    height: 400px;
+    width: 180px;
+}
+
+.div_var {
+    width: 250px;
+    height: 200px;
+}
+
+.title_var {
+    background-color: #9e9c;
+    padding-left: 35%;
+}
+
+.input_var {
+    border: none;
+    font-size: 12px;
+    height: 26px;
+    width: 260px;
+}
+
+.title_var {
+    border: none;
+    font-size: 13px;
+    height: 26px;
+    width: 140px;
+}
+
+.text_var {
+    height: 126px;
+}
+
+.opacity_b {
+    opacity: 0;
+    /* b div 隐藏*/
+}
+
+.opacity_a:hover .opacity_b {
+    opacity: 1;
+    /* 鼠标经过 a div 时 b div 显示*/
+}
+
+.hover {
+    display: block;
+    width: 100px;
+    line-height: 30px;
+    height: 30px;
+    overflow: hidden;
+    position: relative;
+}
+
+.hover:hover {
+    overflow: visible;
+}
+
+.hover .ex {
+    position: absolute;
+    left: 80px;
+    top: 0;
+    width: 200px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #9e9c;
+    font-size: 15px;
+}
+
+.ex {
+    margin-left: 20px;
+}
+
+.btu_var {
+    margin-top: 0px;
+    border: none;
+    background: transparent;
+    color: #337AB7;
+    width: 86px;
+    height: 40px;
+}
+
+.seach_var {
+    width: 150px;
+}
+
+.nar_var {
+    margin-left: 36%;
+}
+
+.tr_var {
+    width: 120px;
+}
+
+.span_var {
+    font-size: 12px;
+}
+
+ul li {
+    list-style: none;
+}
+
+.wait_var {
+    float: left;
+}
+
+.main_var {
+    float: left;
+}
