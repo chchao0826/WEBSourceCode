@@ -28,6 +28,9 @@ class ProductionSchedulingDTL(base):
     sCardNo = Column(String(40),nullable = True)
     nHDRID = Column(Integer,nullable = True)
     nRowNumber = Column(Integer,nullable = True)
+    tCreateTime = Column(DateTime,nullable = True)
+    tUpdateTime = Column(DateTime,nullable = True)
+    uppTrackJobGUID = Column(String(40),nullable = True)
     def __str__(self):
         return self.id
 
@@ -97,10 +100,11 @@ def UpdateDtl(data):
     nRowNumber = data['nRowNumber']
     sCardNo = data['sCardNo']
     nHDRID = data['nHDRID']
-
+    tUpdateTime = data['tTime']
     target = ses.query(ProductionSchedulingDTL).filter(ProductionSchedulingDTL.sCardNo == sCardNo).first()
     target.nRowNumber = nRowNumber
     target.nHDRID = nHDRID
+    target.tUpdateTime = tUpdateTime
     ses.commit()
     ses.close()
 
@@ -108,7 +112,9 @@ def InsertDtl(data):
     nRowNumber = data['nRowNumber']
     sCardNo = data['sCardNo']
     nHDRID = data['nHDRID']
-    InsertDtl = ProductionSchedulingDTL(nRowNumber=nRowNumber, sCardNo=sCardNo, nHDRID=nHDRID)
+    tCreateTime = data['tTime']
+    uppTrackJobGUID = data['uppTrackJobGUID']
+    InsertDtl = ProductionSchedulingDTL(nRowNumber=nRowNumber, sCardNo=sCardNo, nHDRID=nHDRID, uppTrackJobGUID = uppTrackJobGUID, tCreateTime = tCreateTime, tUpdateTime = tCreateTime)
     ses.add(InsertDtl)
     ses.commit()
     ses.close()

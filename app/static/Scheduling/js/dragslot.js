@@ -153,16 +153,18 @@
 		var cardList = []
 		var sEquipmentID = el[0].parentNode.parentNode.attributes.name.nodeValue.split("_")[1];
 		var LiList = el[0].parentNode.children;
-		// console.log('LiList')
 		for (var i = 0; i < LiList.length; i++) {
 			var inputHtml = LiList[i].children[0].children[0].children[0];
+			var uppTrackJobGUIDHtml = LiList[i].children[0].children[0].children[1];
 
 			var inputValue = inputHtml.value;
+			var uppTrackJobGUIDValue = uppTrackJobGUIDHtml.value;
 			if (inputValue != '空机台') {
 				Dict = {
 					nRowNumber: i,
 					sCardNo: inputValue,
 					sEquipmentID: sEquipmentID,
+					uppTrackJobGUID : uppTrackJobGUIDValue,
 				}
 				cardList.push(Dict)
 			}
@@ -178,8 +180,6 @@
 		});
 
 		$('#top-div').load('AJAX/page');
-		console.log(cardList);
-		console.log(sEquipmentID);
 		// console.log(LiList)
 	}
 

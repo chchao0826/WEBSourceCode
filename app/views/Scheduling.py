@@ -27,18 +27,16 @@ def GetSchedulingData(args):
             'sMaterialLot' : row[3],
             'sColorNo' : row[4],
             'nFactInPutQty' : row[5],
-            'sCustomerName' : str(row[6]),
-            'sSalesName' : str(row[7]),
-            'sSalesGroupName' : str(row[8]),
-            'nPSTime' : str(row[9]),
-            'nSETime' : str(row[10]),
-            'nPSSpeed' : str(row[11]),
-            'nSESpeed' : str(row[12]),
-            'nPS2Temp' : str(row[13]),
-            'nSETemp' : str(row[14]),
-            'sProductWidth' : str(row[15]),
-            'sProductGMWT' : str(row[16]),
-            'sColorBorder' : str(row[17]),
+            'sCustomerName' : row[6],
+            'sSalesGroupName' : row[7],
+            'nTemp' : row[8],
+            'nSpeed' : row[9],
+            'nTime' : row[10],
+            'sProductWidth' : row[11],
+            'sProductGMWT' : row[12],
+            'sColorBorder' : row[13],
+            'uppTrackJobGUID' : row[14],
+            'sWorkingProcedureName' : str(row[15]),
         }
         # print(dictVar)
         returnData.append(dictVar)
@@ -48,9 +46,7 @@ def GetSchedulingData(args):
 
 
 def GetSchedulingDtlData():
-    print('------------------------------')
     sSQL = GetSchedulingDtlSQL()
-    print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
@@ -71,15 +67,14 @@ def GetSchedulingDtlData():
             'sCustomerName' : str(row[9]),
             'sSalesName' : str(row[10]),
             'sSalesGroupName' : str(row[11]),
-            'nPSTime' : str(row[12]),
-            'nSETime' : str(row[13]),
-            'nPSSpeed' : str(row[14]),
-            'nSESpeed' : str(row[15]),
-            'nPS2Temp' : str(row[16]),
-            'nSETemp' : str(row[17]),
-            'sProductWidth' : str(row[18]),
-            'sProductGMWT' : str(row[19]),
-            'sColorBorder' : str(row[20]),
+            'nTemp' : str(row[12]),
+            'nSpeed' : str(row[13]),
+            'nTime' : str(row[14]),
+            'sProductWidth' : str(row[15]),
+            'sProductGMWT' : str(row[16]),
+            'sColorBorder' : str(row[17]),
+            'uppTrackJobGUID' : str(row[18]),
+            'sWorkingProcedureName' : str(row[19]),
         }
         equipmentDict = {
             'nHDRID' : row[1],
@@ -101,8 +96,25 @@ def GetSchedulingDtlData():
             nBigID += 1
             Dict4 = {
             'ID' : nBigID,
-            'sCardNo' : '空机台',
             'nHDRID' : i,
+            'nRowNumber' : i,
+            'sBorderColor' : '#fff',
+            'sCardNo' : '空机台',
+            'sMaterialNo' : '',
+            'sMaterialLot' : '',
+            'sColorNo' : '',
+            'nFactInPutQty' : '',
+            'sCustomerName' : '',
+            'sSalesName' : '',
+            'sSalesGroupName' : '',
+            'nTemp' : '',
+            'nSpeed' : '',
+            'nTime' : '',
+            'sProductWidth' : '',
+            'sProductGMWT' : '',
+            'sColorBorder' : '',
+            'uppTrackJobGUID' : '',
+            'sWorkingProcedureName' : ''
             }
             returnData.append(Dict4)
     return returnData

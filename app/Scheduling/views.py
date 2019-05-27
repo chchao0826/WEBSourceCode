@@ -10,7 +10,7 @@ import time
 def index():
     ReturnData_NET = GetSchedulingData('NET')
     ReturnData_BW = GetSchedulingData('BW')
-    ReturnData_Other = GetSchedulingData('Other')
+    ReturnData_Other = GetSchedulingData('Others')
     ReturnEquipment = GetEquipment('整理')
     ReturnDtlData = GetSchedulingDtlData()
     return render_template('Scheduling/Scheduling_ZL.html', ReturnData_NET=ReturnData_NET, ReturnData_BW=ReturnData_BW, ReturnData_Other=ReturnData_Other, ReturnEquipment=ReturnEquipment, ReturnDtlData=ReturnDtlData)
@@ -22,19 +22,20 @@ def AJAXEquipment(sEquipmentNo):
     data = request.get_json()
     
     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    print(data)
-    print(datetimeVar)
+
     for i in data:
         sCardNo = str(i['sCardNo'])
         nHDRID = str(i['sEquipmentID'])
         nRowNumber = str(i['nRowNumber'])
+        uppTrackJobGUID = str(i['uppTrackJobGUID'])
         #  查找卡号是否存在Dtl表中,若存在更新机台号和顺序,不存在进行INSERT
         # print(IsHaveCard(sCardNo))
         VarData = {
             'sCardNo': sCardNo,
             'nHDRID': nHDRID,
             'nRowNumber': nRowNumber,
-            'datetime': datetimeVar,
+            'tTime': datetimeVar,
+            'uppTrackJobGUID' : uppTrackJobGUID,
         }
         if IsHaveCard(sCardNo):
             UpdateDtl(VarData)
@@ -48,7 +49,6 @@ def AJAXEquipment(sEquipmentNo):
 
 @Scheduling.route('/ZL/AJAX/page', methods=['GET', 'POST'])
 def AJAXPage():
-
     DtlData = GetSchedulingDtlData()
     HdrData = GetEquipment('整理')
     AJAXHTML = ''
@@ -80,22 +80,22 @@ def AJAXPage():
                                             <td class="td_var">%s</td><br> \
                                             <td class="td_var">%s</td><br> \
                                             <td class="td_var">%s</td><br> \
+                                            <td class="td_var">实际投胚:%s</td><br> \
+                                            <td class="td_var">%s</td><br> \
+                                            <td class="td_var">%s</td><br> \
+                                            <td class="td_var">温度:%s</td><br> \
+                                            <td class="td_var">速度:%s</td><br> \
+                                            <td class="td_var">耗时:%s</td><br> \
                                             <td class="td_var">%s</td><br> \
                                             <td class="td_var">%s</td><br> \
                                             <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td> \
                                         </tr> \
                                     </div> \
                                 </td> \
                             </tr> \
                         </div> \
                     </div> \
-                </li>' % (a['sBorderColor'], a['sColorBorder'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['sMaterialNo'], a['sMaterialLot'], a['sColorNo'], a['nFactInPutQty'], a['sCustomerName'], a['sSalesGroupName'], a['nPSTime'], a['nSETime'], a['nPSSpeed'], a['nSESpeed'], a['nPS2Temp'], a['nSETemp'])
+                </li>' % (a['sBorderColor'], a['sColorBorder'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['sMaterialNo'], a['sMaterialLot'], a['sColorNo'], a['nFactInPutQty'], a['sCustomerName'], a['sSalesGroupName'], a['nTemp'], a['nSpeed'], a['nTime'], a['sProductWidth'], a['sProductGMWT'], a['sWorkingProcedureName'])
         AJAXHTML += '\
                 </div> \
             </ul> \
