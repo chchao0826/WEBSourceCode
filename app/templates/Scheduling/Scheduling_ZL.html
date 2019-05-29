@@ -38,7 +38,7 @@
                                             {% for sCardNo in ReturnDtlData %}
                                             {% if sCardNo.nHDRID == equipment.ID %}
                                             <li class="slot-item"
-                                                style="border-left:5px solid {{sCardNo.sBorderColor}}; border-right:5px solid {{sCardNo.sColorBorder}};">
+                                                style="border-left:15px solid {{sCardNo.sBorderColor}}; border-right:15px solid {{sCardNo.sColorBorder}};">
                                                 <div class="clearfix">
                                                     <div class="hover" style="width:100%;">
                                                         <tr class="tr_var">
@@ -53,8 +53,7 @@
                                                                 <div style="z-index:10" class="ex">
                                                         <tr>
                                                             <td>{{sCardNo.sCardNo}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sMaterialNo}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sMaterialLot}}</td><br>
+                                                            <td class="td_var">{{sCardNo.sMaterialNo}} LOT:{{sCardNo.sMaterialLot}}</td><br>
                                                             <td class="td_var">{{sCardNo.sColorNo}}</td><br>
                                                             <td class="td_var">投胚:{{sCardNo.nFactInPutQty}}</td><br>
                                                             <td class="td_var">{{sCardNo.sCustomerName}}</td><br>
@@ -90,7 +89,7 @@
                                     {% for i in ReturnData_NET %}
                                     <div class="float-left">
                                         <li class="slot-item"
-                                            style="border-left:5px solid {{i.sBorderColor}}; border-right:5px solid {{i.sColorBorder}}; width: 280px;">
+                                            style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}}; width: 280px;">
                                             <div class="clearfix">
                                                 <div class="hover" style="width:100%;">
                                                     <tr class="tr_var">
@@ -105,8 +104,7 @@
                                                             <div style="z-index:10" class="ex2">
                                                                 <tr>
                                                                     <td>{{i.sCardNo}}</td><br>
-                                                                    <td class="td_var">{{i.sMaterialNo}}</td><br>
-                                                                    <td class="td_var">{{i.sMaterialLot}}</td><br>
+                                                                    <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
                                                                     <td class="td_var">{{i.sColorNo}}</td><br>
                                                                     <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
                                                                     <td class="td_var">{{i.sCustomerName}}</td><br>
@@ -136,7 +134,7 @@
                                 {% for i in ReturnData_BW %}
                                 <div class="float-left card-padding">
                                     <li class="slot-item"
-                                        style="border-left:5px solid {{i.sBorderColor}}; border-right:5px solid {{i.sColorBorder}};">
+                                        style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}};">
                                         <div class="clearfix">
                                             <div class="hover" style="width:100%;">
                                                 <tr class="tr_var">
@@ -151,8 +149,7 @@
                                                         <div style="z-index:10" class="ex2">
                                                             <tr>
                                                                 <td>{{i.sCardNo}}</td><br>
-                                                                <td class="td_var">{{i.sMaterialNo}}</td><br>
-                                                                <td class="td_var">{{i.sMaterialLot}}</td><br>
+                                                                <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
                                                                 <td class="td_var">{{i.sColorNo}}</td><br>
                                                                 <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
                                                                 <td class="td_var">{{i.sCustomerName}}</td><br>
@@ -182,7 +179,7 @@
                                 {% for i in ReturnData_Other %}
                                 <div class="float-left">
                                     <li class="slot-item"
-                                        style="border-left:5px solid {{i.sBorderColor}}; border-right:5px solid {{i.sColorBorder}}; width: 280px;">
+                                        style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}}; width: 280px;">
                                         <div class="clearfix">
                                             <div class="hover" style="width:100%;">
                                                 <tr class="tr_var">
@@ -197,8 +194,7 @@
                                                         <div style="z-index:10" class="ex2">
                                                             <tr>
                                                                 <td>{{i.sCardNo}}</td><br>
-                                                                <td class="td_var">{{i.sMaterialNo}}</td><br>
-                                                                <td class="td_var">{{i.sMaterialLot}}</td><br>
+                                                                <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
                                                                 <td class="td_var">{{i.sColorNo}}</td><br>
                                                                 <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
                                                                 <td class="td_var">{{i.sCustomerName}}</td><br>

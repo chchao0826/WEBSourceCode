@@ -66,12 +66,15 @@ def AJAXPage():
             if a['nHDRID'] == i['ID']:
                 AJAXHTML += '\
                 <li class="slot-item" \
-                    style="border-left:5px solid %s; border-right:5px solid %s;"> \
+                    style="border-left:15px solid %s; border-right:15px solid %s;"> \
                     <div class="clearfix"> \
                         <div class="hover" style=" width:100%% ; "> \
                             <tr class="tr_var"> \
                                 <td class=""> \
                                     <input class="input_var" type="text" readOnly="true" \
+                                        name="%s" id="%s" \
+                                        value="%s"> \
+                                    <input type="text" hidden \
                                         name="%s" id="%s" \
                                         value="%s"> \
                                     <div style="z-index:10" class="ex"> \
@@ -95,7 +98,7 @@ def AJAXPage():
                             </tr> \
                         </div> \
                     </div> \
-                </li>' % (a['sBorderColor'], a['sColorBorder'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['sMaterialNo'], a['sMaterialLot'], a['sColorNo'], a['nFactInPutQty'], a['sCustomerName'], a['sSalesGroupName'], a['nTemp'], a['nSpeed'], a['nTime'], a['sProductWidth'], a['sProductGMWT'], a['sWorkingProcedureName'])
+                </li>' % (a['sBorderColor'], a['sColorBorder'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['uppTrackJobGUID'], a['uppTrackJobGUID'], a['uppTrackJobGUID'], a['sCardNo'], a['sMaterialNo'], a['sMaterialLot'], a['sColorNo'], a['nFactInPutQty'], a['sCustomerName'], a['sSalesGroupName'], a['nTemp'], a['nSpeed'], a['nTime'], a['sProductWidth'], a['sProductGMWT'], a['sWorkingProcedureName'])
         AJAXHTML += '\
                 </div> \
             </ul> \

@@ -1,7 +1,7 @@
 # 获得卡号的详细信息
 def GETSchedulingSQL(sMaterialType):
     return "SELECT \
-    CASE WHEN bISRush = 1 THEN '#FF0000' END AS sBorderColor \
+    CASE WHEN bISRush = 1 THEN '#FF0000'  ELSE '#008000' END AS sBorderColor \
     ,sCardNo,sMaterialNo,sMaterialLot,sColorNo,nFactInPutQty \
     ,sCustomerName,sSalesGroupName \
     ,CASE WHEN sWorkingProcedureName = '预定' THEN \
@@ -48,6 +48,7 @@ def GetSchedulingDtlSQL():
     ,B.sProductWidth,B.sProductGMWT,B.sColorBorder,B.uppTrackJobGUID,sWorkingProcedureName \
     FROM [WebDataBase].[dbo].pbCommonDataProductionSchedulingDTL A \
     LEFT JOIN #TEMPTABLE B ON A.sCardNo = B.sCardNo \
+    WHERE ISNULL(A.bUsable,0) <> 1 \
     ORDER BY A.nRowNumber \
     DROP TABLE #TEMPTABLE \
     "

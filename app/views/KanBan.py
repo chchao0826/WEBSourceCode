@@ -9,6 +9,8 @@ from app.sql.WorkingProcedureStatus import WorkingProcedureStatus
 from app.sql.storeStatus import storeStatus
 from app.sql.GetSample import GetSample
 from app.sql.JSInformation import JSInformation
+from app.sql.SchedulingZL_KanBan import ZLKanBanSQL
+
 import re
 
 base = declarative_base()
@@ -340,6 +342,38 @@ def JSData(*args):
         row = cursor.fetchone()
     cursor.close()
     return dataList, salesGroupList, groupNameList, salesList, salesValueList, sWorkingProcedureList, sWorkingProcedureDataList
+
+# 整理看板SQL
+def ZLKanBanData():
+    ReturnData = []
+    sSQL = ZLKanBanSQL()
+    cursor = connect.cursor()
+    cursor.execute(sSQL)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'sCardNo' : str(row[0]),
+            'sEquipmentNo' : str(row[1]),
+            'sColorNo' : str(row[2]),
+            'sMaterialNo' : str(row[3]),
+            'sWorkingProcedureName' : str(row[4]),
+            'nTime' : str(row[5]),
+            'nFactTime' : str(row[6]),
+            'nFactInPutQty' : str(row[7]),
+            'nSpeed' : str(row[8]),
+            'nTemp' : str(row[9]),
+            'sProductWidth' : str(row[10]),
+            'sProductGMWT' : str(row[11]),
+            'uppTrackJobGUID' : str(row[12]),
+            'nRowNumber' : str(row[13]),
+            'sCustomerName' : str(row[14]),
+            'nPre': str(row[15]),
+        }
+        ReturnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return ReturnData
+
 
 
 if __name__ == '__main__':

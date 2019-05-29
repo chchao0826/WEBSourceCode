@@ -1,7 +1,8 @@
 # -*-coding:utf-8-*-
 from . import KanBan
 from flask import render_template, Flask, request
-from app.views.KanBan import emStatus, wpStatus, StoreStatus, DyeGetSample, JSData
+from app.views.KanBan import emStatus, wpStatus, StoreStatus, DyeGetSample, JSData, ZLKanBanData
+from app.models.Scheduling import GetEquipment
 
 import json
 
@@ -338,3 +339,10 @@ def JSProAJAX(sWorkingProcedureName):
     returnHTML += '<script>scroll();</script>'
     return returnHTML
 
+
+@KanBan.route('/Scheduling/整理')
+def SchedulingZL():
+    ZLData = ZLKanBanData()
+    # print(ZLData)
+    equipmentData = GetEquipment('整理')
+    return render_template('KanBan/Scheduling_ZL.html', equipmentData = equipmentData, ZLData = ZLData)
