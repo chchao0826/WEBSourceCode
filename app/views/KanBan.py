@@ -11,7 +11,9 @@ from app.sql.GetSample import GetSample
 from app.sql.JSInformation import JSInformation
 from app.sql.SchedulingZL_KanBan import ZLKanBanSQL
 
+
 import re
+
 
 base = declarative_base()
 # 236
@@ -88,9 +90,6 @@ def emStatus():
             YB_eq.append(dictVar)
         row = cursor.fetchone()
     cursor.close()
-
-    print(DX_eq1)
-    print(DX_eq2)
     # connect.close()
     return TJ_eq, MM_eq, Dye_eq1, Dye_eq2, Dye_eq3, Dye_eq4, Dye_eq5, Dye_eq6, PB_eq, DB_eq, TS_eq, FB_eq, SX_eq, DX_eq1, DX_eq2, DJ_eq, YB_eq
 
@@ -261,7 +260,7 @@ def DyeGetSample(*args):
                 nextList.append(i)
 
         if minRowNumber == i['nRowNumber']:
-            print(minRowNumber)
+            # print(minRowNumber)
             minList.append(i)
     return dataList, euipmentList, activeList, prevList, nextList, minList
 
@@ -283,8 +282,8 @@ def JSData(*args):
         borderColor = ''
         if row[9] == 1:
             borderColor = '#FFFF00'
-            print('1111')
-            print('#FFFF00')
+            # print('1111')
+            # print('#FFFF00')
         elif row[10] != None:
             borderColor = '#FF0000'
         else :
@@ -373,6 +372,7 @@ def ZLKanBanData():
         row = cursor.fetchone()
     cursor.close()
     return ReturnData
+
 
 
 

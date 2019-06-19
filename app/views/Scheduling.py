@@ -5,6 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
 from app.sql.ProductionScheduling import GETSchedulingSQL, GetSchedulingDtlSQL
+from app.sql.SchedulingZL_PMC import GetSchedulingSQL_ZL_PMC, GetSchedulingSQL_ZL_PMCHDR, SearchAllCard
+
+
 import re
 
 base = declarative_base()
@@ -12,6 +15,7 @@ base = declarative_base()
 session = sessionmaker(bind=engine_253)
 ses = session()
 
+# 预排数据
 def GetSchedulingData(args):
     sVarArgs = ''.join(args)
     sSQL = GETSchedulingSQL(sVarArgs)
@@ -21,22 +25,22 @@ def GetSchedulingData(args):
     returnData = []
     while row:
         dictVar = {
-            'sBorderColor' : row[0],
-            'sCardNo' : row[1],
-            'sMaterialNo' : row[2],
-            'sMaterialLot' : row[3],
-            'sColorNo' : row[4],
-            'nFactInPutQty' : row[5],
-            'sCustomerName' : row[6],
-            'sSalesGroupName' : row[7],
-            'nTemp' : row[8],
-            'nSpeed' : row[9],
-            'nTime' : row[10],
-            'sProductWidth' : row[11],
-            'sProductGMWT' : row[12],
-            'sColorBorder' : row[13],
-            'uppTrackJobGUID' : row[14],
-            'sWorkingProcedureName' : str(row[15]),
+            'sBorderColor': row[0],
+            'sCardNo': row[1],
+            'sMaterialNo': row[2],
+            'sMaterialLot': row[3],
+            'sColorNo': row[4],
+            'nFactInPutQty': row[5],
+            'sCustomerName': row[6],
+            'sSalesGroupName': row[7],
+            'nTemp': row[8],
+            'nSpeed': row[9],
+            'nTime': row[10],
+            'sProductWidth': row[11],
+            'sProductGMWT': row[12],
+            'sColorBorder': row[13],
+            'uppTrackJobGUID': row[14],
+            'sWorkingProcedureName': str(row[15]),
         }
         # print(dictVar)
         returnData.append(dictVar)
@@ -44,7 +48,7 @@ def GetSchedulingData(args):
     cursor.close()
     return returnData
 
-
+# 预排子表数据
 def GetSchedulingDtlData():
     sSQL = GetSchedulingDtlSQL()
     cursor = connect.cursor()
@@ -55,29 +59,29 @@ def GetSchedulingDtlData():
     nBigID = 0
     while row:
         dictVar = {
-            'ID' : row[0],
-            'nHDRID' : row[1],
-            'nRowNumber' : str(row[2]),
-            'sBorderColor' : str(row[3]),
-            'sCardNo' : str(row[4]),
-            'sMaterialNo' : str(row[5]),
-            'sMaterialLot' : str(row[6]),
-            'sColorNo' : str(row[7]),
-            'nFactInPutQty' : str(row[8]),
-            'sCustomerName' : str(row[9]),
-            'sSalesName' : str(row[10]),
-            'sSalesGroupName' : str(row[11]),
-            'nTemp' : str(row[12]),
-            'nSpeed' : str(row[13]),
-            'nTime' : str(row[14]),
-            'sProductWidth' : str(row[15]),
-            'sProductGMWT' : str(row[16]),
-            'sColorBorder' : str(row[17]),
-            'uppTrackJobGUID' : str(row[18]),
-            'sWorkingProcedureName' : str(row[19]),
+            'ID': row[0],
+            'nHDRID': row[1],
+            'nRowNumber': str(row[2]),
+            'sBorderColor': str(row[3]),
+            'sCardNo': str(row[4]),
+            'sMaterialNo': str(row[5]),
+            'sMaterialLot': str(row[6]),
+            'sColorNo': str(row[7]),
+            'nFactInPutQty': str(row[8]),
+            'sCustomerName': str(row[9]),
+            'sSalesName': str(row[10]),
+            'sSalesGroupName': str(row[11]),
+            'nTemp': str(row[12]),
+            'nSpeed': str(row[13]),
+            'nTime': str(row[14]),
+            'sProductWidth': str(row[15]),
+            'sProductGMWT': str(row[16]),
+            'sColorBorder': str(row[17]),
+            'uppTrackJobGUID': str(row[18]),
+            'sWorkingProcedureName': str(row[19]),
         }
         equipmentDict = {
-            'nHDRID' : row[1],
+            'nHDRID': row[1],
         }
         if equipmentDict not in equipmentList:
             equipmentList.append(equipmentDict)
@@ -87,34 +91,173 @@ def GetSchedulingDtlData():
         returnData.append(dictVar)
         row = cursor.fetchone()
     cursor.close()
-
-    for i in range(1,6):
+    for i in range(1, 6):
         Dict3 = {
-            'nHDRID' : i,
+            'nHDRID': i,
         }
         if Dict3 not in equipmentList:
             nBigID += 1
             Dict4 = {
-            'ID' : nBigID,
-            'nHDRID' : i,
-            'nRowNumber' : i,
-            'sBorderColor' : '#fff',
-            'sCardNo' : '空机台',
-            'sMaterialNo' : '',
-            'sMaterialLot' : '',
-            'sColorNo' : '',
-            'nFactInPutQty' : '',
-            'sCustomerName' : '',
-            'sSalesName' : '',
-            'sSalesGroupName' : '',
-            'nTemp' : '',
-            'nSpeed' : '',
-            'nTime' : '',
-            'sProductWidth' : '',
-            'sProductGMWT' : '',
-            'sColorBorder' : '',
-            'uppTrackJobGUID' : '',
-            'sWorkingProcedureName' : ''
+                'ID': nBigID,
+                'nHDRID': i,
+                'nRowNumber': i,
+                'sBorderColor': '#fff',
+                'sCardNo': '空机台',
+                'sMaterialNo': '',
+                'sMaterialLot': '',
+                'sColorNo': '',
+                'nFactInPutQty': '',
+                'sCustomerName': '',
+                'sSalesName': '',
+                'sSalesGroupName': '',
+                'nTemp': '',
+                'nSpeed': '',
+                'nTime': '',
+                'sProductWidth': '',
+                'sProductGMWT': '',
+                'sColorBorder': '',
+                'uppTrackJobGUID': '',
+                'sWorkingProcedureName': ''
             }
             returnData.append(Dict4)
     return returnData
+
+# 生管整理预排SQL
+def SchedulingDataZL_PMC(sWorkingProcedureName, sWorkingProcedureName2):
+    ReturnData = []
+    # print(sWorkingProcedureName)
+    sSQL = GetSchedulingSQL_ZL_PMC(sWorkingProcedureName, sWorkingProcedureName2)
+    # print(sSQL)
+    cursor = connect.cursor()
+    cursor.execute(sSQL)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'ID': row[0],
+            'sIsRush': row[1],
+            'sCardNo': row[2],
+            'sMaterialNo': row[3],
+            'sMaterialLot': row[4],
+            'sColorNo': row[5],
+            'nFactInputQty': row[6],
+            'sWorkingProcedureNameCurrent': row[7],
+            'tFactEndTimeLast': row[8],
+            'sNotDoneProcedure': row[9],
+            'nTJTime': row[10],
+            'nPSTime': row[11],
+            'nDyeingTime': row[12],
+            'nSETime': row[13],
+            'sCustomerName': row[14],
+            'sSalesName': row[15],
+            'sSalesGroupName': row[16],
+            'sColorBorder': row[17],
+            'nOverTime': row[18],
+            'uppTrackJobGUID': row[20],
+            'sLocation': row[21],
+            'sLabel': row[22],
+        }
+        ReturnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return ReturnData
+
+# 生管整理预排主表
+def SchedulingSQL_ZL_PMCHDR(sType):
+    ReturnData = []
+    sSQL = GetSchedulingSQL_ZL_PMCHDR(sType)
+    cursor = connect.cursor()
+    cursor.execute(sSQL)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'ID': row[0],
+            'sIsRush': row[1],
+            'sCardNo': row[2],
+            'sMaterialNo': row[3],
+            'sMaterialLot': row[4],
+            'sColorNo': row[5],
+            'nFactInputQty': row[6],
+            'sWorkingProcedureNameCurrent': row[7],
+            'tFactEndTimeLast': row[8],
+            'sNotDoneProcedure': row[9],
+            'nTJTime': row[10],
+            'nPSTime': row[11],
+            'nDyeingTime': row[12],
+            'nSETime': row[13],
+            'sCustomerName': row[14],
+            'sSalesName': row[15],
+            'sSalesGroupName': row[16],
+            'sColorBorder': row[17],
+            'nOverTime': row[18],
+            'uppTrackJobGUID': row[20],
+            'sLabel': row[21],
+            'sLocation': row[22],
+        }
+        ReturnData.append(dictVar)
+        row = cursor.fetchone()
+    # print(ReturnData)
+    if ReturnData == []:
+        dictVar = {
+            'ID': 1,
+            'sIsRush': '',
+            'sCardNo': '',
+            'sMaterialNo': '',
+            'sMaterialLot': '',
+            'sColorNo': '',
+            'nFactInputQty': '',
+            'sWorkingProcedureNameCurrent': '',
+            'tFactEndTimeLast': '',
+            'sNotDoneProcedure': '',
+            'nTJTime': '',
+            'nPSTime': '',
+            'nDyeingTime': '',
+            'nSETime': '',
+            'sCustomerName': '',
+            'sSalesName': '',
+            'sSalesGroupName': '',
+            'sColorBorder': '',
+            'nOverTime': '',
+            'uppTrackJobGUID': '',
+            'sLabel': '#FFF',
+            'sLocation': '',
+        }
+        ReturnData.append(dictVar)
+    cursor.close()
+    return ReturnData
+
+# Search其他卡号
+def SearchOtherCard(sCardNo, sWorkingProcedureName):
+    ReturnData = []
+    sSQL = SearchAllCard(sCardNo, sWorkingProcedureName)
+    cursor = connect.cursor()
+    cursor.execute(sSQL)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'ID': row[0],
+            'sIsRush': row[1],
+            'sCardNo': row[2],
+            'sMaterialNo': row[3],
+            'sMaterialLot': row[4],
+            'sColorNo': row[5],
+            'nFactInputQty': row[6],
+            'sWorkingProcedureNameCurrent': row[7],
+            'tFactEndTimeLast': row[8],
+            'sNotDoneProcedure': row[9],
+            'nTJTime': row[10],
+            'nPSTime': row[11],
+            'nDyeingTime': row[12],
+            'nSETime': row[13],
+            'sCustomerName': row[14],
+            'sSalesName': row[15],
+            'sSalesGroupName': row[16],
+            'sColorBorder': row[17],
+            'nOverTime': row[18],
+            'uppTrackJobGUID': row[20],
+            'sLocation': row[21],
+        }
+        ReturnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return ReturnData
+

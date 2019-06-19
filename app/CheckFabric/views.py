@@ -117,7 +117,7 @@ def AJAXSaveDataHDR():
     utmColorGUID = ''
     upsWorkFlowCardGUID = ''
 
-    datetime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    datetimeVar = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     for i in data:
         sUserName = str(i['sUserName'])
         sGroup = str(i['sGroup'])
@@ -129,8 +129,9 @@ def AJAXSaveDataHDR():
         utmColorGUID = i['utmColorGUID']
         upsWorkFlowCardGUID = i['upsWorkFlowCardGUID']
     iFlag = ISHaveuppTrackJobGUID("'"+uppTrackJobGUID+"'")
+    print(iFlag)
     if iFlag == []:
-        InspectHdr_var = InspectHdr(sGroupNo=sGroup, sCardNo=sCardNo, sEquipmentName=sEquipment, sCreator=sUserName, tCreateTime=datetime, sUpdateMan=sUserName, tUpdateTime=datetime,
+        InspectHdr_var = InspectHdr(sGroupNo=sGroup, sCardNo=sCardNo, sEquipmentName=sEquipment, sCreator=sUserName, tCreateTime=datetimeVar, sUpdateMan=sUserName, tUpdateTime=datetimeVar,
                                     uppTrackJobGUID=uppTrackJobGUID, usdOrderLotGUID=usdOrderLotGUID, ummMaterialGUID=ummMaterialGUID, utmColorGUID=utmColorGUID, upsWorkFlowCardGUID=upsWorkFlowCardGUID)
         ses.add(InspectHdr_var)
         ses.commit()
@@ -153,9 +154,10 @@ def AJAXSaveDataDTL():
     sRemark = ''
     sCardNo = ''
     uppTrackJobGUID = ''
+    tInspectTime =''
     for i in data:
         sFabricNo = str(i['sFabricNo']),
-        print(i['sFabricNo']),
+        # print(i['sFabricNo']),
         nLengthYard = float(i['nLength']),
         nWidth = float(i['nWidth']),
         sGrade = i['sGrade'],
@@ -168,6 +170,7 @@ def AJAXSaveDataDTL():
         sCardNo = i['sCardNo'],
         tInspectTime = i['tTime'],
         uppTrackJobGUID = str(i['uppTrackJobGUID'])
+    tInspectTime = tInspectTime[0]
     HdrID = ReturnHdrID(sCardNo)[0]['ID']
     sFabricNo = sFabricNo[0]
     iFlag = ISInsertDtl("'" + uppTrackJobGUID + "'", "'" + sFabricNo + "'")
@@ -295,7 +298,6 @@ def AJAXInput(VarValue):
                     readonly, '"' + str(sValue) + '"')
                 print(returnVar)
                 return returnVar
-
 
 
 @CheckFabric.route('/AJAX/TABLEDefect/<ipbCommonDataHalfInspectDtlID>')

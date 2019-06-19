@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>Document</title>
+<link rel="stylesheet" href="https://saeedalipoor.github.io/icono/icono.min.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<!-- 
+<script type="text/javascript" src="jquery-3.2.1.js"></script>
+ -->
+<style type="text/css">
+th {
+    background-color: rgba(3, 169, 244, 0.8);
+    font-weight: 300pt;
+    color: #fff;
+}
+ 
+th, td {
+    border: 1px solid #ccc;
+    text-align: center;
+}
+ 
+.icon {
+    display: inline-block;
+}
+ 
+.filter {
+    text-align: left;
+    padding: 5px 10px;
+    color: rgba(33, 150, 243, 0.8);
+    font-weight: 100pt; width : 100px;
+    display: none;
+    width: 100px;
+}
+ 
+.modal {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    outline: 0;
+    -webkit-overflow-scrolling: touch;
+    background-color: rgb(200, 240, 160);
+    filter: alpha(opacity = 60);
+    background-color: rgba(200, 240, 160, 0.45);
+    z-index: 9999;
+}
+</style>
+</head>
+<body>
+    <div class="lw-we-table"></div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    var datas = [];
+ 
+    //构造数据
+    var initDatas = function() {
+        for (var idx = 0; idx < 10; idx++) {
+            datas.push({
+                type : (idx % 3 == 0 ? "人类" : (idx % 3 == 1 ? "鸟类" : "鱼类")),
+                unit : (idx % 3 == 0 ? "个" : (idx % 3 == 1 ? "只" : "条")),
+                quantity : ((idx + 10) - 5) * 4 / 2
+            });
+        }
+    };
+     
+    //加载数据
+    var loadData = function(records){
+        var arr = [];
+        $(records).each(function(idx, item) {
+            arr.push("<tr>");
+            arr.push("<td>" + item.type + "</td>");
+            arr.push("<td>" + item.unit + "</td>");
+            arr.push("<td>" + item.quantity + "</td>");
+            arr.push("</tr>");
+        });
+        $(".lw-we-table").find("tbody").html(arr.join(" "));
+    };
+     
+    //设置查询条件
+    var setFilter = function() {
+        $(".filter").addClass("modal");
+    };
+     
+    //获取所有选中的条件
+    var getCheckedRecords = function(){
+        var chks = $(".filter").find("input[type='checkbox']:checked");
+        var arr = [];
+        $(chks).each(function(idx, item){
+            arr.push({
+                value:$(item).val(),
+                text: $(item).parent().text().trim()
+            });
+        });
+        return arr;
+    };
+ 
+    //加载表格
+    var loadUI = function() {
+        var arr = [];
+        arr.push("<table style='width:100%;border:1px solid #ccc;'>");
+        arr.push("<thead>");
+        arr.push("<th id='type'>种类<div class='icon' onclick='setFilter(this);'><i class='icono-hamburger'></i><div></th>");
+        arr.push("<th id='unit'>单位</th>");
+        arr.push("<th id='quantity'>数量</th>");
+        arr.push("</thead>");
+        arr.push("<tbody>");
+        arr.push("</tbody>");
+        arr.push("</table>");
+        $(".lw-we-table").html(arr.join(" "));
+         
+        //设置图标
+        $(".icon").mouseover(function() {
+            $(this).find("i").css("color", "#009688");
+        }).mouseleave(function() {
+            $(this).find("i").css("color", "#ddd");
+        });
+ 
+        //设置条件
+        var farr = [];
+        farr.push("<div class='filter'>");
+        farr.push("<span><input type='checkbox' value='人类' checked>人类</span><br />");
+        farr.push("<span><input type='checkbox' value='鸟类' checked>鸟类</span><br />");
+        farr.push("<span><input type='checkbox' value='鱼类' checked>鱼类</span><br />");
+        farr.push("</div>");
+        $(".icon").append(farr.join(""));
+        $(".filter").mouseleave(function() {
+            $(this).removeClass("modal");
+        });
+         
+        //添加事件
+        $(".filter").find(":checkbox").click(function(){
+            var filterDatas = [];
+            var filters = getCheckedRecords();
+            for(var idx = 0; idx < datas.length; idx ++){
+                var data = datas[idx];
+                for(var fi = 0; fi< filters.length; fi ++){
+                    var obj = filters[fi];
+                    if(data.type == obj.value){
+                        filterDatas.push(data);
+                        break;
+                    }
+                }
+            }
+            loadData(filterDatas); 
+        });
+    };
+     
+    $(function() {
+        //获取数据（可以从数据库或其他地方获取）
+        initDatas();
+ 
+        //加载界面UI
+        loadUI();
+         
+        //加载数据
+        loadData(datas);
+    });
+</script>

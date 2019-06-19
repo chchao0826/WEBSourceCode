@@ -340,7 +340,7 @@ def JSProAJAX(sWorkingProcedureName):
     return returnHTML
 
 
-@KanBan.route('/Scheduling/整理')
+@KanBan.route('/整理')
 def SchedulingZL():
     ZLData = ZLKanBanData()
     # print(ZLData)

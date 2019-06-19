@@ -34,6 +34,18 @@ class ProductionSchedulingDTL(base):
     def __str__(self):
         return self.id
 
+# 生管预排
+class ProductionScheduling(base):
+    __tablename__ = 'pbCommonDataProductionScheduling'
+    id = Column(Integer, primary_key = True, autoincrement = True)
+    sType = Column(String(40),nullable = True)
+    nRowNumber = Column(Integer,nullable = True)
+    uppTrackJobGUID = Column(String(40),nullable = True)
+    tUpdateTime = Column(DateTime,nullable = True)
+    sLabel = Column(String(40),nullable = True)
+    def __str__(self):
+        return self.id
+
 # 查到预排主表 获得机台号
 def GetEquipment(sType):
     # print(tInspectTime)
@@ -85,7 +97,6 @@ def GetDtlData():
             ReturnList.append(Dict4)
     return ReturnList
 
-
 # 按照卡号查询预排表
 def IsHaveCard(sCardNo):
     iFlag = False
@@ -108,6 +119,7 @@ def UpdateDtl(data):
     ses.commit()
     ses.close()
 
+# 插入数据
 def InsertDtl(data):
     nRowNumber = data['nRowNumber']
     sCardNo = data['sCardNo']
@@ -118,6 +130,84 @@ def InsertDtl(data):
     ses.add(InsertDtl)
     ses.commit()
     ses.close()
+
+# ---------------
+# 以下生管预排整理
+def IsHaveCard_PMC(uppTrackJobGUID):
+    iFlag = False
+    for i in ses.query(ProductionScheduling).filter(ProductionScheduling.uppTrackJobGUID == uppTrackJobGUID).all():
+        iFlag = True
+        # print(i)
+        # print('-----------------')
+    return iFlag
+
+# 更新Dtl数据
+def UpdateDtl_PMC(data):
+    nRowNumber = data['nRowNumber']
+    uppTrackJobGUID = data['uppTrackJobGUID']
+    tUpdateTime = data['tUpdateTime']
+    target = ses.query(ProductionScheduling).filter(ProductionScheduling.uppTrackJobGUID == uppTrackJobGUID).first()
+    target.nRowNumber = nRowNumber
+    target.tUpdateTime = tUpdateTime
+    ses.commit()
+    ses.close()
+
+# 插入数据
+def InsertDtl_PMC(data):
+    sType = data['sType']
+    nRowNumber = data['nRowNumber']
+    uppTrackJobGUID = data['uppTrackJobGUID']
+    tUpdateTime = data['tUpdateTime']
+    sLabel = data['sLabel']
+    InsertDtl = ProductionScheduling(sType=sType, nRowNumber=nRowNumber, uppTrackJobGUID = uppTrackJobGUID, tUpdateTime = tUpdateTime, sLabel = sLabel)
+    ses.add(InsertDtl)
+    ses.commit()
+    ses.close()
+
+# 更新标签
+def UpdateLabel_PMC_True(uppTrackJobGUID):
+    nMax = 0
+    for i in ses.query(ProductionScheduling).filter(ProductionScheduling.sLabel == '#FFA54F').all():
+        if nMax <= i.nRowNumber:
+            nMax = i.nRowNumber
+    
+    target = ses.query(ProductionScheduling).filter(ProductionScheduling.uppTrackJobGUID == uppTrackJobGUID).first()
+    nMax += 1
+    target.sLabel = '#FFA54F'
+    target.nRowNumber = nMax
+
+    for i in ses.query(ProductionScheduling).filter(ProductionScheduling.sLabel != '#FFA54F').all():
+        target = ses.query(ProductionScheduling).filter(ProductionScheduling.uppTrackJobGUID == i.uppTrackJobGUID).first()
+        target.nRowNumber = nMax
+        nMax += 1
+
+    ses.commit()
+    ses.close()
+
+# 更新标签
+def UpdateLabel_PMC_False(uppTrackJobGUID):
+    target = ses.query(ProductionScheduling).filter(ProductionScheduling.uppTrackJobGUID == uppTrackJobGUID).first()
+    target.sLabel = '#FFF'
+    ses.commit()
+    ses.close()
+
+# 取消预排
+def DeleteData(uppTrackJobGUID):
+    target = ses.query(ProductionScheduling).filter(ProductionScheduling.uppTrackJobGUID == uppTrackJobGUID).first()
+    ses.delete(target)
+    ses.commit()
+    ses.close()
+
+# 查找当前最大序号
+def getMaxNumber(sType):
+    MaxNumber = 0
+    for i in ses.query(ProductionScheduling).filter(ProductionScheduling.sType == sType).all():
+        if MaxNumber <= i.nRowNumber:
+            MaxNumber = i.nRowNumber
+    return MaxNumber
+
+
+
 
 
 if __name__ == '__main__':
