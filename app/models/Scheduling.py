@@ -98,9 +98,10 @@ def GetDtlData():
     return ReturnList
 
 # 按照卡号查询预排表
-def IsHaveCard(sCardNo):
+def IsHaveCard(uppTrackJobGUID):
     iFlag = False
-    for i in ses.query(ProductionSchedulingDTL).filter(ProductionSchedulingDTL.sCardNo == sCardNo).all():
+    print(uppTrackJobGUID)
+    for i in ses.query(ProductionSchedulingDTL).filter(ProductionSchedulingDTL.uppTrackJobGUID == uppTrackJobGUID).all():
         iFlag = True
         # print(i)
         # print('-----------------')
@@ -109,10 +110,10 @@ def IsHaveCard(sCardNo):
 # 更新Dtl数据
 def UpdateDtl(data):
     nRowNumber = data['nRowNumber']
-    sCardNo = data['sCardNo']
     nHDRID = data['nHDRID']
     tUpdateTime = data['tTime']
-    target = ses.query(ProductionSchedulingDTL).filter(ProductionSchedulingDTL.sCardNo == sCardNo).first()
+    uppTrackJobGUID = data['uppTrackJobGUID']
+    target = ses.query(ProductionSchedulingDTL).filter(ProductionSchedulingDTL.uppTrackJobGUID == uppTrackJobGUID).first()
     target.nRowNumber = nRowNumber
     target.nHDRID = nHDRID
     target.tUpdateTime = tUpdateTime
@@ -126,6 +127,7 @@ def InsertDtl(data):
     nHDRID = data['nHDRID']
     tCreateTime = data['tTime']
     uppTrackJobGUID = data['uppTrackJobGUID']
+    print('111')
     InsertDtl = ProductionSchedulingDTL(nRowNumber=nRowNumber, sCardNo=sCardNo, nHDRID=nHDRID, uppTrackJobGUID = uppTrackJobGUID, tCreateTime = tCreateTime, tUpdateTime = tCreateTime)
     ses.add(InsertDtl)
     ses.commit()

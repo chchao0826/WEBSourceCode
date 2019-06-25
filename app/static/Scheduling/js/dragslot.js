@@ -179,7 +179,7 @@
 			success: function (data) {},
 		});
 
-		$('#top-div').load('AJAX/page');
+		// $('#top-div').load('AJAX/page');
 		// console.log(LiList)
 	}
 

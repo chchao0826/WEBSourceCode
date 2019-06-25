@@ -17,8 +17,10 @@ ses = session()
 
 # 预排数据
 def GetSchedulingData(args):
+    # print(args)
     sVarArgs = ''.join(args)
     sSQL = GETSchedulingSQL(sVarArgs)
+    # print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
@@ -41,6 +43,7 @@ def GetSchedulingData(args):
             'sColorBorder': row[13],
             'uppTrackJobGUID': row[14],
             'sWorkingProcedureName': str(row[15]),
+            'sLocation': str(row[16]),
         }
         # print(dictVar)
         returnData.append(dictVar)
@@ -59,33 +62,33 @@ def GetSchedulingDtlData():
     nBigID = 0
     while row:
         dictVar = {
-            'ID': row[0],
-            'nHDRID': row[1],
-            'nRowNumber': str(row[2]),
-            'sBorderColor': str(row[3]),
-            'sCardNo': str(row[4]),
-            'sMaterialNo': str(row[5]),
-            'sMaterialLot': str(row[6]),
-            'sColorNo': str(row[7]),
-            'nFactInPutQty': str(row[8]),
-            'sCustomerName': str(row[9]),
-            'sSalesName': str(row[10]),
-            'sSalesGroupName': str(row[11]),
-            'nTemp': str(row[12]),
-            'nSpeed': str(row[13]),
-            'nTime': str(row[14]),
-            'sProductWidth': str(row[15]),
-            'sProductGMWT': str(row[16]),
-            'sColorBorder': str(row[17]),
-            'uppTrackJobGUID': str(row[18]),
-            'sWorkingProcedureName': str(row[19]),
+            'sBorderColor' : row[0],
+            'sCardNo' : row[1],
+            'sMaterialNo' : row[2],
+            'sMaterialLot' : row[3],
+            'sColorNo' : row[4],
+            'nFactInPutQty' : row[5],
+            'sCustomerName' : row[6],
+            'sSalesGroupName' : row[7],
+            'nTemp' : row[8],
+            'nSpeed' : row[9],
+            'nTime' : row[10],
+            'sProductWidth' : row[11],
+            'sProductGMWT' : row[12],
+            'sColorBorder' : row[13],
+            'uppTrackJobGUID' : row[14],
+            'sWorkingProcedureNameCurrent' : row[15],
+            'sLocation' : row[16],
+            'sEquipmentNo' : row[17],
+            'nHDRID' : row[18],
+            'nRowNumber' : row[19],
         }
         equipmentDict = {
-            'nHDRID': row[1],
+            'nHDRID': row[18],
         }
         if equipmentDict not in equipmentList:
             equipmentList.append(equipmentDict)
-        nBigID = row[0]
+        nBigID = row[19]
         # print(dictVar)
         # print(dictVar)
         returnData.append(dictVar)

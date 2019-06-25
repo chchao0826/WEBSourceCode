@@ -19,204 +19,187 @@
 </head>
 
 <body id="body" class="">
-    <div class="main_var">
-        <div class="outer_div">
-            <div class="htmleaf-container">
+    <div class="main_var" style="height: 100%;">
+        <div class="outer_div" style="height: 100%;">
+            <div class="htmleaf-container" style="height: 100%;">
                 <form action="" method="POST">
                     <section class="">
-                        <div id="dragslot" class="">
+                        <div id="dragslot" class="" style="height: 100%;">
                             <div class="top-div" id="top-div">
                                 {% for equipment in ReturnEquipment %}
                                 <div class="section_var">
                                     <ul id=" Ul_{{equipment.ID}} " class="" name="Ul_{{equipment.ID}}">
                                         <div class="">
-                                            <input class="title_var" type="text" readOnly="true"
-                                                name="{{equipment.sEquipmentNo}}" id="{{equipment.sEquipmentNo}}"
-                                                value={{equipment.sEquipmentNo}}>
+                                            <input class="title_var" type="text" readOnly="true" name="{{equipment.sEquipmentNo}}" id="{{equipment.sEquipmentNo}}" value={{equipment.sEquipmentNo}}>
                                         </div>
                                         <div class="float-left" style="width:100%">
                                             {% for sCardNo in ReturnDtlData %}
                                             {% if sCardNo.nHDRID == equipment.ID %}
-                                            <li class="slot-item"
-                                                style="border-left:15px solid {{sCardNo.sBorderColor}}; border-right:15px solid {{sCardNo.sColorBorder}};">
+                                            <li class="slot-item" style="border-left:15px solid {{sCardNo.sBorderColor}}; border-right:15px solid {{sCardNo.sColorBorder}};">
                                                 <div class="clearfix">
                                                     <div class="hover" style="width:100%;">
                                                         <tr class="tr_var">
                                                             <td class="">
-                                                                <input class="input_var" type="text" readOnly="true"
-                                                                    name="{{sCardNo.sCardNo}}" id="{{sCardNo.sCardNo}}"
-                                                                    value="{{sCardNo.sCardNo}}">
-                                                                <input type="text" hidden
-                                                                    value="{{sCardNo.uppTrackJobGUID}}"
-                                                                    id="{{sCardNo.uppTrackJobGUID}}"
-                                                                    id="{{sCardNo.uppTrackJobGUID}}">
+                                                                <input class="input_var" type="text" readOnly="true" name="{{sCardNo.sCardNo}}" id="{{sCardNo.sCardNo}}" value="{{sCardNo.sCardNo}}">
+                                                                <input type="text" hidden value="{{sCardNo.uppTrackJobGUID}}" id="{{sCardNo.uppTrackJobGUID}}" id="{{sCardNo.uppTrackJobGUID}}">
                                                                 <div style="z-index:10" class="ex">
-                                                        <tr>
-                                                            <td>{{sCardNo.sCardNo}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sMaterialNo}}
-                                                                LOT:{{sCardNo.sMaterialLot}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sColorNo}}</td><br>
-                                                            <td class="td_var">投胚:{{sCardNo.nFactInPutQty}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sCustomerName}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sSalesGroupName}}</td><br>
-                                                            <td class="td_var">温度:{{sCardNo.nTemp}}</td><br>
-                                                            <td class="td_var">速度:{{sCardNo.nSpeed}}</td><br>
-                                                            <td class="td_var">耗时:{{sCardNo.nTime}}</td><br>
-                                                            <td class="td_var">幅宽:{{sCardNo.sProductWidth}}</td><br>
-                                                            <td class="td_var">克重:{{sCardNo.sProductGMWT}}</td><br>
-                                                            <td class="td_var">{{sCardNo.sWorkingProcedureName}}</td>
-                                                            <br>
+                                                                    <tr>
+                                                                        <td>{{sCardNo.sCardNo}}</td><br>
+                                                                        <td class="td_var">{{sCardNo.sMaterialNo}}
+                                                                            LOT:{{sCardNo.sMaterialLot}}</td><br>
+                                                                        <td class="td_var">{{sCardNo.sColorNo}}</td><br>
+                                                                        <td class="td_var">投胚:{{sCardNo.nFactInPutQty}}</td><br>
+                                                                        <td class="td_var">{{sCardNo.sCustomerName}}</td><br>
+                                                                        <td class="td_var">{{sCardNo.sSalesGroupName}}</td><br>
+                                                                        <td class="td_var">温度:{{sCardNo.nTemp}}</td><br>
+                                                                        <td class="td_var">速度:{{sCardNo.nSpeed}}</td><br>
+                                                                        <td class="td_var">耗时:{{sCardNo.nTime}}</td><br>
+                                                                        <td class="td_var">幅宽:{{sCardNo.sProductWidth}}</td><br>
+                                                                        <td class="td_var">克重:{{sCardNo.sProductGMWT}}</td><br>
+                                                                        <td class="td_var">{{sCardNo.sWorkingProcedureName}}</td>
+                                                                        <br>
+                                                                    </tr>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     </div>
-                                                    </td>
-                                                    </tr>
                                                 </div>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
                                         </div>
-                                        </li>
-                                        {% endif %}
+                                    </ul>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="bottom-div">
+                                <div class="section_var2 float-left" style="overflow-y:scroll;">
+                                    <ul id="" class="">
+                                        <div class="">
+                                            <input class="title_var2" type="text" readOnly="true" name="" id=""
+                                                value='网布克重低于130g'>
+                                        </div>
+                                        {% for i in ReturnData_NET %}
+                                        <div class="float-left" style="width: 50%;">
+                                            <li class="slot-item"
+                                                style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}}; ">
+                                                <div class="clearfix">
+                                                    <div class="hover" style="width:100%;">
+                                                        <tr class="tr_var">
+                                                            <td class="">
+                                                                <input class="input_var" type="text" readOnly="true" name="{{i.sCardNo}}" id="{{i.sCardNo}}" value="{{i.sCardNo}}">
+                                                                <input type="text" hidden value="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}">
+                                                                <div style="z-index:10" class="ex2">
+                                                                    <tr>
+                                                                        <td>{{i.sCardNo}}</td><br>
+                                                                        <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td>
+                                                                        <br>
+                                                                        <td class="td_var">{{i.sColorNo}}</td><br>
+                                                                        <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
+                                                                        <td class="td_var">{{i.sCustomerName}}</td><br>
+                                                                        <td class="td_var">{{i.sSalesGroupName}}</td><br>
+                                                                        <td class="td_var">温度:{{i.nTemp}}</td><br>
+                                                                        <td class="td_var">速度:{{i.nSpeed}}</td><br>
+                                                                        <td class="td_var">耗时:{{i.nTime}}</td><br>
+                                                                        <td class="td_var">幅宽:{{i.sProductWidth}}</td><br>
+                                                                        <td class="td_var">克重:{{i.sProductGMWT}}</td><br>
+                                                                        <td class="td_var">{{i.sWorkingProcedureName}}</td><br>
+                                                                    </tr>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
                                         {% endfor %}
+                                    </ul>
                                 </div>
-                                </ul>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <div class="bottom-div">
-                            <div class="section_var2 float-left">
-                                <ul id="" class="">
-                                    <div class="">
-                                        <input class="title_var2" type="text" readOnly="true" name="" id=""
-                                            value='网布克重低于130g'>
-                                    </div>
-                                    {% for i in ReturnData_NET %}
-                                    <div class="float-left">
-                                        <li class="slot-item"
-                                            style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}}; width: 280px;">
-                                            <div class="clearfix">
-                                                <div class="hover" style="width:100%;">
-                                                    <tr class="tr_var">
-                                                        <td class="">
-                                                            <input class="input_var" type="text" readOnly="true"
-                                                                name="{{i.sCardNo}}" id="{{i.sCardNo}}"
-                                                                value="{{i.sCardNo}}">
-                                                            <input type="text" hidden value="{{i.uppTrackJobGUID}}"
-                                                                id="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}">
-                                                            <div style="z-index:10" class="ex2">
-                                                    <tr>
-                                                        <td>{{i.sCardNo}}</td><br>
-                                                        <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td>
-                                                        <br>
-                                                        <td class="td_var">{{i.sColorNo}}</td><br>
-                                                        <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
-                                                        <td class="td_var">{{i.sCustomerName}}</td><br>
-                                                        <td class="td_var">{{i.sSalesGroupName}}</td><br>
-                                                        <td class="td_var">温度:{{i.nTemp}}</td><br>
-                                                        <td class="td_var">速度:{{i.nSpeed}}</td><br>
-                                                        <td class="td_var">耗时:{{i.nTime}}</td><br>
-                                                        <td class="td_var">幅宽:{{i.sProductWidth}}</td><br>
-                                                        <td class="td_var">克重:{{i.sProductGMWT}}</td><br>
-                                                        <td class="td_var">{{i.sWorkingProcedureName}}</td><br>
-                                                    </tr>
-                                                </div>
-                                                </td>
-                                                </tr>
-                                            </div>
-                                    </div>
-                                    </li>
-                            </div>
-                            {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="section_var2 float-left">
-                            <ul id="" class="">
-                                <div class="">
-                                    <input class="title_var2" type="text" readOnly="true" name="" id="" value='平布黑白'>
-                                </div>
-                                {% for i in ReturnData_BW %}
-                                <div class="float-left card-padding">
-                                    <li class="slot-item"
-                                        style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}};">
-                                        <div class="clearfix">
-                                            <div class="hover" style="width:100%;">
-                                                <tr class="tr_var">
-                                                    <td class="">
-                                                        <input class="input_var" type="text" readOnly="true"
-                                                            name="{{i.sCardNo}}" id="{{i.sCardNo}}"
-                                                            value="{{i.sCardNo}}">
-                                                        <input type="text" hidden value="{{i.uppTrackJobGUID}}"
-                                                            id="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}">
-                                                        <div style="z-index:10" class="ex2">
-                                                <tr>
-                                                    <td>{{i.sCardNo}}</td><br>
-                                                    <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
-                                                    <td class="td_var">{{i.sColorNo}}</td><br>
-                                                    <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
-                                                    <td class="td_var">{{i.sCustomerName}}</td><br>
-                                                    <td class="td_var">{{i.sSalesGroupName}}</td><br>
-                                                    <td class="td_var">温度:{{i.nTemp}}</td><br>
-                                                    <td class="td_var">速度:{{i.nSpeed}}</td><br>
-                                                    <td class="td_var">时间:{{i.nTime}}</td><br>
-                                                    <td class="td_var">幅宽:{{i.sProductWidth}}</td><br>
-                                                    <td class="td_var">克重:{{i.sProductGMWT}}</td><br>
-                                                    <td class="td_var">{{i.sWorkingProcedureName}}</td><br>
-                                                </tr>
-                                            </div>
-                                            </td>
-                                            </tr>
+                                <div class="section_var2 float-left" style="overflow-y:scroll;">
+                                    <ul id="" class="">
+                                        <div class="">
+                                            <input class="title_var2" type="text" readOnly="true" name="" id="" value='平布黑白'>
                                         </div>
+                                        {% for i in ReturnData_BW %}
+                                        <div class="float-left card-padding" style="width: 50%;">
+                                            <li class="slot-item"
+                                                style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}};">
+                                                <div class="clearfix">
+                                                    <div class="hover" style="width:100%;">
+                                                        <tr class="tr_var">
+                                                            <td class="">
+                                                                <input class="input_var" type="text" readOnly="true" name="{{i.sCardNo}}" id="{{i.sCardNo}}" value="{{i.sCardNo}}">
+                                                                <input type="text" hidden value="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}">
+                                                                <div style="z-index:10" class="ex2">
+                                                                    <tr>
+                                                                        <td>{{i.sCardNo}}</td><br>
+                                                                        <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
+                                                                        <td class="td_var">{{i.sColorNo}}</td><br>
+                                                                        <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
+                                                                        <td class="td_var">{{i.sCustomerName}}</td><br>
+                                                                        <td class="td_var">{{i.sSalesGroupName}}</td><br>
+                                                                        <td class="td_var">温度:{{i.nTemp}}</td><br>
+                                                                        <td class="td_var">速度:{{i.nSpeed}}</td><br>
+                                                                        <td class="td_var">时间:{{i.nTime}}</td><br>
+                                                                        <td class="td_var">幅宽:{{i.sProductWidth}}</td><br>
+                                                                        <td class="td_var">克重:{{i.sProductGMWT}}</td><br>
+                                                                        <td class="td_var">{{i.sWorkingProcedureName}}</td><br>
+                                                                    </tr>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
-                                </li>
-                        </div>
-                        {% endfor %}
-                        </ul>
-            </div>
-            <div class="section_var2 float-left">
-                <ul id="" class="">
-                    <div class="">
-                        <input class="title_var2" type="text" readOnly="true" name="" id="" value='平布其他'>
-                    </div>
-                    {% for i in ReturnData_Other %}
-                    <div class="float-left">
-                        <li class="slot-item"
-                            style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}}; width: 280px;">
-                            <div class="clearfix">
-                                <div class="hover" style="width:100%;">
-                                    <tr class="tr_var">
-                                        <td class="">
-                                            <input class="input_var" type="text" readOnly="true" name="{{i.sCardNo}}"
-                                                id="{{i.sCardNo}}" value="{{i.sCardNo}}">
-                                            <input type="text" hidden name="{{i.uppTrackJobGUID}}"
-                                                id="{{i.uppTrackJobGUID}}" value="{{i.uppTrackJobGUID}}">
-                                            <div style="z-index:10" class="ex2">
-                                    <tr>
-                                        <td>{{i.sCardNo}}</td><br>
-                                        <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
-                                        <td class="td_var">{{i.sColorNo}}</td><br>
-                                        <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
-                                        <td class="td_var">{{i.sCustomerName}}</td><br>
-                                        <td class="td_var">{{i.sSalesGroupName}}</td><br>
-                                        <td class="td_var">温度:{{i.nTemp}}</td><br>
-                                        <td class="td_var">速度:{{i.nSpeed}}</td><br>
-                                        <td class="td_var">耗时:{{i.nTime}}</td><br>
-                                        <td class="td_var">幅宽:{{i.sProductWidth}}</td><br>
-                                        <td class="td_var">克重:{{i.sProductGMWT}}</td><br>
-                                        <td class="td_var">{{i.sWorkingProcedureName}}</td><br>
-                                    </tr>
+                                <div class="section_var2 float-left" style="overflow-y:scroll;">
+                                    <ul id="" class="">
+                                        <div class="">
+                                            <input class="title_var2" type="text" readOnly="true" name="" id="" value='平布其他'>
+                                        </div>
+                                        {% for i in ReturnData_Other %}
+                                        <div class="float-left" style="width: 50%;">
+                                            <li class="slot-item" style="border-left:15px solid {{i.sBorderColor}}; border-right:15px solid {{i.sColorBorder}};">
+                                                <div class="clearfix">
+                                                    <div class="hover" style="width:100%;">
+                                                        <tr class="tr_var">
+                                                            <td class="">
+                                                                <input class="input_var" type= "text" readOnly="true" name="{{i.sCardNo}}" id="{{i.sCardNo}}" value="{{i.sCardNo}}">
+                                                                <input type="text" hidden name="{{i.uppTrackJobGUID}}" id="{{i.uppTrackJobGUID}}" value="{{i.uppTrackJobGUID}}">
+                                                                <div style="z-index:10" class="ex2">
+                                                                    <tr>
+                                                                        <td>{{i.sCardNo}}</td><br>
+                                                                        <td class="td_var">{{i.sMaterialNo}} LOT:{{i.sMaterialLot}}</td><br>
+                                                                        <td class="td_var">{{i.sColorNo}}</td><br>
+                                                                        <td class="td_var">投胚:{{i.nFactInPutQty}}</td><br>
+                                                                        <td class="td_var">{{i.sCustomerName}}</td><br>
+                                                                        <td class="td_var">{{i.sSalesGroupName}}</td><br>
+                                                                        <td class="td_var">温度:{{i.nTemp}}</td><br>
+                                                                        <td class="td_var">速度:{{i.nSpeed}}</td><br>
+                                                                        <td class="td_var">耗时:{{i.nTime}}</td><br>
+                                                                        <td class="td_var">幅宽:{{i.sProductWidth}}</td><br>
+                                                                        <td class="td_var">克重:{{i.sProductGMWT}}</td><br>
+                                                                        <td class="td_var">{{i.sWorkingProcedureName}}</td><br>
+                                                                    </tr>
+                                                                </div>
+                                                            </td>
+                                                        </tr>   
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
-                                </td>
-                                </tr>
                             </div>
-                    </div>
-                    </li>
+                        </div>
+                    </section>
+                </form>
             </div>
-            {% endfor %}
-            </ul>
         </div>
-    </div>
-    </div>
-    </section>
-    </form>
-    </div>
-    </div>
     </div>
 
     <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
@@ -252,7 +235,7 @@
 
 
             content.style.width = nWidth + 'px';
-            content.style.height = nHeight - 5 + 'px';
+            content.style.height = nHeight - 50 + 'px';
         }
 
         // 页面初始

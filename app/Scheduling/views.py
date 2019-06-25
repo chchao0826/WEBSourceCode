@@ -34,10 +34,15 @@ def AJAXEquipment(sEquipmentNo):
             'tTime': datetimeVar,
             'uppTrackJobGUID': uppTrackJobGUID,
         }
-        if IsHaveCard(sCardNo):
+        print('-----------------------')
+        print(VarData)
+        print(IsHaveCard(uppTrackJobGUID))
+        if IsHaveCard(uppTrackJobGUID):
+            print('UPDATE')
             UpdateDtl(VarData)
             # print('----------------')
         else:
+            print('INSERT')
             InsertDtl(VarData)
             # print('++++++++++++++++')
 
@@ -57,7 +62,7 @@ def AJAXPage():
                 <input class="title_var" type="text" readOnly="true" \
                     name="%s" id="%s" value=%s> \
             </div> \
-            <div class="float-left">' % (i['ID'], i['ID'], i['sEquipmentNo'], i['sEquipmentNo'], i['sEquipmentNo'])
+            <div class="float-left" style="width: 100%%;>' % (i['ID'], i['ID'], i['sEquipmentNo'], i['sEquipmentNo'], i['sEquipmentNo'])
 
         for a in DtlData:
             if a['nHDRID'] == i['ID']:
