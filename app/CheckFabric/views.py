@@ -5,7 +5,6 @@ from app.views.CheckFabric import GetDetail, GETFabricIn, GetEquipment, GetDefec
 from app.models.CheckFabric import ses, InspectHdr, InspectDtl, ReturnHdrID, ReturnDtlID, InspectDefect
 import json
 import time
-import eel
 
 
 @CheckFabric.route('/')

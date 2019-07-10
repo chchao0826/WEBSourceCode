@@ -1,0 +1,51 @@
+.div_css{
+    width: 120px;
+    border: 1px solid #111;
+}
+.div_title{
+    height: 5%;
+}
+.div_top{
+    height: 45%;
+    width: 100%;
+}
+.Height100{
+    height: 100%;
+}
+.div_bottom{
+    height: 50%;
+    width: 100%;
+}
+.padding5{
+    padding: 5px;
+}
+ul li{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.div_bottom_left{
+    width: 10%;
+    height: 100%;
+}
+.div_bottom_left_group{
+    width: 50%;
+    height: 100%;
+    border-right: 2px solid #ccc;
+}
+.div_bottom_left_machine{
+    width: 50%;
+    height: 100%;
+    border-right: 2px solid #ccc;
+}
+.float_left{
+    float: left;
+}
+.float_right{
+    float: right;
+}
+.div_bottom_right{
+    height: 100%;
+    width: 80%;
+}
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+
+    <style>
+        #a {
+            display: block;
+            width: 200px;
+            height: 20px;
+            margin: auto;
+        }
+
+        #d {
+            width: 500px;
+            height: 500px;
+            margin: auto;
+            display: block;
+            border: 1px red solid;
+        }
+    </style>
+
+    <script>
+
+    </script>
+
+</head>
+
+<body>
+
+    <a id="a" href="http://www.baidu.com" draggable="true">百度一下,你就知道</a>
+
+    <a id="aa" href="http://www.4399.com" draggable="true">4399</a>
+
+    <div id="d"></div>
+
+</body>
+
+</html>
+<script>
+    // 开始
+    document.addEventListener("dragstart", function (e) {
+        e.dataTransfer.setData("key", e.target.id);
+    }, false);
+
+    // 移动
+    document.addEventListener("dragover", function (e) {
+        e.preventDefault();
+    }, false);
+
+    // 处理
+    document.addEventListener("drop", function (e) {
+        var id = e.dataTransfer.getData("key");
+        e.target.appendChild(document.getElementById(id));
+    }, false);
+
+    // 结束
+    document.addEventListener("dragend", function (e) {}, false);
+</script>
