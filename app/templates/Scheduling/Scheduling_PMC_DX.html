@@ -9,8 +9,9 @@
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/dragslot.css')}} ">
-    <!-- <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/bootstrap_var.css')}} "> -->
     <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/Scheduling_PMC.css')}} ">
+
+
     <style type="text/css">
         .currentli {
             color: #186ecc;
@@ -64,27 +65,29 @@
                 <div style="height: 50px; text-align: center;">
                     <table class="table" style="position: fixed;">
                         <tr style="background-color:#EEE0E5;">
-                            <td style="width: 8%; line-height: 25px;" class="border-left">卡号</td>
+                            <td style="width: 4%; line-height: 25px;" class="border-left">超时</td>
+                            <td style="width: 10%; line-height: 25px;" class="border-left">客户名称</td>
+                            <td style="width: 5%; line-height: 25px;" class="border-left">布车号</td>
                             <td style="width: 8%; line-height: 25px;" class="border-left">物料编号</td>
                             <td style="width: 3%; line-height: 25px;" class="border-left">LOT</td>
-                            <td style="width: 10%; line-height: 25px;" class="border-left">色号</td>
-                            <td style="width: 5%; line-height: 25px;" class="border-left">实际投胚</td>
-                            <td style="width: 6%; line-height: 25px;" class="border-left">当前工段</td>
-                            <td style="width: 10%; line-height: 25px;" class="border-left">上工段完成时间</td>
-                            <!-- <td style="width: 5%; line-height: 25px;" class="border-left">退卷耗时</td> -->
-                            <td style="width: 5%; line-height: 25px;" class="border-left">预定耗时</td>
-                            <td style="width: 15%; line-height: 25px;" class="border-left">客户名称</td>
-                            <td style="width: 6%; line-height: 25px;" class="border-left">业务员</td>
+                            <td style="width: 8%; line-height: 25px;" class="border-left">卡号</td>
+                            <td style="width: 9%; line-height: 25px;" class="border-left">色号</td>
+                            <td style="width: 5%; line-height: 25px;" class="border-left">投胚</td>
+                            <td style="width: 5%; line-height: 25px;" class="border-left">上工段</td>
+                            <td style="width: 5%; line-height: 25px;" class="border-left">现工段</td>
+                            <td style="width: 5%; line-height: 25px;" class="border-left">下工段</td>
+                            <td style="width: 8%; line-height: 25px;" class="border-left">上完成时间</td>
+                            <td style="width: 5%; line-height: 25px;" class="border-left">耗时</td>
                             <td style="width: 8%; line-height: 25px;" class="border-left">营业课别</td>
-                            <td style="width: 6%; line-height: 25px;" class="border-left">布车号</td>
-                            <td style="width: 2%; line-height: 25px;" class="border-left"></td>
+                            <td style="width: 10%; line-height: 25px;" class="border-left">工卡备注</td>
+                            <td style="width: 8%; line-height: 25px;" class="border-left"></td>
                         </tr>
                     </table>
                 </div>
                 <form action="" method="POST">
                     <section class="">
                         <div id="dragslot" class="">
-                            <div class="top-div" id="top-div" style="overflow-y:scroll;">
+                            <div class="top-div" id="top-div" style="overflow-y:scroll; overflow-x:scroll;">
                                 <ul id="" class="" style="margin: 0;padding: 0;">
                                     {% for i in SchedulingZL_PMCDataHDR %}
                                     <li class="slot-item height40 marginLeft40"
@@ -92,35 +95,37 @@
                                         <div class="clearfix height40">
                                             <div class="hover_PMC" style="width:100%;">
                                                 <table class="table">
-                                                    <tr>
-                                                        <td style="width: 8%; line-height: 25px;">{{i.sCardNo}}</td>
+                                                    <tr style="text-align: center;">
+                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
+                                                            {{i.nOverTime}}</td>
+                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                            {{i.sCustomerName}}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.sLocation}}</td>
                                                         <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.sMaterialNo}}</td>
                                                         <td style="width: 3%; line-height: 25px;" class="border-left">
                                                             {{i.sMaterialLot}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
+                                                            {{i.sCardNo}}</td>
+                                                        <td style="width: 9%; line-height: 25px;" class="border-left">
                                                             {{i.sColorNo}}</td>
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.nFactInputQty}}</td>
-                                                        <td style="width: 6%; line-height: 25px;" class="border-left">
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.sWorkingProcedureNameLast}}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.sWorkingProcedureNameCurrent}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.sWorkingProcedureNameNext}}</td>
+                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.tFactEndTimeLast }}</td>
-                                                        <!-- <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.nTJTime}}</td> -->
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.nPSTime}}</td>
-                                                        <td style="width: 15%; line-height: 25px;" class="border-left">
-                                                            {{i.sCustomerName}}</td>
-                                                        <td style="width: 6%; line-height: 25px;" class="border-left">
-                                                            {{i.sSalesName}}</td>
                                                         <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.sSalesGroupName}}</td>
-                                                        <td style="width: 6%; line-height: 25px;" class="border-left">
-                                                            {{i.sLocation}}</td>
-                                                        <td style="width: 1%; line-height: 25px;" class="border-left">
-                                                        </td>
-                                                        <td hidden>{{i.nOverTime}}</td>
+                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                            {{i.sRemark}}</td>
                                                         <td hidden>{{i.uppTrackJobGUID}}</td>
                                                     </tr>
                                                 </table>
@@ -136,40 +141,45 @@
                                 <ul id="" class="" style="margin: 0;padding: 0;">
                                     <!-- <div style="margin-top: 30px;" style="position: fixed;"> -->
                                     {% for i in SchedulingZL_PMCData %}
-                                    <li class="slot-item height40 marginLeft40" style="padding: 0; background-color: {{i.sIsRush}}">
+                                    <li class="slot-item height40 marginLeft40"
+                                        style="padding: 0; background-color: {{i.sIsRush}}">
                                         <div class="clearfix height40">
                                             <div class="hover_PMC" style="width:100%;">
                                                 <table class="table">
-                                                    <tr>
-                                                        <td style="width: 8%; line-height: 25px;">{{i.sCardNo}}
+                                                    <tr style="text-align: center;">
+                                                        <!--  -->
+                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
+                                                            {{i.nOverTime}}
                                                         </td>
+                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                            {{i.sCustomerName}}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.sLocation}}</td>
                                                         <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.sMaterialNo}}</td>
                                                         <td style="width: 3%; line-height: 25px;" class="border-left">
                                                             {{i.sMaterialLot}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
+                                                            {{i.sCardNo}}
+                                                        </td>
+                                                        <td style="width: 9%; line-height: 25px;" class="border-left">
                                                             {{i.sColorNo}}</td>
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.nFactInputQty}}</td>
-                                                        <td style="width: 6%; line-height: 25px;" class="border-left">
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.sWorkingProcedureNameLast}}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.sWorkingProcedureNameCurrent}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.sWorkingProcedureNameNext}}</td>
+                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.tFactEndTimeLast }}</td>
-                                                        <!-- <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.nTJTime}}</td> -->
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.nPSTime}}</td>
-                                                        <td style="width: 15%; line-height: 25px;" class="border-left">
-                                                            {{i.sCustomerName}}</td>
-                                                        <td style="width: 6%; line-height: 25px;" class="border-left">
-                                                            {{i.sSalesName}}</td>
                                                         <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.sSalesGroupName}}</td>
-                                                        <td style="width: 6%; line-height: 25px;" class="border-left">
-                                                            {{i.sLocation}}</td>
-                                                        <td style="width: 1%; line-height: 25px;" class="border-left">
-                                                        </td>
-                                                        <td hidden>{{i.nOverTime}}</td>
+                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
+                                                            {{i.sRemark}}</td>
                                                         <td hidden>{{i.uppTrackJobGUID}}</td>
                                                     </tr>
                                                 </table>
@@ -177,9 +187,7 @@
                                         </div>
                                     </li>
                                     {% endfor %}
-                                    <!-- </div> -->
                                 </ul>
-                                <!-- </div> -->
                             </div>
                         </div>
                     </section>
@@ -250,7 +258,6 @@
         // 页面初始
         window.onload = function () {
             getScreen();
-            // fullScreen();
         }
 
         // 修改屏幕尺寸后进行div的更新
@@ -305,13 +312,13 @@
                 if (iFlag == 1) {
                     var ReturnList = [];
                     var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[
-                        14].innerHTML;
+                        15].innerHTML;
                     // UpdateLabel_PMC(CheckLabel);
                     VarDict = {
                         'uppTrackJobGUID': CheckLabel,
                     }
                     ReturnList.push(VarDict);
-
+                    console.log(VarDict)
                     $.ajax({
                         type: 'POST',
                         url: 'ZL/AJAX/Label/True',
@@ -340,7 +347,7 @@
                 if (iFlag == 1) {
                     var ReturnList = [];
                     var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[
-                        14].innerHTML;
+                        15].innerHTML;
                     // UpdateLabel_PMC(CheckLabel);
                     VarDict = {
                         'uppTrackJobGUID': CheckLabel,
@@ -377,7 +384,7 @@
                 if (iFlag == 1) {
                     var ReturnList = [];
                     var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[
-                        14].innerHTML;
+                        15].innerHTML;
                     // UpdateLabel_PMC(CheckLabel);
                     VarDict = {
                         'uppTrackJobGUID': CheckLabel,
@@ -403,6 +410,8 @@
         var CheckScheduling = function () {
             var bottomli = $$('bottom-div').children[0].children;
             var Working = GetCurrentWork();
+            console.log('8888888888888' * 20)
+            console.log(Working)
             console.log(bottomli)
             var returnList = [];
             for (var i = 0; i < bottomli.length; i++) {
@@ -413,7 +422,7 @@
                 for (var a = 0; a <= liClassList.length; a++) {
                     if (liClassList[a] == 'currentli') {
                         var uppTrackJobGUID = bottomli[i].children[0].children[0].children[0].children[0].children[
-                            0].children[14].innerHTML;
+                            0].children[15].innerHTML;
                         var varDict = {
                             'sType': Working,
                             'uppTrackJobGUID': uppTrackJobGUID
@@ -427,7 +436,7 @@
             console.log(returnList);
             $.ajax({
                 type: 'POST',
-                url: 'ZL/AJAX/DataUpdate/ + Working',
+                url: 'ZL/AJAX/DataUpdate/' + Working,
                 data: JSON.stringify(returnList),
                 contentType: 'application/json; charset=UTF-8',
                 dataType: 'json',
@@ -493,8 +502,8 @@
     <script>
         var btnRemark = function () {
             var url = "http://198.168.6.56:5000/Scheduling/PMC/ZL/Remark";
-            window.open(url, '说明','height=400, width=320, top=270%, left=600%')
-        
+            window.open(url, '说明', 'height=400, width=320, top=270%, left=600%')
+
         }
     </script>
 

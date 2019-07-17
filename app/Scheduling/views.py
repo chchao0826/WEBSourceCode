@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 from . import Scheduling
 from flask import render_template, Flask, request, jsonify
-from app.views.Scheduling import GetSchedulingData, GetSchedulingDtlData, SchedulingDataZL_PMC, SchedulingSQL_ZL_PMCHDR, SearchOtherCard
+from app.views.Scheduling import GetSchedulingData, GetSchedulingDtlData, SchedulingDataZL_PMC, SchedulingSQL_ZL_PMCHDR, SearchOtherCard, Color, SearChEquipment
 from app.models.Scheduling import GetEquipment, GetDtlData, GetDtlData, IsHaveCard, UpdateDtl, InsertDtl, IsHaveCard_PMC, InsertDtl_PMC, UpdateDtl_PMC, UpdateLabel_PMC_True, UpdateLabel_PMC_False, DeleteData, getMaxNumber
 import time
 
@@ -131,6 +131,7 @@ def PMCIndex(sWorkingProcedureName):
 def PMCAjaxZL():
     # print('+++++++++++++++++++++++++++++++++')
     data = request.get_json()
+    print(data)
     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     for i in data:
         uppTrackJobGUID = str(i['uppTrackJobGUID'])
@@ -182,7 +183,6 @@ def PMCAjaxDeleteData():
 @Scheduling.route('/PMC/ZL/AJAX/DataUpdate/<sWorkingProcedureName>', methods=['GET', 'POST'])
 def PMCAjaxDataUpdate(sWorkingProcedureName):
     data = request.get_json()
-    print(data)
     nRowNumber = getMaxNumber(sWorkingProcedureName)
     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     for i in data:
@@ -222,26 +222,27 @@ def PMCAjaxUpdatePage(sWorkingProcedureName):
                                 <div class="hover_PMC" style="width:100%%;"> \
                                     <table class="table"> \
                                         <tr> \
-                                            <td style="width: 8%%; line-height: 25px;">%s</td> \
-                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 3%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 6%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 15%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 6%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 4%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 1%%; line-height: 25px;" class="border-left"></td> \
-                                            <td hidden>%s</td> \
+                                            <td style="width: 4%%; line-height: 25px;" class="border-left">%s</td> <!-- 超时 --> \
+                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 客户名称 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 布车号 --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 物料编号 --> \
+                                            <td style="width: 3%%; line-height: 25px;" class="border-left">%s</td> <!-- LOT --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 卡号 --> \
+                                            <td style="width: 9%%; line-height: 25px;" class="border-left">%s</td> <!-- 色号 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 投胚 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 上工段 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 现工段 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 下工段 --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 上完成时间 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 耗时 --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 营业课别 --> \
+                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 工卡备注 --> \
                                             <td hidden>%s</td> \
                                         </tr> \
                                     </table> \
                                 </div> \
                             </div> \
-                        </li>' % (i['sLabel'], i['sCardNo'], i['sMaterialNo'], i['sMaterialLot'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameCurrent'], i['tFactEndTimeLast'], i['nPSTime'], i['sCustomerName'], i['sSalesName'], i['sSalesGroupName'], i['sLocation'], i['nOverTime'], i['uppTrackJobGUID'])
+                        </li>' % (i['sLabel'], i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'],i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'],i['tFactEndTimeLast'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
 
     returnHtml += ' </ul> \
                 </div> \
@@ -252,29 +253,30 @@ def PMCAjaxUpdatePage(sWorkingProcedureName):
     for i in SchedulingSQL_ZL_PMCData:
         returnHtml += '<li class="slot-item height40" style="padding: 0;"> \
                             <div class="clearfix height40"> \
-                                <div class="hover_PMC" style="width:100%%;"> \
+                                <div class="hover_PMC" style="width:100%%; background-color: %s;"> \
                                     <table class="table"> \
                                         <tr> \
-                                            <td style="width: 8%%; line-height: 25px;">%s</td> \
-                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 3%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 6%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 15%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 6%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 4%%; line-height: 25px;" class="border-left">%s</td> \
-                                            <td style="width: 1%%; line-height: 25px;" class="border-left"></td> \
-                                            <td hidden>%s</td> \
+                                            <td style="width: 4%%; line-height: 25px;" class="border-left">%s</td> <!-- 超时 --> \
+                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 客户名称 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 布车号 --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 物料编号 --> \
+                                            <td style="width: 3%%; line-height: 25px;" class="border-left">%s</td> <!-- LOT --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 卡号 --> \
+                                            <td style="width: 9%%; line-height: 25px;" class="border-left">%s</td> <!-- 色号 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 投胚 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 上工段 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 现工段 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 下工段 --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 上完成时间 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 耗时 --> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 营业课别 --> \
+                                            <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 工卡备注 --> \
                                             <td hidden>%s</td> \
                                         </tr> \
                                     </table> \
                                 </div> \
                             </div> \
-                        </li>' % (i['sCardNo'], i['sMaterialNo'], i['sMaterialLot'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameCurrent'], i['tFactEndTimeLast'], i['nPSTime'], i['sCustomerName'], i['sSalesName'], i['sSalesGroupName'], i['sLocation'], i['nOverTime'], i['uppTrackJobGUID'])
+                        </li>' % (i['sLabel'], i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'],i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'],i['tFactEndTimeLast'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
 
     returnHtml += '</div> \
                 </ul> \
@@ -303,27 +305,28 @@ def PMCAjaxSearchCard(InputVar):
                     <div class="hover_PMC" style="width:100%%;"> \
                         <table class="table"> \
                             <tr> \
-                                <td style="width: 8%%; line-height: 25px;">%s</td> \
-                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 3%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 6%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 13%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 6%%; line-height: 25px;" class="border-left">%s</td> \
-                                <td style="width: 1%%; line-height: 25px;" class="border-left"> </td> \
-                                <td hidden>%s</td> \
+                                <td style="width: 4%%; line-height: 25px;" class="border-left">%s</td> <!-- 超时 --> \
+                                <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 客户名称 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 布车号 --> \
+                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 物料编号 --> \
+                                <td style="width: 3%%; line-height: 25px;" class="border-left">%s</td> <!-- LOT --> \
+                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 卡号 --> \
+                                <td style="width: 9%%; line-height: 25px;" class="border-left">%s</td> <!-- 色号 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 投胚 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 上工段 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 现工段 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 下工段 --> \
+                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 上完成时间 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 耗时 --> \
+                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 营业课别 --> \
+                                <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 工卡备注 --> \
                                 <td hidden>%s</td> \
                             </tr> \
                         </table> \
                     </div> \
                 </div> \
             </li> \
-        ' %(i['sCardNo'], i['sMaterialNo'], i['sMaterialLot'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameCurrent'], i['tFactEndTimeLast'], i['nTJTime'], i['sCustomerName'], i['sSalesName'], i['sSalesGroupName'], i['sLocation'], i['nOverTime'], i['uppTrackJobGUID'])
+        ' %(i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'],i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'],i['tFactEndTimeLast'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
 
     returnHtml += '</ul>' 
 
@@ -333,3 +336,15 @@ def PMCAjaxSearchCard(InputVar):
 @Scheduling.route('/PMC/ZL/Remark')
 def PMCZLRemark():
     return render_template('Scheduling/Remark.html')
+
+
+@Scheduling.route('/PMC/Dyeing')
+def PMCDyeing():
+    EquipmentList = SearChEquipment('A群组(HISAK机)')
+    return render_template('Scheduling/Scheduling_PMC_Dyeing.html', EquipmentList = EquipmentList)
+
+
+@Scheduling.route('/Color/')
+def ColorCode():
+    returnColor = Color()
+    return render_template('Scheduling/Color.html', returnColor = returnColor)

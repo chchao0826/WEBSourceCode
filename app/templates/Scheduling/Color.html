@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>颜色预览</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
 </head>
 <body>
-    <table>
+    <table class="table table-bordered">
         <tr>
+            <td>ID</td>
             <td>色名</td>
             <td>颜色</td>
         </tr>
+        {% for i in returnColor %}
         <tr>
-            <td></td>
-            <td></td>
+            <td> {{i['ID']}} </td>
+            <td> {{i['picName']}} </td>
+            <td style="background-color: {{i['colorCode']}}"> {{i['colorCode']}} </td>
         </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

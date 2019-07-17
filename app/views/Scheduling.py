@@ -6,6 +6,8 @@ from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
 from app.sql.ProductionScheduling import GETSchedulingSQL, GetSchedulingDtlSQL
 from app.sql.SchedulingZL_PMC import GetSchedulingSQL_ZL_PMC, GetSchedulingSQL_ZL_PMCHDR, SearchAllCard
+from app.sql.SearchEquipmentNo import SearchEquipmentNoSQL
+from app.sql.Color import colorSql
 
 
 import re
@@ -158,6 +160,9 @@ def SchedulingDataZL_PMC(sWorkingProcedureName, sWorkingProcedureName2):
             'uppTrackJobGUID': row[20],
             'sLocation': row[21],
             'sLabel': row[22],
+            'sRemark':row[24],
+            'sWorkingProcedureNameLast':row[25],
+            'sWorkingProcedureNameNext':row[26],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
@@ -195,6 +200,9 @@ def SchedulingSQL_ZL_PMCHDR(sType):
             'uppTrackJobGUID': row[20],
             'sLabel': row[21],
             'sLocation': row[22],
+            'sRemark':row[23],
+            'sWorkingProcedureNameLast':row[24],
+            'sWorkingProcedureNameNext':row[25],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
@@ -223,6 +231,9 @@ def SchedulingSQL_ZL_PMCHDR(sType):
             'uppTrackJobGUID': '',
             'sLabel': '#FFF',
             'sLocation': '',
+            'sRemark': '',
+            'sWorkingProcedureNameLast':'',
+            'sWorkingProcedureNameNext':'',
         }
         ReturnData.append(dictVar)
     cursor.close()
@@ -264,3 +275,37 @@ def SearchOtherCard(sCardNo, sWorkingProcedureName):
     cursor.close()
     return ReturnData
 
+# 色号对应颜色
+def Color():
+    ReturnData = []
+    cursor = connect.cursor()
+    cursor.execute(colorSql)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'ID': row[0],
+            'picName': row[1],
+            'colorCode': row[2],
+        }
+        ReturnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return ReturnData
+
+# 通过机台的类型查找机台号
+def SearChEquipment(sEquipmentModelName):
+    ReturnData = []
+    sSQL = SearchEquipmentNoSQL(sEquipmentModelName)
+    cursor = connect.cursor()
+    cursor.execute(sSQL)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'sEquipmentNo':row[1],
+            'sEquipmentName':row[2],
+            'uemEquipmentGUID':row[3],
+        }
+        ReturnData.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return ReturnData

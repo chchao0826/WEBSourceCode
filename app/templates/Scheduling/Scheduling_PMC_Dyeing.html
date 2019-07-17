@@ -7,13 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>生管预排-染色排单</title>
 
-    <!-- <link rel="stylesheet" href=" {{url_for('static', filename='Scheduling/css/PMC-Dyeing.css')}} "> -->
-
-    <link rel="stylesheet" href="../../static/Scheduling/css/PMC-Dyeing.css">
-    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="../../static/bootstrap/fonts/glyphicons-halflings-regular.svg">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/fonts/glyphicons-halflings-regular.svg')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='Scheduling/css/PMC-Dyeing.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = '')}} ">
 
 </head>
 
@@ -48,69 +46,109 @@
             <div class="div_top padding5">
                 <table class="table table-striped">
                     <tr draggable="true">
-                        <th>222</th>
-                        <th>333</th>
-                        <th>444</th>
-                        <th>555</th>
-                        <th>666</th>
-                        <th>777</th>
+                        <th>卡号</th>
+                        <th>工序</th>
+                        <th>数量</th>
+                        <th>物料编号</th>
+                        <th>物料名称</th>
+                        <th>色号</th>
+                        <th>色名</th>
+                        <th>订单号</th>
+                        <th>物料编号</th>
+                        <th>物料名称</th>
+                        <th>客户</th>
+                        <th>交期</th>
+                        <th>机型</th>
+                        <th>计划染机</th>
+                        <th>批号</th>
                     </tr>
+                    {% for i in range(5) %}
                     <tr draggable="true">
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
+                        <td>卡号</td>
+                        <td>工序</td>
+                        <td>数量</td>
+                        <td>物料编号</td>
+                        <td>物料名称</td>
+                        <td>色号</td>
+                        <td>色名</td>
+                        <td>订单号</td>
+                        <td>物料编号</td>
+                        <td>物料名称</td>
+                        <td>客户</td>
+                        <td>交期</td>
+                        <td>机型</td>
+                        <td>计划染机</td>
+                        <td>批号</td>
                     </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                    </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                        <td>111</td>
-                    </tr>
+                    {% endfor %}
                 </table>
             </div>
+
             <div class="div_middle">
-                <ul class="nav nav-tabs">
-                    <li role="presentation" class="active"><a href="#">图形视图</a></li>
-                    <li role="presentation"><a href="#">数据视图</a></li>
-                </ul>
-            </div>
-            <div class="div_bottom padding5">
-                <div class="div_bottom_left float_left">
-                    <div class="div_bottom_left_group float_left">
-                        <span>1211</span>
-                        <div class="float_right">
-                            <span class="glyphicon glyphicon-option-vertical" name="bottom_gly_height"></span>
-                        </div>
-                    </div>
-                    <div class="div_bottom_left_machine float_left">
-                        <div class="float_right">
-                            <span class="glyphicon glyphicon-option-vertical" name="bottom_gly_height"></span>
-                        </div>
-                    </div>
+                <div class="float_left">
+                    <ul class="nav nav-tabs">
+                        <li role="presentation" class="active"><a href="#">A群组(HISAK机)</a></li>
+                        <li role="presentation"><a href="#">B群组(立信经轴)</a></li>
+                        <li role="presentation"><a href="#">C群组(东武/亚矶溢流)</a></li>
+                        <li role="presentation"><a href="#">C群组(东武/亚矶溢流)</a></li>
+                        <li role="presentation"><a href="#">D群组(O型缸)</a></li>
+                        <li role="presentation"><a href="#">E群组(小缸群)</a></li>
+                        <li role="presentation"><a href="#">F群组(单定.CR)</a></li>
+                    </ul>
                 </div>
-                <div class="div_bottom_right float_left" id="d" onmouseover="IsOverDiv()">
+                <div class="float_right">
+                    <ul class="nav nav-tabs">
+                        <li role="presentation" class="active"><a href="#">图形视图</a></li>
+                        <li role="presentation"><a href="#">数据视图</a></li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="div_mic">
+                <ol class="breadcrumb">
+                    {% for i in EquipmentList %}
+                    <li><a href="#">{{i['sEquipmentName']}}</a></li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="div_bottom">
+                <div class="" id="d">
                     <table class="table table-striped">
                         <tr>
-                            <th>222</th>
-                            <th>333</th>
-                            <th>444</th>
-                            <th>555</th>
-                            <th>666</th>
-                            <th>777</th>
+                            <th>卡号</th>
+                            <th>工序</th>
+                            <th>数量</th>
+                            <th>物料编号</th>
+                            <th>物料名称</th>
+                            <th>色号</th>
+                            <th>色名</th>
+                            <th>订单号</th>
+                            <th>物料编号</th>
+                            <th>物料名称</th>
+                            <th>客户</th>
+                            <th>交期</th>
+                            <th>机型</th>
+                            <th>计划染机</th>
+                            <th>批号</th>
                         </tr>
+                        <tr draggable="true">
+                                <td>卡号</td>
+                                <td>工序</td>
+                                <td>数量</td>
+                                <td>物料编号</td>
+                                <td>物料名称</td>
+                                <td>色号</td>
+                                <td>色名</td>
+                                <td>订单号</td>
+                                <td>物料编号</td>
+                                <td>物料名称</td>
+                                <td>客户</td>
+                                <td>交期</td>
+                                <td>机型</td>
+                                <td>计划染机</td>
+                                <td>批号</td>
+                            </tr>
                     </table>
                 </div>
             </div>
@@ -149,7 +187,6 @@
         // 页面初始
         window.onload = function () {
             getScreen();
-            gly_lineHeight();
         }
 
         // 修改屏幕尺寸后进行div的更新
@@ -159,22 +196,6 @@
     </script>
 
     <script>
-        // 下方图标视图距离
-        var gly_lineHeight = function () {
-            var nHeight = document.documentElement.clientHeight;
-            var HeightList = __$('bottom_gly_height');
-            for (var i = 0; i < HeightList.length; i++) {
-                HeightList[i].style.lineHeight = nHeight - (nHeight * 0.55) + 'px';
-            }
-        }
-    </script>
-
-    <script>
-        // 判断鼠标是否在DIV里面
-        var IsOverDiv = function () {
-            console.log('11111')
-        }
-
         // 开始
         document.addEventListener("dragstart", function (e) {
             e.dataTransfer.setData("key", e.target.id);

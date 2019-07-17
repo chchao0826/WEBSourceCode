@@ -18,3 +18,7 @@ app.register_blueprint(Scheduling_blueprint, url_prefix = '/Scheduling/')
 # CheckData
 from app.CheckData import CheckData as CheckData_blueprint
 app.register_blueprint(CheckData_blueprint, url_prefix = '/CheckData/')
+
+# Index
+from app.home import home as home_blueprint
+app.register_blueprint(home_blueprint)

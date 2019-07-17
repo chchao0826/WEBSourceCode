@@ -203,9 +203,14 @@ def DeleteData(uppTrackJobGUID):
 # 查找当前最大序号
 def getMaxNumber(sType):
     MaxNumber = 0
+    print(sType)
+    print(MaxNumber)
+    print('**************'*20)
     for i in ses.query(ProductionScheduling).filter(ProductionScheduling.sType == sType).all():
         if MaxNumber <= i.nRowNumber:
             MaxNumber = i.nRowNumber
+            print('*******'*20)
+            print(MaxNumber)
     return MaxNumber
 
 

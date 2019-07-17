@@ -75,7 +75,12 @@
 				'left': clientX,
 				'top': clientY
 			});
-			dragItem.addClass("currentli");
+			if (dragItem.hasClass("currentli")) {
+				dragItem.removeClass("currentli");
+			} else {
+				dragItem.addClass("currentli");
+			}
+
 		},
 		_dragMove: function (e) {
 			var newClientX = e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft),
@@ -139,7 +144,7 @@
 				self.slotlist.closest('.' + self.options.slotClass).addClass(self.options.emptySlotClass);
 				// self.slotlist[0].parentNode.removeChild(self.slotlist[0]);
 			}
-
+			console.log('22222222222222')
 			AJAXData(el);
 		}
 	}
@@ -154,20 +159,23 @@
 		var topli = $$('top-div').children[0].children;
 		var LiList = topli;
 		var Working = GetCurrentWork();
+		console.log(Working)
 		// console.log(LiList)
-		for(var i = 0; i < LiList.length; i++){
+		for (var i = 0; i < LiList.length; i++) {
 			// console.log(LiList[i])
-			var uppTrackJobGUID = LiList[i].children[0].children[0].children[0].children[0].children[0].children[14].innerText;
+			var uppTrackJobGUID = LiList[i].children[0].children[0].children[0].children[0].children[0].children[15].innerText;
+			console.log(uppTrackJobGUID)
 			var tdDict = {
-				'uppTrackJobGUID' : uppTrackJobGUID,
-				'sType' : Working,
-				'nRowNumber' : i,
+				'uppTrackJobGUID': uppTrackJobGUID,
+				'sType': Working,
+				'nRowNumber': i,
 			}
-			if (uppTrackJobGUID != ''){
+			if (uppTrackJobGUID != '') {
 				ReturnList.push(tdDict);
 			}
 		}
-
+		console.log('ReturnList')
+		console.log(ReturnList)
 		$.ajax({
 			type: 'POST',
 			url: 'ZL/AJAX/Move',
@@ -181,7 +189,7 @@
 		console.log(111)
 		// $('#top-div').load('AJAX/page');
 		// console.log(LiList)
-		
+
 	}
 
 

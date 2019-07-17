@@ -16,9 +16,6 @@
     height: 50%;
     width: 100%;
 }
-.padding5{
-    padding: 5px;
-}
 ul li{
     padding: 0;
     margin: 0;
@@ -48,4 +45,11 @@ ul li{
     height: 100%;
     width: 80%;
 }
-
+.div_middle{
+    height: 5%;
+    width: 100%;
+}
+.div_mic{
+    height: 5%;
+    width: 100%;
+}
