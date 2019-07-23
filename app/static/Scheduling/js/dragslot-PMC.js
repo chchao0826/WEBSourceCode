@@ -163,7 +163,7 @@
 		// console.log(LiList)
 		for (var i = 0; i < LiList.length; i++) {
 			// console.log(LiList[i])
-			var uppTrackJobGUID = LiList[i].children[0].children[0].children[0].children[0].children[0].children[15].innerText;
+			var uppTrackJobGUID = LiList[i].children[0].children[0].children[0].children[0].children[0].children[16].innerText;
 			console.log(uppTrackJobGUID)
 			var tdDict = {
 				'uppTrackJobGUID': uppTrackJobGUID,
@@ -187,6 +187,7 @@
 			},
 		});
 		console.log(111)
+		getCount();
 		// $('#top-div').load('AJAX/page');
 		// console.log(LiList)
 

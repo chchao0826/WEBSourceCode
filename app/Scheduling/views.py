@@ -118,7 +118,8 @@ def PMCIndex(sWorkingProcedureName):
     sWorkingProcedureName2 = ''
     if sWorkingProcedureName1 == '水洗' or sWorkingProcedureName == '预定':
         sWorkingProcedureName2 = '预定'
-    SchedulingZL_PMCData = SchedulingDataZL_PMC(sWorkingProcedureName1, sWorkingProcedureName2)
+    SchedulingZL_PMCData = SchedulingDataZL_PMC(
+        sWorkingProcedureName1, sWorkingProcedureName2)
     SchedulingZL_PMCDataHDR = SchedulingSQL_ZL_PMCHDR(sWorkingProcedureName)
     print(SchedulingZL_PMCData)
     print(SchedulingZL_PMCDataHDR)
@@ -174,15 +175,19 @@ def PMCAjaxLabelFalse():
 @Scheduling.route('/PMC/ZL/AJAX/delete', methods=['GET', 'POST'])
 def PMCAjaxDeleteData():
     data = request.get_json()
+    print(data)
     for i in data:
         uppTrackJobGUID = str(i['uppTrackJobGUID'])
+        print(uppTrackJobGUID)
         DeleteData(uppTrackJobGUID)
-    return ''
+    return 'Delete OK'
 
 # 下部数据网上移
 @Scheduling.route('/PMC/ZL/AJAX/DataUpdate/<sWorkingProcedureName>', methods=['GET', 'POST'])
 def PMCAjaxDataUpdate(sWorkingProcedureName):
     data = request.get_json()
+    print(data)
+    print('-------------')
     nRowNumber = getMaxNumber(sWorkingProcedureName)
     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     for i in data:
@@ -194,6 +199,7 @@ def PMCAjaxDataUpdate(sWorkingProcedureName):
             'tUpdateTime': datetimeVar,
             'sLabel': ''
         }
+        print(i)
         uppTrackJobGUID = i['uppTrackJobGUID']
         iFlag = IsHaveCard_PMC(uppTrackJobGUID)
         if iFlag == False:
@@ -210,11 +216,12 @@ def PMCAjaxUpdatePage(sWorkingProcedureName):
     sWorkingProcedureName2 = ''
     if sWorkingProcedureName1 == '水洗' or sWorkingProcedureName == '预定':
         sWorkingProcedureName2 = '预定'
-    SchedulingSQL_ZL_PMCData = SchedulingDataZL_PMC(sWorkingProcedureName1, sWorkingProcedureName2)
+    SchedulingSQL_ZL_PMCData = SchedulingDataZL_PMC(
+        sWorkingProcedureName1, sWorkingProcedureName2)
     SchedulingSQL_ZL_PMCTop = SchedulingSQL_ZL_PMCHDR(sWorkingProcedureName)
     returnHtml = ''
     returnHtml = '<div class="top-div" id="top-div" style="overflow-y:scroll; height: 40%;"> \
-                    <ul id="" class="" style="margin: 0;padding: 0;">'
+                    <ul id="ul_var" class="" style="margin: 0;padding: 0;">'
 
     for i in SchedulingSQL_ZL_PMCTop:
         returnHtml += '<li class="slot-item height40 marginLeft40" style="padding: 0; background-color: %s"> \
@@ -233,25 +240,59 @@ def PMCAjaxUpdatePage(sWorkingProcedureName):
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 上工段 --> \
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 现工段 --> \
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 下工段 --> \
-                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 上完成时间 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 生管交期 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 生管交期 --> \
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 耗时 --> \
                                             <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 营业课别 --> \
                                             <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 工卡备注 --> \
                                             <td hidden>%s</td> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left"></td> \
                                         </tr> \
                                     </table> \
                                 </div> \
                             </div> \
-                        </li>' % (i['sLabel'], i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'],i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'],i['tFactEndTimeLast'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
+                        </li>' % (i['sLabel'], i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['dReplyDate'], i['dDeliveryDate'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
 
-    returnHtml += ' </ul> \
+    returnHtml += '\
+            </ul> \
+                </div> \
+                <div style="margin-left:-40px;"> \
+                    <ul> \
+                        <li> \
+                            <div class=""> \
+                                <div class="hover_PMC" style="width:100%;"> \
+                                    <table class="table" style="background-color:#EEE0E5;"> \
+                                        <tr style="text-align: center;"> \
+                                            <td style="width: 4%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 10%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 3%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 9%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left" id="count_tr"></td> \
+                                            <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left" id="sum_time"></td> \
+                                            <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 10%; line-height: 10px; font-size: 0.8em; font-weight: 700" class="border-left"></td> \
+                                            <td style="width: 8%; line-height: 25px;" class="border-left"></td> \
+                                        </tr> \
+                                    </table> \
+                                </div> \
+                            </div> \
+                        </li> \
+                    </ul> \
                 </div> \
                 <div style="background-color:#000; height:5px;"></div> \
                 <div class="bottom-div" id="bottom-div" style="overflow-y:scroll;" style="position: fixed; height: 45%;"> \
                         <ul id="" class="" style="margin: 0;padding: 0;"> '
 
     for i in SchedulingSQL_ZL_PMCData:
-        returnHtml += '<li class="slot-item height40" style="padding: 0;"> \
+        returnHtml += '<li class="slot-item height40 marginLeft40" style="padding: 0;"> \
                             <div class="clearfix height40"> \
                                 <div class="hover_PMC" style="width:100%%; background-color: %s;"> \
                                     <table class="table"> \
@@ -267,25 +308,31 @@ def PMCAjaxUpdatePage(sWorkingProcedureName):
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 上工段 --> \
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 现工段 --> \
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 下工段 --> \
-                                            <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 上完成时间 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 生管交期 --> \
+                                            <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 生管交期 --> \
                                             <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 耗时 --> \
                                             <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 营业课别 --> \
                                             <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 工卡备注 --> \
                                             <td hidden>%s</td> \
+                                            <td style="width: 8%%; line-height: 25px;" class="border-left"></td> \
                                         </tr> \
                                     </table> \
                                 </div> \
                             </div> \
-                        </li>' % (i['sLabel'], i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'],i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'],i['tFactEndTimeLast'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
+                        </li>' % (i['sLabel'], i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['dReplyDate'], i['dDeliveryDate'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
 
     returnHtml += '</div> \
                 </ul> \
             </div> \
-        </div>'
+        </div> \
+        <script> \
+            getScreen(); \
+            getCount(); \
+        </script>'
 
     return returnHtml
 
-
+# 生管整理看板搜索功能
 @Scheduling.route('/PMC/ZL/AJAX/Search/<InputVar>', methods=['GET', 'POST'])
 def PMCAjaxSearchCard(InputVar):
     # print(InputVar)
@@ -316,7 +363,8 @@ def PMCAjaxSearchCard(InputVar):
                                 <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 上工段 --> \
                                 <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 现工段 --> \
                                 <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 下工段 --> \
-                                <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 上完成时间 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 生管交期 --> \
+                                <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 业务交期 --> \
                                 <td style="width: 5%%; line-height: 25px;" class="border-left">%s</td> <!-- 耗时 --> \
                                 <td style="width: 8%%; line-height: 25px;" class="border-left">%s</td> <!-- 营业课别 --> \
                                 <td style="width: 10%%; line-height: 25px;" class="border-left">%s</td> <!-- 工卡备注 --> \
@@ -326,25 +374,35 @@ def PMCAjaxSearchCard(InputVar):
                     </div> \
                 </div> \
             </li> \
-        ' %(i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'],i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'],i['tFactEndTimeLast'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
+        ' % (i['nOverTime'], i['sCustomerName'], i['sLocation'], i['sMaterialNo'], i['sMaterialLot'], i['sCardNo'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['dReplyDate'], i['dDeliveryDate'], i['nPSTime'], i['sSalesGroupName'], i['sRemark'],  i['uppTrackJobGUID'])
 
-    returnHtml += '</ul>' 
+    returnHtml += '</ul>'
 
     return returnHtml
 
-
+# 备注
 @Scheduling.route('/PMC/ZL/Remark')
 def PMCZLRemark():
     return render_template('Scheduling/Remark.html')
 
+# 生管预排定型打印
+@Scheduling.route('/PMC/ZL/Print/<sWorkingProcedureName>')
+def PMCZLPrint(sWorkingProcedureName):
+    SchedulingSQL_ZL_PMC = SchedulingSQL_ZL_PMCHDR(sWorkingProcedureName)
+    print('----------------------')
+    print(SchedulingSQL_ZL_PMC)
+    return render_template('Scheduling/print_PMC_DX.html', SchedulingSQL_ZL_PMC = SchedulingSQL_ZL_PMC)
 
+
+# 生管染色预排
 @Scheduling.route('/PMC/Dyeing')
 def PMCDyeing():
     EquipmentList = SearChEquipment('A群组(HISAK机)')
-    return render_template('Scheduling/Scheduling_PMC_Dyeing.html', EquipmentList = EquipmentList)
+    return render_template('Scheduling/Scheduling_PMC_Dyeing.html', EquipmentList=EquipmentList)
 
 
+# 颜色
 @Scheduling.route('/Color/')
 def ColorCode():
     returnColor = Color()
-    return render_template('Scheduling/Color.html', returnColor = returnColor)
+    return render_template('Scheduling/Color.html', returnColor=returnColor)

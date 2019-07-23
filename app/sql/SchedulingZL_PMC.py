@@ -3,7 +3,7 @@ def GetSchedulingSQL_ZL_PMC(sWorkingProcedureName, sWorkingProcedureName2):
     ,ISNULL(nFactInputQty,nPlanOutputQty) AS nFactInputQty,sWorkingProcedureNameCurrent \
     ,CONVERT(NVARCHAR(20),sFactEndTimeLast) AS tFactEndTimeLast,sNotDoneProcedure \
     ,nTJTime,nPSTime,nDyeingTime,nSETime,sCustomerName,sSalesName,sSalesGroupName,sColorBorder,sOverTime AS nOverTime,bUsable,A.uppTrackJobGUID \
-    , A.sLocation ,B.sLabel ,B.uppTrackJobGUID AS uppTrackJobGUIDB,A.sRemark,A.sWorkingProcedureNameLast,A.sWorkingProcedureNameNext \
+    , A.sLocation ,B.sLabel ,B.uppTrackJobGUID AS uppTrackJobGUIDB,A.sRemark,A.sWorkingProcedureNameLast,A.sWorkingProcedureNameNext,A.sReplyDate AS dReplyDate,A.sDeliveryDate AS dDeliveryDate \
     INTO #TEMPTABLE \
     FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase A \
     LEFT JOIN [dbo].[pbCommonDataProductionScheduling] B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
@@ -18,10 +18,10 @@ def GetSchedulingSQL_ZL_PMCHDR(sType):
     B.ID,CASE WHEN bIsRush = 1 THEN '#FF0000' WHEN DATEDIFF(HOUR,A.tUpdateTime,GETDATE()) >6 THEN '#FA8072' ELSE '#00FF00' END AS sIsRush,sCardNo,sMaterialNo,sMaterialLot,sColorNo \
     ,ISNULL(nFactInputQty,nPlanOutputQty) AS nFactInputQty,sWorkingProcedureNameCurrent \
     ,CONVERT(NVARCHAR(20),sFactEndTimeLast) AS tFactEndTimeLast,sNotDoneProcedure \
-    ,nTJTime,nPSTime,nDyeingTime,nSETime,sCustomerName,sSalesName,sSalesGroupName,sColorBorder,sOverTime AS nOverTime,bUsable,B.uppTrackJobGUID,A.sLabel, B.sLocation,B.sRemark,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameNext \
+    ,nTJTime,nPSTime,nDyeingTime,nSETime,sCustomerName,sSalesName,sSalesGroupName,sColorBorder,sOverTime AS nOverTime,bUsable,B.uppTrackJobGUID,A.sLabel, B.sLocation,B.sRemark,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameNext,B.sReplyDate AS dReplyDate,B.sDeliveryDate AS dDeliveryDate \
     FROM [dbo].pbCommonDataProductionScheduling A \
     JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
-    WHERE A.sType = '%s' AND B.bUsable = 1\
+    WHERE A.sType = '%s' AND B.bUsable = 1 \
     ORDER BY A.nRowNumber, sMaterialNo"%(sType)
 
 
@@ -33,7 +33,7 @@ def SearchAllCard(sVarInput, sWorkingProcedureName):
     ,ISNULL(nFactInputQty,nPlanOutputQty) AS nFactInputQty,sWorkingProcedureNameCurrent \
     ,CONVERT(NVARCHAR(20),sFactEndTimeLast) AS tFactEndTimeLast,sNotDoneProcedure \
     ,nTJTime,nPSTime,nDyeingTime,nSETime,sCustomerName,sSalesName,sSalesGroupName,sColorBorder,sOverTime AS nOverTime,bUsable,A.uppTrackJobGUID \
-    , A.sLocation ,B.ID AS IDB, A.sWorkingProcedureNameLast, A.sWorkingProcedureNameNext \
+    , A.sLocation ,B.ID AS IDB, A.sWorkingProcedureNameLast, A.sWorkingProcedureNameNext,A.sReplyDate AS dReplyDate,A.sDeliveryDate AS dDeliveryDate \
 	INTO #TEMPTABLE \
     FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase A \
 	LEFT JOIN [dbo].[pbCommonDataProductionScheduling] B ON A.uppTrackJobGUID = B.uppTrackJobGUID \

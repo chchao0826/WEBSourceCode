@@ -1,0 +1,32 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <script type="text/javascript">
+        function dayin() {
+            bdhtml = window.document.body.innerHTML; //前页面body内容    
+            sprnstr = "<!--startprint-->"; //开始打印内容的标识
+            eprnstr = "<!--endprint-->"; //结束打印的标识
+            prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 17); //截取开始标识
+            prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr)); //截取结束标识
+            window.document.body.innerHTML = prnhtml; //截取部分重新赋予给body内容 替换
+            window.print(); //打印
+        }
+    </script>
+</head>
+
+<body>
+    <form>
+        <p style="text-align:center;" id="p1"><input type="button" value="打印"
+                onclick="dayin()" />&nbsp;&nbsp;&nbsp;<input type="button" value="返回"
+                onclick="javascript:window.close();" /></p>
+        <!--startprint-->
+        asdasdsadsadsadasdasd
+        <!--endprint-->
+    </form>
+</body>
+
+</html>

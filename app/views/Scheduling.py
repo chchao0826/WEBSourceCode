@@ -163,6 +163,8 @@ def SchedulingDataZL_PMC(sWorkingProcedureName, sWorkingProcedureName2):
             'sRemark':row[24],
             'sWorkingProcedureNameLast':row[25],
             'sWorkingProcedureNameNext':row[26],
+            'dReplyDate':row[27],
+            'dDeliveryDate':row[28],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
@@ -203,6 +205,9 @@ def SchedulingSQL_ZL_PMCHDR(sType):
             'sRemark':row[23],
             'sWorkingProcedureNameLast':row[24],
             'sWorkingProcedureNameNext':row[25],
+            'dReplyDate':row[26],
+            'dDeliveryDate':row[27],
+            'sType':sType,
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
@@ -234,6 +239,8 @@ def SchedulingSQL_ZL_PMCHDR(sType):
             'sRemark': '',
             'sWorkingProcedureNameLast':'',
             'sWorkingProcedureNameNext':'',
+            'dReplyDate':'',
+            'dDeliveryDate':'',
         }
         ReturnData.append(dictVar)
     cursor.close()
@@ -284,8 +291,10 @@ def Color():
     while row:
         dictVar = {
             'ID': row[0],
-            'picName': row[1],
-            'colorCode': row[2],
+            'Page': row[1],
+            'Color': row[2],
+            'No': row[3],
+            'Name': row[4],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()

@@ -37,7 +37,7 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class=""><a href="#">更新数据<span class="sr-only"></span></a></li>
+                    <li><a href="#" onclick="Update()">更新数据<span class="sr-only"></span></a></li>
                     <li><a href="#" onclick="GetLabel()">标记特急</a></li>
                     <li><a href="#" onclick="LossLabel()">取消特急</a></li>
                     <li><a href="#" onclick="DeleteLabelData()">取消预排</a></li>
@@ -46,6 +46,8 @@
                     <li><a href="#" onclick="CheckScheduling()">标记预排</a></li>
                     <li><a href="#" onclick="unCheck('down')">取消选中</a></li>
                     <li><a>|</a></li>
+                    <li><a href="#" onclick="btnPrint()">打印</a></li>
+                    <li><a href="#" onclick="ExportExcel()">导出数据</a></li>
                     <li><a href="#" onclick="btnRemark()">说明</a></li>
                 </ul>
                 <div class="navbar-form navbar-left">
@@ -76,7 +78,8 @@
                             <td style="width: 5%; line-height: 25px;" class="border-left">上工段</td>
                             <td style="width: 5%; line-height: 25px;" class="border-left">现工段</td>
                             <td style="width: 5%; line-height: 25px;" class="border-left">下工段</td>
-                            <td style="width: 8%; line-height: 25px;" class="border-left">上完成时间</td>
+                            <td style="width: 4%; line-height: 25px;" class="border-left">生交期</td>
+                            <td style="width: 4%; line-height: 25px;" class="border-left">业交期</td>
                             <td style="width: 5%; line-height: 25px;" class="border-left">耗时</td>
                             <td style="width: 8%; line-height: 25px;" class="border-left">营业课别</td>
                             <td style="width: 10%; line-height: 25px;" class="border-left">工卡备注</td>
@@ -88,7 +91,7 @@
                     <section class="">
                         <div id="dragslot" class="">
                             <div class="top-div" id="top-div" style="overflow-y:scroll; overflow-x:scroll;">
-                                <ul id="" class="" style="margin: 0;padding: 0;">
+                                <ul id="ul_var" class="" style="margin: 0;padding: 0;">
                                     {% for i in SchedulingZL_PMCDataHDR %}
                                     <li class="slot-item height40 marginLeft40"
                                         style="padding: 0; background-color: {{i.sLabel}}">
@@ -118,9 +121,12 @@
                                                             {{i.sWorkingProcedureNameCurrent}}</td>
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.sWorkingProcedureNameNext}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.tFactEndTimeLast }}</td>
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.dReplyDate }}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.dDeliveryDate }}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left"
+                                                            name="PSTime">
                                                             {{i.nPSTime}}</td>
                                                         <td style="width: 8%; line-height: 25px;" class="border-left">
                                                             {{i.sSalesGroupName}}</td>
@@ -133,6 +139,53 @@
                                         </div>
                                     </li>
                                     {% endfor %}
+                                </ul>
+                            </div>
+                            <div style="margin-left:-40px;">
+                                <ul>
+                                    <li>
+                                        <div class="">
+                                            <div class="hover_PMC" style="width:100%;">
+                                                <table class="table" style="background-color:#EEE0E5;">
+                                                    <tr style="text-align: center;">
+                                                        <td style="width: 4%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 10%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 3%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 9%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left" id="count_tr"></td>
+                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left" id="sum_time"></td>
+                                                        <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 10%; line-height: 10px; font-size: 0.8em; font-weight: 700"
+                                                            class="border-left"></td>
+                                                        <td style="width: 8%; line-height: 25px;" class="border-left"></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
                             <div style="background-color:#000; height:5px;"></div>
@@ -172,8 +225,10 @@
                                                             {{i.sWorkingProcedureNameCurrent}}</td>
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.sWorkingProcedureNameNext}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.tFactEndTimeLast }}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.dReplyDate }}</td>
+                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
+                                                            {{i.dDeliveryDate }}</td>
                                                         <td style="width: 5%; line-height: 25px;" class="border-left">
                                                             {{i.nPSTime}}</td>
                                                         <td style="width: 8%; line-height: 25px;" class="border-left">
@@ -221,7 +276,6 @@
         }
     </script>
 
-
     <script>
         // ClassName
         var _$ = function (id) {
@@ -243,8 +297,7 @@
             var nWidth = document.body.clientWidth;
             var nHeight = document.documentElement.clientHeight;
             var content = $$('body');
-            console.log(nWidth);
-            console.log(nHeight);
+
             $$('top-div').style.height = (nHeight / 2) - 100 + 'px';
             $$('bottom-div').style.height = (nHeight / 2) - 30 + 'px';
             $$('top-div').style.nWidth = nWidth + 'px';
@@ -252,12 +305,13 @@
             $$('dragslot').style.height = nHeight - 110 + 'px';
             content.style.width = nWidth + 'px';
             content.style.height = nHeight - 5 + 'px';
-            console.log('getScreen');
+
         }
 
         // 页面初始
         window.onload = function () {
             getScreen();
+            getCount();
         }
 
         // 修改屏幕尺寸后进行div的更新
@@ -281,6 +335,7 @@
         var AjaxPage = function () {
             ThisWork = GetCurrentWork();
             $('#dragslot').load('ZL/AJAX/UpdatePage/' + ThisWork);
+            getCount();
         }
 
         // 取消上部分选中 // top-div      
@@ -292,11 +347,9 @@
                 topli = $$('bottom-div').children[0].children;
             }
             for (var i = 0; i < topli.length; i++) {
-                console.log(topli[i]);
                 topli[i].classList.remove("currentli");
             }
         }
-
         // 标记特急件
         var GetLabel = function () {
             var topli = $$('top-div').children[0].children;
@@ -312,13 +365,12 @@
                 if (iFlag == 1) {
                     var ReturnList = [];
                     var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[
-                        15].innerHTML;
+                        16].innerHTML;
                     // UpdateLabel_PMC(CheckLabel);
                     VarDict = {
                         'uppTrackJobGUID': CheckLabel,
                     }
                     ReturnList.push(VarDict);
-                    console.log(VarDict)
                     $.ajax({
                         type: 'POST',
                         url: 'ZL/AJAX/Label/True',
@@ -347,7 +399,7 @@
                 if (iFlag == 1) {
                     var ReturnList = [];
                     var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[
-                        15].innerHTML;
+                        16].innerHTML;
                     // UpdateLabel_PMC(CheckLabel);
                     VarDict = {
                         'uppTrackJobGUID': CheckLabel,
@@ -364,6 +416,7 @@
                         success: function (data) {},
                     });
                     AjaxPage();
+                    getScreen();
                 }
             }
         }
@@ -372,26 +425,24 @@
         var DeleteLabelData = function () {
             var topli = $$('top-div').children[0].children;
             for (var i = 0; i < topli.length; i++) {
-                var iFlag = 0
+                var iFlag = 0;
+                var ReturnList = [];
                 var classListVar = topli[i].classList;
-                for (var a = 0; a < classListVar.length; a++) {
-                    if (classListVar[a] == 'currentli') {
-                        iFlag = 1;
-                        break;
+                if (classListVar.length == 4){
+                    var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[16].innerHTML;
+                    var sLocation = topli[i].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
+                    for (var a = 0; a < topli.length; a++){
+                        var sLocationVar = topli[a].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
+                        var CheckLabelVar = topli[a].children[0].children[0].children[0].children[0].children[0].children[16].innerHTML;
+                        if (sLocationVar == sLocation){
+                            VarDict = {
+                                'uppTrackJobGUID': CheckLabelVar,
+                            }
+                            if(ReturnList.indexOf(VarDict) == -1){
+                                ReturnList.push(VarDict);
+                            }
+                        }
                     }
-                }
-
-                if (iFlag == 1) {
-                    var ReturnList = [];
-                    var CheckLabel = topli[i].children[0].children[0].children[0].children[0].children[0].children[
-                        15].innerHTML;
-                    // UpdateLabel_PMC(CheckLabel);
-                    VarDict = {
-                        'uppTrackJobGUID': CheckLabel,
-                    }
-
-                    ReturnList.push(VarDict);
-
                     $.ajax({
                         type: 'POST',
                         url: 'ZL/AJAX/delete',
@@ -400,40 +451,57 @@
                         dataType: 'json',
                         success: function (data) {},
                     });
+
                 }
             }
             AjaxPage();
-
+            getCount();
+            getScreen();
         }
 
         // 下部数据上移
         var CheckScheduling = function () {
             var bottomli = $$('bottom-div').children[0].children;
-            var Working = GetCurrentWork();
-            console.log('8888888888888' * 20)
-            console.log(Working)
             console.log(bottomli)
+            var Working = GetCurrentWork();
             var returnList = [];
             for (var i = 0; i < bottomli.length; i++) {
                 // console.log(returnList);
                 var liClassList = bottomli[i].classList;
+                var sLocation = '';
                 console.log(liClassList);
-                // console.log(liClassList);
-                for (var a = 0; a <= liClassList.length; a++) {
-                    if (liClassList[a] == 'currentli') {
-                        var uppTrackJobGUID = bottomli[i].children[0].children[0].children[0].children[0].children[
-                            0].children[15].innerHTML;
-                        var varDict = {
-                            'sType': Working,
-                            'uppTrackJobGUID': uppTrackJobGUID
+                console.log(liClassList.length);
+                if (liClassList.length == 4) {
+                    var uppTrackJobGUID = bottomli[i].children[0].children[0].children[0].children[0].children[0].children[16].innerHTML;
+                    sLocation = bottomli[i].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
+                    var varDict = {
+                        'sType': Working,
+                        'uppTrackJobGUID': uppTrackJobGUID
+                    }
+                    console.log('----------------');
+                    console.log(returnList);
+
+
+
+                    for (var a = 0; a < bottomli.length; a++) {
+                        var sLocationVar = bottomli[a].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
+                        if (sLocationVar == sLocation) {
+                            var uppTrackJobGUID = bottomli[a].children[0].children[0].children[0].children[0].children[0].children[16].innerHTML;
+                            var varDict = {
+                                'sType': Working,
+                                'uppTrackJobGUID': uppTrackJobGUID
+                            }
+                            if (returnList.indexOf(varDict) == -1) {
+                                returnList.push(varDict);
+                            }
+                        console.log('------------');
+                        console.log(returnList);
                         }
-                        returnList.push(varDict);
-                        // console.log(returnList);
-                        // break;
+                    console.log('==========');
+                    console.log(returnList);
                     }
                 }
             }
-            console.log(returnList);
             $.ajax({
                 type: 'POST',
                 url: 'ZL/AJAX/DataUpdate/' + Working,
@@ -442,9 +510,17 @@
                 dataType: 'json',
                 success: function (data) {},
             });
-            console.log('------------------')
             AjaxPage();
+            getCount();
+            getScreen();
         }
+    </script>
+
+    <script>
+    //刷新页面
+    var Refresh = function (){
+        location.reload();
+    }
     </script>
 
     <script>
@@ -456,21 +532,18 @@
             if (sVar == 'btnup') {
                 dragslot = $$('dragslot').children[0];
             } else if (sVar = 'btndown') {
-                dragslot = $$('dragslot').children[2];
+                dragslot = $$('dragslot').children[3];
             }
-
             var LiList = dragslot.children[0].children;
 
             var iFlag = 0
             for (var i = 0; i < LiList.length; i++) {
                 var tdList = LiList[i].children[0].children[0].children[0].children[0].children[0].children;
-
                 // 清空选中
                 var LiClassName = LiList[i].className;
                 if (LiClassName.search('currentli') != -1) {
                     LiList[i].className = 'slot-item height40';
                 }
-
                 // 遍历td,寻找值
                 for (var a = 0; a < tdList.length; a++) {
                     var tdValue = tdList[a].innerHTML.replace(/\s*/g, "");;
@@ -488,14 +561,14 @@
                 }
             }
             returnValue = inputVar + '_' + ThisWorking;
-            console.log(returnValue);
             // 查找其他的卡号
             if (iFlag == 0 && sVar == 'btndown') {
-                console.log(returnValue);
-                console.log('-------------------------');
+
 
                 $('#bottom-div').load('ZL/AJAX/Search/' + returnValue);
             }
+            getCount();
+            getScreen();
         }
     </script>
 
@@ -503,6 +576,54 @@
         var btnRemark = function () {
             var url = "http://198.168.6.56:5000/Scheduling/PMC/ZL/Remark";
             window.open(url, '说明', 'height=400, width=320, top=270%, left=600%')
+
+        }
+    </script>
+
+    <script>
+        // 打印
+        var btnPrint = function () {
+            var sWork = GetCurrentWork();
+            var url = "http://198.168.6.56:5000/Scheduling/PMC/ZL/Print/" + sWork;
+            window.open(url)
+        }
+    </script>
+
+    <script>
+        function changeTwoDecimal(x) {
+            var f_x = parseFloat(x);
+            if (isNaN(f_x)) {
+                alert('function:changeTwoDecimal->parameter error');
+                return false;
+            }
+            f_x = Math.round(f_x * 100) / 100;
+            return f_x;
+        }
+        // 求和以及计数
+        var getCount = function () {
+            var liList = $$('ul_var').children;
+            var nCount = liList.length;
+            var nCountVar = nCount - 1;
+            var PSTimeList = __$('PSTime');
+            var nSumPSTime = 0
+            for (var i = 0; i < liList.length; i++) {
+                nPSTime = liList[i].children[0].children[0].children[0].children[0].children[0].children[13].innerText;
+                nSumPSTime += parseFloat(nPSTime);
+            }
+            if (isNaN(nSumPSTime)) {
+                nSumPSTime = 0
+            }
+            $$('sum_time').innerHTML = changeTwoDecimal(nSumPSTime);
+            $$('count_tr').innerHTML = nCountVar;
+        }
+    </script>
+
+    <script>
+        var Update = function () {
+
+        }
+
+        var ExportExcel = function () {
 
         }
     </script>

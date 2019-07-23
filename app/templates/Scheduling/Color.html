@@ -11,14 +11,18 @@
     <table class="table table-bordered">
         <tr>
             <td>ID</td>
-            <td>色名</td>
-            <td>颜色</td>
+            <td>Page</td>
+            <td>No</td>
+            <td>Color</td>
+            <td>Name</td>
         </tr>
         {% for i in returnColor %}
         <tr>
             <td> {{i['ID']}} </td>
-            <td> {{i['picName']}} </td>
-            <td style="background-color: {{i['colorCode']}}"> {{i['colorCode']}} </td>
+            <td> {{i['Page']}} </td>
+            <td> {{i['No']}} </td>
+            <td style="background-color: {{i['Color']}}"> {{i['Color']}} </td>
+            <td> {{i['Name']}} </td>
         </tr>
         {% endfor %}
     </table>
