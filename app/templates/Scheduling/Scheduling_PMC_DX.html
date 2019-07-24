@@ -623,21 +623,21 @@
     </script>
 
     <script>
+        //获取当前时间
         var getDateTime = function(){
             var myDate = new Date()
             var myDay = myDate.getDate();
             var myMonth = myDate.getMonth();
             var myYear = myDate.getFullYear();
-            if (myDay.length < 2){
-                myDay = 0 + myDay;
+            if (myDay.toString().length < 2){
+                myDay = 0 + myDay.toString();
             }
-            if (myMonth.length < 2){
-                myMonth = 0 + myMonth;   
+            if (myMonth.toString().length < 2){
+                myMonth = 0 + (myMonth + 1).toString();   
             }
             var DataTime = myYear + '-' + myMonth + '-' + myDay;
             return DataTime
         }
-
  
     </script>
 

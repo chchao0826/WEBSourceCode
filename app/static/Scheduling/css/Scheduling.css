@@ -256,7 +256,7 @@ ul li {
 }
 
 .ex {
-    margin-left: 240px;
+    margin-left: 100px;
 }
 
 .hover .ex2 {
@@ -272,6 +272,6 @@ ul li {
 }
 
 .ex2 {
-    margin-left: -30px;
+    margin-left: -100px;
     margin-top: 30px;
 }
