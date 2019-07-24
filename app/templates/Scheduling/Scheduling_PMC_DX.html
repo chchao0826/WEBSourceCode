@@ -252,10 +252,14 @@
     </div>
 
     <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+
     <script>
         window.jQuery || document.write('<script src="../static/Scheduling/js/jquery-1.11.0.min.js"><\/script>')
     </script>
+
     <script type="text/javascript" src="/static/Scheduling/js/dragslot-PMC.js"></script>
+
+    <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script>
 
     <script>
         var GetCurrentWork = function () {
@@ -619,12 +623,118 @@
     </script>
 
     <script>
+        var getDateTime = function(){
+            var myDate = new Date()
+            var myDay = myDate.getDate();
+            var myMonth = myDate.getMonth();
+            var myYear = myDate.getFullYear();
+            if (myDay.length < 2){
+                myDay = 0 + myDay;
+            }
+            if (myMonth.length < 2){
+                myMonth = 0 + myMonth;   
+            }
+            var DataTime = myYear + '-' + myMonth + '-' + myDay;
+            return DataTime
+        }
+
+ 
+    </script>
+
+    <script>
         var Update = function () {
 
         }
 
-        var ExportExcel = function () {
+        function sheet2blob(sheet, sheetName) {
+            sheetName = sheetName || 'sheet1';
+            var workbook = {
+                SheetNames: [sheetName],
+                Sheets: {}
+            };
+            workbook.Sheets[sheetName] = sheet;
+            // 生成excel的配置项
+            var wopts = {
+                bookType: 'xlsx', // 要生成的文件类型
+                bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+                type: 'binary'
+            };
+            var wbout = XLSX.write(workbook, wopts);
+            var blob = new Blob([s2ab(wbout)], {type:"application/octet-stream"});
+            // 字符串转ArrayBuffer
+            function s2ab(s) {
+                var buf = new ArrayBuffer(s.length);
+                var view = new Uint8Array(buf);
+                for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            }
+            return blob;
+        }
 
+        function openDownloadDialog(url, saveName){
+            if(typeof url == 'object' && url instanceof Blob)
+            {
+                url = URL.createObjectURL(url); // 创建blob地址
+            }
+            var aLink = document.createElement('a');
+            aLink.href = url;
+            aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+            var event;
+            if(window.MouseEvent) event = new MouseEvent('click');
+            else
+            {
+                event = document.createEvent('MouseEvents');
+                event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            }
+            aLink.dispatchEvent(event);
+        }
+
+        var ExportExcel = function () {
+            var ulList = $$('ul_var').children;
+            var sWork = GetCurrentWork();
+            var aoa  = [];
+
+            var excelT = [sWork + '预排',null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
+            aoa.push(excelT);
+
+            var excelTitle = ['工段名称','超时','客户名称','布车号','物料编号','LOT','卡号','色号','投胚','上工段','现工段','下工段','生交期','业交期','耗时','营业课别','工卡备注'];
+            aoa.push(excelTitle);
+            
+            for (var i = 0; i < ulList.length; i++){
+                var liList = ulList[i].children[0].children[0].children[0].children[0].children;
+                for (var a = 0; a < liList.length; a++){
+                    var tdList = liList[a].children;
+                    var nOverTime = tdList[0].innerText; //超时
+                    var sCustomerName = tdList[1].innerText; //客户名称
+                    var sLocation = tdList[2].innerText; //布车号	
+                    var sMaterialNo = tdList[3].innerText; //物料编号
+                    var sMaterialLot = tdList[4].innerText; //LOT
+                    var sCardNo = tdList[5].innerText; //卡号
+                    var sColorNo = tdList[6].innerText; //色号
+                    var nFactInputQty = tdList[7].innerText; //投胚	
+                    var sWorkingProcedureNameLast = tdList[8].innerText; //上工段	
+                    var sWorkingProcedureNameCurrent = tdList[9].innerText; //现工段
+                    var sWorkingProcedureNameNext = tdList[10].innerText; //下工段
+                    var dReplyDate = tdList[11].innerText; //生交期
+                    var dDeliveryDate = tdList[12].innerText; //业交期
+                    var nPSTime = tdList[13].innerText; //耗时	
+                    var sSalesGroupName = tdList[14].innerText; //营业课别
+                    var sRemark = tdList[15].innerText; //工卡备注
+                    var excelVar = [
+                    sWork,nOverTime,sCustomerName,sLocation,sMaterialNo,sMaterialLot,sCardNo,sColorNo,nFactInputQty,sWorkingProcedureNameLast,sWorkingProcedureNameCurrent,sWorkingProcedureNameNext,dReplyDate,dDeliveryDate,nPSTime,sSalesGroupName,sRemark];
+                    aoa .push(excelVar);
+                }
+
+            }
+            console.log(aoa );
+            var sheet = XLSX.utils.aoa_to_sheet(aoa);
+            sheet['!merges'] = [
+                // 设置A1-C1的单元格合并
+                {s: {r: 0, c: 0}, e: {r: 0, c: 16}}
+            ];
+            dateTime = getDateTime();
+            var excelName = sWork + '排单' + dateTime + '.xlsx';
+            openDownloadDialog(sheet2blob(sheet), excelName);
         }
     </script>
 

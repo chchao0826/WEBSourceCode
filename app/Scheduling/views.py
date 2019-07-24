@@ -4,6 +4,8 @@ from flask import render_template, Flask, request, jsonify
 from app.views.Scheduling import GetSchedulingData, GetSchedulingDtlData, SchedulingDataZL_PMC, SchedulingSQL_ZL_PMCHDR, SearchOtherCard, Color, SearChEquipment
 from app.models.Scheduling import GetEquipment, GetDtlData, GetDtlData, IsHaveCard, UpdateDtl, InsertDtl, IsHaveCard_PMC, InsertDtl_PMC, UpdateDtl_PMC, UpdateLabel_PMC_True, UpdateLabel_PMC_False, DeleteData, getMaxNumber
 import time
+import os
+from app.PyScript.PMC_ZL_Export import CreateExcel
 
 # 整理预排主页
 @Scheduling.route('/ZL/')
@@ -393,6 +395,10 @@ def PMCZLPrint(sWorkingProcedureName):
     print(SchedulingSQL_ZL_PMC)
     return render_template('Scheduling/print_PMC_DX.html', SchedulingSQL_ZL_PMC = SchedulingSQL_ZL_PMC)
 
+# 导出数据EXCEL
+@Scheduling.route('/PMC/ZL/ExportExecl')
+def PMCZLExportExecl():
+    CreateExcel()
 
 # 生管染色预排
 @Scheduling.route('/PMC/Dyeing')
@@ -406,3 +412,5 @@ def PMCDyeing():
 def ColorCode():
     returnColor = Color()
     return render_template('Scheduling/Color.html', returnColor=returnColor)
+
+
