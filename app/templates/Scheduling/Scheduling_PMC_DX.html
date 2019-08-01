@@ -37,7 +37,7 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="#" onclick="Update()">更新数据<span class="sr-only"></span></a></li>
+                    <li><a href="#" onclick="">更新数据<span class="sr-only"></span></a></li>
                     <li><a href="#" onclick="GetLabel()">标记特急</a></li>
                     <li><a href="#" onclick="LossLabel()">取消特急</a></li>
                     <li><a href="#" onclick="DeleteLabelData()">取消预排</a></li>
@@ -83,7 +83,7 @@
                             <td style="width: 5%; line-height: 25px;" class="border-left">耗时</td>
                             <td style="width: 8%; line-height: 25px;" class="border-left">营业课别</td>
                             <td style="width: 10%; line-height: 25px;" class="border-left">工卡备注</td>
-                            <td style="width: 8%; line-height: 25px;" class="border-left"></td>
+                            <td style="width: 6%; line-height: 25px;" class="border-left"></td>
                         </tr>
                     </table>
                 </div>
@@ -485,8 +485,6 @@
                     console.log('----------------');
                     console.log(returnList);
 
-
-
                     for (var a = 0; a < bottomli.length; a++) {
                         var sLocationVar = bottomli[a].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
                         if (sLocationVar == sLocation) {
@@ -643,6 +641,16 @@
 
     <script>
         var Update = function () {
+            console.log('Update')
+            $.ajax({
+                type: 'POST',
+                url: 'ZL/Updata/',
+                // data: JSON.stringify(returnList),
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json',
+                success: function (data) {},
+            });
+            // $('').load('/ZL/Updata');
 
         }
 

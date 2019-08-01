@@ -1,113 +1,73 @@
 # -*-coding:utf-8-*-
 from . import Scheduling
 from flask import render_template, Flask, request, jsonify
-from app.views.Scheduling import GetSchedulingData, GetSchedulingDtlData, SchedulingDataZL_PMC, SchedulingSQL_ZL_PMCHDR, SearchOtherCard, Color, SearChEquipment
-from app.models.Scheduling import GetEquipment, GetDtlData, GetDtlData, IsHaveCard, UpdateDtl, InsertDtl, IsHaveCard_PMC, InsertDtl_PMC, UpdateDtl_PMC, UpdateLabel_PMC_True, UpdateLabel_PMC_False, DeleteData, getMaxNumber
+from app.views.Scheduling import GetSchedulingData, GetSchedulingDtlData, SchedulingDataZL_PMC, SchedulingSQL_ZL_PMCHDR, SearchOtherCard, Color, SearChEquipment, ExecUpdata
+from app.models.Scheduling import GetEquipment, GetDtlData, GetDtlData, IsHaveCard, UpdateDtl, InsertDtl, IsHaveCard_PMC, InsertDtl_PMC, UpdateDtl_PMC, UpdateLabel_PMC_True, UpdateLabel_PMC_False, DeleteData, getMaxNumber, OperationalData
 import time
 import os
 from app.PyScript.PMC_ZL_Export import CreateExcel
 
 # 整理预排主页
-@Scheduling.route('/ZL/')
-def index():
-    ReturnData_NET = GetSchedulingData('NET')
-    ReturnData_BW = GetSchedulingData('BW')
-    ReturnData_Other = GetSchedulingData('Others')
+@Scheduling.route('/ZL/<sWorkingProcedureName>')
+def DXindex(sWorkingProcedureName):
+    sEquipmentID = ''
+    ReturnData = GetSchedulingData(sWorkingProcedureName)
     ReturnEquipment = GetEquipment('整理')
-    ReturnDtlData = GetSchedulingDtlData()
-    return render_template('Scheduling/Scheduling_ZL.html', ReturnData_NET=ReturnData_NET, ReturnData_BW=ReturnData_BW, ReturnData_Other=ReturnData_Other, ReturnEquipment=ReturnEquipment, ReturnDtlData=ReturnDtlData)
+    ReturnDtlData = GetSchedulingDtlData(sEquipmentID)
+    return render_template('Scheduling/Scheduling_ZL.html', ReturnData=ReturnData, ReturnEquipment=ReturnEquipment, ReturnDtlData=ReturnDtlData)
 
-# 整理预排更新数据
-@Scheduling.route('/ZL/AJAX/Update/<sEquipmentNo>', methods=['GET', 'POST'])
-def AJAXEquipment(sEquipmentNo):
+@Scheduling.route('/ZL/AJAXInsertData', methods=['GET', 'POST'])
+def AJAXInsertData():
     data = request.get_json()
-    datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    # 进行数据交换
     for i in data:
-        sCardNo = str(i['sCardNo'])
-        nHDRID = str(i['sEquipmentID'])
-        nRowNumber = str(i['nRowNumber'])
-        uppTrackJobGUID = str(i['uppTrackJobGUID'])
-        #  查找卡号是否存在Dtl表中,若存在更新机台号和顺序,不存在进行INSERT
-        # print(IsHaveCard(sCardNo))
-        VarData = {
-            'sCardNo': sCardNo,
-            'nHDRID': nHDRID,
-            'nRowNumber': nRowNumber,
-            'tTime': datetimeVar,
-            'uppTrackJobGUID': uppTrackJobGUID,
-        }
-        print('-----------------------')
-        print(VarData)
-        print(IsHaveCard(uppTrackJobGUID))
-        if IsHaveCard(uppTrackJobGUID):
-            print('UPDATE')
-            UpdateDtl(VarData)
-            # print('----------------')
-        else:
-            print('INSERT')
-            InsertDtl(VarData)
-            # print('++++++++++++++++')
-
-    return '123'
-
-# 整理预排刷新数据
-@Scheduling.route('/ZL/AJAX/page', methods=['GET', 'POST'])
-def AJAXPage():
-    DtlData = GetSchedulingDtlData()
-    HdrData = GetEquipment('整理')
-    AJAXHTML = ''
-    for i in HdrData:
-        AJAXHTML += ' \
-        <div class="section_var"> \
-        <ul id=" Ul_%s " class="" name="Ul_%s"> \
-            <div class=""> \
-                <input class="title_var" type="text" readOnly="true" \
-                    name="%s" id="%s" value=%s> \
+        OperationalData(i)
+        print(i)
+    # 更新页面
+    sEquipmentID = data[0]['nHDRID']
+    DTLData = GetSchedulingDtlData(sEquipmentID)
+    returnHTML = ''
+    for i in DTLData:
+        returnHTML += ' \
+        <div class="div-card"> \
+            <div class="float-left" style="width: 200px; border-right: 1px solid #111; height: 100%%; text-align: center; line-height: 55px; text-align: center; line-height: 60px;"> \
+                <span>%s</span> \
             </div> \
-            <div class="float-left" style="width: 100%%;>' % (i['ID'], i['ID'], i['sEquipmentNo'], i['sEquipmentNo'], i['sEquipmentNo'])
-
-        for a in DtlData:
-            if a['nHDRID'] == i['ID']:
-                AJAXHTML += '\
-                <li class="slot-item" \
-                    style="border-left:15px solid %s; border-right:15px solid %s;"> \
-                    <div class="clearfix"> \
-                        <div class="hover" style=" width:100%% ; "> \
-                            <tr class="tr_var"> \
-                                <td class=""> \
-                                    <input class="input_var" type="text" readOnly="true" \
-                                        name="%s" id="%s" \
-                                        value="%s"> \
-                                    <input type="text" hidden \
-                                        name="%s" id="%s" \
-                                        value="%s"> \
-                                    <div style="z-index:10" class="ex"> \
-                                        <tr> \
-                                            <td>%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">实际投胚:%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">温度:%s</td><br> \
-                                            <td class="td_var">速度:%s</td><br> \
-                                            <td class="td_var">耗时:%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                            <td class="td_var">%s</td><br> \
-                                        </tr> \
-                                    </div> \
-                                </td> \
-                            </tr> \
-                        </div> \
-                    </div> \
-                </li>' % (a['sBorderColor'], a['sColorBorder'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['uppTrackJobGUID'], a['uppTrackJobGUID'], a['uppTrackJobGUID'], a['sCardNo'], a['sMaterialNo'], a['sMaterialLot'], a['sColorNo'], a['nFactInPutQty'], a['sCustomerName'], a['sSalesGroupName'], a['nTemp'], a['nSpeed'], a['nTime'], a['sProductWidth'], a['sProductGMWT'], a['sWorkingProcedureName'])
-        AJAXHTML += '\
+            <div class="float-left"> \
+                <div style="border-bottom: 1px solid #111; height: 30px; width: 157px; text-align: center; line-height: 30px;"> \
+                    <span>%s</span> \
                 </div> \
-            </ul> \
-        </div>'
-    return AJAXHTML
+                <div style="text-align: center; line-height: 30px;"> \
+                    <span>%s</span> \
+                </div> \
+            </div> \
+            <div class="float-left" style="width: 21px; height:58px; background-color:#111; text-align: center;"></div> \
+            <div hidden>%s</div> \
+        </div> '%(i['sCardNo'], i['sMaterialNo'], i['nTime'], i['uppTrackJobGUID'])
+    return returnHTML
+
+@Scheduling.route('/ZL/AJAXDtl/<sEquipmentID>')
+def AJAXDtl(sEquipmentID):
+    data = GetSchedulingDtlData(sEquipmentID)
+    returnHTML = ''
+    for i in data:
+        returnHTML += ' \
+        <div class="div-card"> \
+            <div class="float-left" style="width: 200px; border-right: 1px solid #111; height: 100%%; text-align: center; line-height: 55px; text-align: center; line-height: 60px;"> \
+                <span>%s</span> \
+            </div> \
+            <div class="float-left"> \
+                <div style="border-bottom: 1px solid #111; height: 30px; width: 157px; text-align: center; line-height: 30px;"> \
+                    <span>%s</span> \
+                </div> \
+                <div style="text-align: center; line-height: 30px;"> \
+                    <span>%s</span> \
+                </div> \
+            </div> \
+            <div class="float-left" style="width: 21px; height:58px; background-color:#111; text-align: center;"> </div> \
+            <div hidden>%s</div> \
+        </div> '%(i['sCardNo'], i['sMaterialNo'], i['nTime'], i['uppTrackJobGUID'])
+    return returnHTML
 
 # ---------------------
 # 生管预排
@@ -118,13 +78,15 @@ def PMCIndex(sWorkingProcedureName):
         sWorkingProcedureName1 = '水洗'
 
     sWorkingProcedureName2 = ''
-    if sWorkingProcedureName1 == '水洗' or sWorkingProcedureName == '预定':
+    if sWorkingProcedureName1 == '水洗':
+        sWorkingProcedureName2 = '水洗'
+    elif sWorkingProcedureName == '预定':
         sWorkingProcedureName2 = '预定'
     SchedulingZL_PMCData = SchedulingDataZL_PMC(
         sWorkingProcedureName1, sWorkingProcedureName2)
     SchedulingZL_PMCDataHDR = SchedulingSQL_ZL_PMCHDR(sWorkingProcedureName)
-    print(SchedulingZL_PMCData)
-    print(SchedulingZL_PMCDataHDR)
+    # print(SchedulingZL_PMCData)
+    # print(SchedulingZL_PMCDataHDR)
     # print('--------' * 12)
     # print(SchedulingZL_PMCDataHDR)
     return render_template('Scheduling/Scheduling_PMC_DX.html', SchedulingZL_PMCData=SchedulingZL_PMCData, SchedulingZL_PMCDataHDR=SchedulingZL_PMCDataHDR)
@@ -134,7 +96,7 @@ def PMCIndex(sWorkingProcedureName):
 def PMCAjaxZL():
     # print('+++++++++++++++++++++++++++++++++')
     data = request.get_json()
-    print(data)
+    # print(data)
     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     for i in data:
         uppTrackJobGUID = str(i['uppTrackJobGUID'])
@@ -177,10 +139,10 @@ def PMCAjaxLabelFalse():
 @Scheduling.route('/PMC/ZL/AJAX/delete', methods=['GET', 'POST'])
 def PMCAjaxDeleteData():
     data = request.get_json()
-    print(data)
+    # print(data)
     for i in data:
         uppTrackJobGUID = str(i['uppTrackJobGUID'])
-        print(uppTrackJobGUID)
+        # print(uppTrackJobGUID)
         DeleteData(uppTrackJobGUID)
     return 'Delete OK'
 
@@ -188,8 +150,8 @@ def PMCAjaxDeleteData():
 @Scheduling.route('/PMC/ZL/AJAX/DataUpdate/<sWorkingProcedureName>', methods=['GET', 'POST'])
 def PMCAjaxDataUpdate(sWorkingProcedureName):
     data = request.get_json()
-    print(data)
-    print('-------------')
+    # print(data)
+    # print('-------------')
     nRowNumber = getMaxNumber(sWorkingProcedureName)
     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     for i in data:
@@ -201,7 +163,7 @@ def PMCAjaxDataUpdate(sWorkingProcedureName):
             'tUpdateTime': datetimeVar,
             'sLabel': ''
         }
-        print(i)
+        # print(i)
         uppTrackJobGUID = i['uppTrackJobGUID']
         iFlag = IsHaveCard_PMC(uppTrackJobGUID)
         if iFlag == False:
@@ -215,8 +177,9 @@ def PMCAjaxUpdatePage(sWorkingProcedureName):
     if sWorkingProcedureName.find('水洗') != -1:
         sWorkingProcedureName1 = '水洗'
 
-    sWorkingProcedureName2 = ''
-    if sWorkingProcedureName1 == '水洗' or sWorkingProcedureName == '预定':
+    if sWorkingProcedureName1 == '水洗':
+        sWorkingProcedureName2 = '水洗'
+    elif sWorkingProcedureName == '预定':
         sWorkingProcedureName2 = '预定'
     SchedulingSQL_ZL_PMCData = SchedulingDataZL_PMC(
         sWorkingProcedureName1, sWorkingProcedureName2)
@@ -387,12 +350,20 @@ def PMCAjaxSearchCard(InputVar):
 def PMCZLRemark():
     return render_template('Scheduling/Remark.html')
 
+# 定型数据更新
+@Scheduling.route('/PMC/ZL/Updata/', methods=['GET', 'POST'])
+def PMCZLUpdata():
+    # ReturnData = ExecUpdata()
+    # print(ReturnData)
+    print('--------------')
+    # return ReturnData
+
 # 生管预排定型打印
 @Scheduling.route('/PMC/ZL/Print/<sWorkingProcedureName>')
 def PMCZLPrint(sWorkingProcedureName):
     SchedulingSQL_ZL_PMC = SchedulingSQL_ZL_PMCHDR(sWorkingProcedureName)
-    print('----------------------')
-    print(SchedulingSQL_ZL_PMC)
+    # print('----------------------')
+    # print(SchedulingSQL_ZL_PMC)
     return render_template('Scheduling/print_PMC_DX.html', SchedulingSQL_ZL_PMC = SchedulingSQL_ZL_PMC)
 
 # 导出数据EXCEL
@@ -414,3 +385,95 @@ def ColorCode():
     return render_template('Scheduling/Color.html', returnColor=returnColor)
 
 
+
+# # 整理预排更新数据
+# @Scheduling.route('/ZL/AJAX/Update/<sEquipmentNo>', methods=['GET', 'POST'])
+# def AJAXEquipment(sEquipmentNo):
+#     data = request.get_json()
+#     datetimeVar = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+#     for i in data:
+#         sCardNo = str(i['sCardNo'])
+#         nHDRID = str(i['sEquipmentID'])
+#         nRowNumber = str(i['nRowNumber'])
+#         uppTrackJobGUID = str(i['uppTrackJobGUID'])
+#         #  查找卡号是否存在Dtl表中,若存在更新机台号和顺序,不存在进行INSERT
+#         # print(IsHaveCard(sCardNo))
+#         VarData = {
+#             'sCardNo': sCardNo,
+#             'nHDRID': nHDRID,
+#             'nRowNumber': nRowNumber,
+#             'tTime': datetimeVar,
+#             'uppTrackJobGUID': uppTrackJobGUID,
+#         }
+#         # print('-----------------------')
+#         # print(VarData)
+#         # print(IsHaveCard(uppTrackJobGUID))
+#         if IsHaveCard(uppTrackJobGUID):
+#             print('UPDATE')
+#             UpdateDtl(VarData)
+#             # print('----------------')
+#         else:
+#             print('INSERT')
+#             InsertDtl(VarData)
+#             # print('++++++++++++++++')
+
+#     return '123'
+
+# # 整理预排刷新数据
+# @Scheduling.route('/ZL/AJAX/page', methods=['GET', 'POST'])
+# def AJAXPage():
+#     DtlData = GetSchedulingDtlData()
+#     HdrData = GetEquipment('整理')
+#     AJAXHTML = ''
+#     for i in HdrData:
+#         AJAXHTML += ' \
+#         <div class="section_var"> \
+#         <ul id=" Ul_%s " class="" name="Ul_%s"> \
+#             <div class=""> \
+#                 <input class="title_var" type="text" readOnly="true" \
+#                     name="%s" id="%s" value=%s> \
+#             </div> \
+#             <div class="float-left" style="width: 100%%;>' % (i['ID'], i['ID'], i['sEquipmentNo'], i['sEquipmentNo'], i['sEquipmentNo'])
+
+#         for a in DtlData:
+#             if a['nHDRID'] == i['ID']:
+#                 AJAXHTML += '\
+#                 <li class="slot-item" \
+#                     style="border-left:15px solid %s; border-right:15px solid %s;"> \
+#                     <div class="clearfix"> \
+#                         <div class="hover" style=" width:100%% ; "> \
+#                             <tr class="tr_var"> \
+#                                 <td class=""> \
+#                                     <input class="input_var" type="text" readOnly="true" \
+#                                         name="%s" id="%s" \
+#                                         value="%s"> \
+#                                     <input type="text" hidden \
+#                                         name="%s" id="%s" \
+#                                         value="%s"> \
+#                                     <div style="z-index:10" class="ex"> \
+#                                         <tr> \
+#                                             <td>%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">实际投胚:%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">温度:%s</td><br> \
+#                                             <td class="td_var">速度:%s</td><br> \
+#                                             <td class="td_var">耗时:%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                             <td class="td_var">%s</td><br> \
+#                                         </tr> \
+#                                     </div> \
+#                                 </td> \
+#                             </tr> \
+#                         </div> \
+#                     </div> \
+#                 </li>' % (a['sBorderColor'], a['sColorBorder'], a['sCardNo'], a['sCardNo'], a['sCardNo'], a['uppTrackJobGUID'], a['uppTrackJobGUID'], a['uppTrackJobGUID'], a['sCardNo'], a['sMaterialNo'], a['sMaterialLot'], a['sColorNo'], a['nFactInPutQty'], a['sCustomerName'], a['sSalesGroupName'], a['nTemp'], a['nSpeed'], a['nTime'], a['sProductWidth'], a['sProductGMWT'], a['sWorkingProcedureName'])
+#         AJAXHTML += '\
+#                 </div> \
+#             </ul> \
+#         </div>'
+#     return AJAXHTML

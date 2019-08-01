@@ -1,0 +1,16 @@
+ul li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+li{
+    height: 38px;
+    line-height: 30px;
+    border-bottom: 2 solid #e21;
+}
+.border_bottom{
+    border-bottom: 2 solid #111;
+}
+.float_left{
+    float: left;
+}

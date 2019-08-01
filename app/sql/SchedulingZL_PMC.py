@@ -23,7 +23,7 @@ def GetSchedulingSQL_ZL_PMCHDR(sType):
     JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
     WHERE A.sType = '%s' AND B.bUsable = 1 \
     ORDER BY A.nRowNumber, sMaterialNo"%(sType)
-
+ 
 
 def SearchAllCard(sVarInput, sWorkingProcedureName):
     return " \
@@ -33,7 +33,7 @@ def SearchAllCard(sVarInput, sWorkingProcedureName):
     ,ISNULL(nFactInputQty,nPlanOutputQty) AS nFactInputQty,sWorkingProcedureNameCurrent \
     ,CONVERT(NVARCHAR(20),sFactEndTimeLast) AS tFactEndTimeLast,sNotDoneProcedure \
     ,nTJTime,nPSTime,nDyeingTime,nSETime,sCustomerName,sSalesName,sSalesGroupName,sColorBorder,sOverTime AS nOverTime,bUsable,A.uppTrackJobGUID \
-    , A.sLocation ,B.ID AS IDB, A.sWorkingProcedureNameLast, A.sWorkingProcedureNameNext,A.sReplyDate AS dReplyDate,A.sDeliveryDate AS dDeliveryDate \
+    , A.sLocation , A.sWorkingProcedureNameLast, A.sWorkingProcedureNameNext,A.sReplyDate AS dReplyDate,A.sDeliveryDate AS dDeliveryDate ,A.sRemark,B.ID AS IDB \
 	INTO #TEMPTABLE \
     FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase A \
 	LEFT JOIN [dbo].[pbCommonDataProductionScheduling] B ON A.uppTrackJobGUID = B.uppTrackJobGUID \

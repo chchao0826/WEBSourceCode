@@ -8,7 +8,7 @@ from app.sql.ProductionScheduling import GETSchedulingSQL, GetSchedulingDtlSQL
 from app.sql.SchedulingZL_PMC import GetSchedulingSQL_ZL_PMC, GetSchedulingSQL_ZL_PMCHDR, SearchAllCard
 from app.sql.SearchEquipmentNo import SearchEquipmentNoSQL
 from app.sql.Color import colorSql
-
+from app.sql.ExecUpdate import ExecUpdateSql
 
 import re
 
@@ -18,11 +18,10 @@ session = sessionmaker(bind=engine_253)
 ses = session()
 
 # 预排数据
-def GetSchedulingData(args):
+def GetSchedulingData(sWorkingProcedureName):
     # print(args)
-    sVarArgs = ''.join(args)
-    sSQL = GETSchedulingSQL(sVarArgs)
-    # print(sSQL)
+    sSQL = GETSchedulingSQL(sWorkingProcedureName)
+    print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
@@ -54,14 +53,16 @@ def GetSchedulingData(args):
     return returnData
 
 # 预排子表数据
-def GetSchedulingDtlData():
-    sSQL = GetSchedulingDtlSQL()
+def GetSchedulingDtlData(sEquipmentID):
+    print('---------------')
+    print(sEquipmentID)
+    sSQL = GetSchedulingDtlSQL(sEquipmentID)
+    print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
     returnData = []
     equipmentList = []
-    nBigID = 0
     while row:
         dictVar = {
             'sBorderColor' : row[0],
@@ -90,41 +91,11 @@ def GetSchedulingDtlData():
         }
         if equipmentDict not in equipmentList:
             equipmentList.append(equipmentDict)
-        nBigID = row[19]
         # print(dictVar)
         # print(dictVar)
         returnData.append(dictVar)
         row = cursor.fetchone()
     cursor.close()
-    for i in range(1, 6):
-        Dict3 = {
-            'nHDRID': i,
-        }
-        if Dict3 not in equipmentList:
-            nBigID += 1
-            Dict4 = {
-                'ID': nBigID,
-                'nHDRID': i,
-                'nRowNumber': i,
-                'sBorderColor': '#fff',
-                'sCardNo': '空机台',
-                'sMaterialNo': '',
-                'sMaterialLot': '',
-                'sColorNo': '',
-                'nFactInPutQty': '',
-                'sCustomerName': '',
-                'sSalesName': '',
-                'sSalesGroupName': '',
-                'nTemp': '',
-                'nSpeed': '',
-                'nTime': '',
-                'sProductWidth': '',
-                'sProductGMWT': '',
-                'sColorBorder': '',
-                'uppTrackJobGUID': '',
-                'sWorkingProcedureName': ''
-            }
-            returnData.append(Dict4)
     return returnData
 
 # 生管整理预排SQL
@@ -250,6 +221,8 @@ def SchedulingSQL_ZL_PMCHDR(sType):
 def SearchOtherCard(sCardNo, sWorkingProcedureName):
     ReturnData = []
     sSQL = SearchAllCard(sCardNo, sWorkingProcedureName)
+    print(sCardNo)
+    print(sWorkingProcedureName)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
@@ -276,6 +249,11 @@ def SearchOtherCard(sCardNo, sWorkingProcedureName):
             'nOverTime': row[18],
             'uppTrackJobGUID': row[20],
             'sLocation': row[21],
+            'sWorkingProcedureNameLast': row[22],
+            'sWorkingProcedureNameNext': row[23],
+            'dReplyDate': row[24],
+            'dDeliveryDate': row[25],
+            'sRemark':row[26]
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
@@ -318,3 +296,20 @@ def SearChEquipment(sEquipmentModelName):
         row = cursor.fetchone()
     cursor.close()
     return ReturnData
+
+# 更新数据
+def ExecUpdata():
+    ReturnData = []
+    cursor = connect_253.cursor()
+    cursor.execute(ExecUpdateSql)
+    row = cursor.fetchone()
+    while row:
+        dictVar = {
+            'ID':row[1]
+        }
+        ReturnData.append(dictVar)
+    cursor.close()
+    return ReturnData
+
+
+    
