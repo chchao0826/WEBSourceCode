@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>主页</title>
 
@@ -16,7 +17,7 @@
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand">
-                    <img alt="Brand" src=" {{url_for('static', filename='Home/images/logo.jpg')}}" width="30px;"
+                    <img alt="Brand" src=" {{url_for('static', filename='bootstrap/images/logo.jpg')}}" width="30px;"
                         height="30px;">
                 </a>
             </div>
@@ -28,27 +29,44 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false">染整看板<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">工厂平面图</a></li>
+                            <li>
+                                <a href="  {{ url_for('kanban.floorplan') }}  ">工厂平面图</a>
+                            </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">技术部看板</a></li>
+                            <li>
+                                <!-- <a href="  {{ url_for('KanBan.JSInformation') }}  ">技术部看板</a> -->
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <!-- <a href="  {{ url_for('KanBan.GetSample') }}  ">取样看板</a> -->
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false">染整预排<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">定型预排-定型</a></li>
+                            <li>
+                                <!-- <a href=" {{ url_for('Scheduling.PMCIndex', sWorkingProcedureName = '预定' ) }} ">定型预排-生管</a> -->
+                            </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">定型预排-生管</a></li>
+                            <li>
+                                <!-- <a href="{{ url_for('Scheduling.DXindex', sWorkingProcedureName = '预定' ) }}">定型预排-预定</a> -->
+                            </li>
+
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">染色预排</a></li>
+                            <li>
+                                <a href="#">染色预排</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false">资料<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">色样资料</a></li>
+                            <li>
+                                <a href="#">色样资料</a>
+                            </li>
                             <li role="separator" class="divider"></li>
                         </ul>
                     </li>
@@ -59,20 +77,6 @@
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
-                <!-- <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Link</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                            aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                        </ul>
-                    </li>
-                </ul> -->
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>

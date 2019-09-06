@@ -1,1 +1,0 @@
-colorSql = "SELECT *FROM pbcommonDataColorCodeBase ORDER BY ID"

@@ -2,6 +2,6 @@
 
 from flask import Blueprint
 
-kanban = Blueprint('kanban',__name__)
+plan = Blueprint('plan',__name__)
 
 from . import views
