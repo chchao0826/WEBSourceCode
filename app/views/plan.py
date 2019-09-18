@@ -10,8 +10,9 @@ from app.sql.DXplan import NoDXPlanSQL, DXPlanSQL
 
 import re
 
-base = declarative_base()
+
 # 236
+base = declarative_base()
 session = sessionmaker(bind=engine_253)
 ses = session()
 
@@ -152,9 +153,9 @@ def Data_Plan(sWorkingProcedureName):
 
 
 # Search其他卡号
-def SearchAllData(sFeild):
+def SearchAllData(sFeild, sWoring):
     ReturnData = []
-    sSQL = GetData_AllNoPlan(sFeild)
+    sSQL = GetData_AllNoPlan(sFeild, sWoring)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()

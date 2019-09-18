@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>看板 - 技术部</title>
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'kanban/css/bootstrap.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'kanban/css/AdminLTE.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'kanban/css/JSInformation.css')}} ">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="body" id="body">
+    <div class="div-nav navbar-fixed-top" id="title">
+        <ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;" id="GroupUL">
+            {% for i in salesGroupList %}
+            <li role="presentation" id="{{i['sSalesGroupNo']}}" name="liNav" style="font-size:25px;">
+                <a href="#" onclick="onclickGroup('{{i['sSalesGroupNo']}}')">
+                    <span style="font-size: 35px;">{{i['sSalesGroupName']}}</span>
+                    <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow" style="font-size:20px; margin-top:-5px; border-radius:20px; font-size: 35px;"> {{i['nSaleGroupCount']}} </span>
+                </a>
+            </li>
+            {% endfor %}
+            <li role="presentation" style="font-size:25px;">
+                <a href="#" onclick="ToWorking()">
+                    <span style="color: teal;" aria-hidden="true">工段</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="wrapper">
+        <div class="content" id="content" style="margin-top: 76px;">
+            {% for i in returnData %}
+            <div class="col-md-4" style="height:400px; margin-top: -7px; margin-bottom: 30px;" onclick="turnOver()">
+                <div class="box direct-chat" style="height:400px; border: 6px solid {{i['borderColor']}};" id="box{{i['id']}}">
+                    <div class="box-header text-center">
+                        <h3 class="box-title" style="font-size: 55px; font-weight: 900;">{{i['sMaterialNo']}}</h3>
+                    </div>
+                    <div class="box-body" style="margin-top:-8px; height: 350px;">
+                        <div class="direct-chat-messages" style="height: 350px;">
+                            <ul class="text-center" style="font-size : 55px; font-weight: 700;">
+                                <li>{{i['sCardNo']}}</li>
+                                <li>{{i['tCardTime']}}</li>
+                                <li>{{i['sWorkingProcedureName']}}</li>
+                                <li>{{i['sSalesName']}}</li>
+                            </ul>
+                        </div>
+                        <div class="direct-chat-contacts" style="font-size: 30px; height:350px;" name="remark">
+                            {{i['sKanBanRemark']}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+            <div class="fixed" id="fixed">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination" style="height:10px; margin-top:-4px;">
+                        {% for i in range(1, nPage + 1) %}
+                            {% if i == 1 %}
+                            <li class="active"><a href="#" onclick="clickPage('{{i}}')" id="{{i}}" style="font-size: 20px;">{{i}}</a></li>
+                            {% endif %}
+                            {% if i != 1 %}
+                            <li class=""><a  href="#" onclick="clickPage('{{i}}')" id="{{i}}" style="font-size: 20px;">{{i}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul> 
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" class="footer float-left text-center" onmouseover="overShow()" onmouseout="overHide()" onclick="ToWork()">
+        <span class="glyphicon glyphicon-menu-up" aria-hidden="true" style="display: none; font-size: 30px;"></span>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
+
+<script>
+    var time2;
+    // ClassName
+    var _$ = function (id) {
+        return document.getElementsByClassName(id);
+    }
+
+    // ID
+    var $$ = function (id) {
+        return document.getElementById(id);
+    }
+
+    // Name
+    var __$ = function (id) {
+        return document.getElementsByName(id);
+    }
+
+    // 尺寸修改
+    var getScreen = function () {
+        var nWidth = document.body.clientWidth;
+        var nHeight = document.documentElement.clientHeight;
+        var content = $$('body')
+        content.style.width = nWidth + 'px'
+        content.style.height = nHeight - 100 + 'px'
+        $$('footer').style.width = nWidth + 'px';
+        PageCenter()
+    }
+</script>
+
+<script>
+    // 获得当前选中的部门
+    var getActive = function(){
+        var ulList = $$('GroupUL').children;
+        for (var i = 0; i < ulList.length; i++){
+            if (ulList[i].className.indexOf('active') != -1){
+                return ulList[0].id
+            }
+        }
+    }
+</script>
+
+<script>
+    // 点击部门
+    var onclickGroup = function (sSaleGroupName) {
+        // AJAX处理点击的li
+        $('#content').load('/kanban/JS/AJAX/sSaleGroupName2/' + sSaleGroupName);
+        // 取得所有的ul中的li,并进行初始化
+        var ulList = $$('GroupUL').children;
+        for(var i = 0; i < ulList.length; i++){
+            ulList[i].classList.remove('active');
+        }
+        // 赋予点击的li点击特效
+        $$(sSaleGroupName).className += 'active';
+    }
+
+    // 点击页码
+    var clickPage = function(nID){
+        var GetHref = getActive();
+        if (GetHref == undefined){
+            GetHref = '';
+        }
+        var returnValue = GetHref + '_' + nID;
+        $('#content').load('/kanban/JS/AJAX/sSaleGroupName2/' + returnValue);
+        console.log(returnValue);
+    }
+
+</script>
+
+<script>
+    // 部门轮播图信息
+    var slideShow = function () {
+        var liData = __$('liNav');
+        var iflag = undefined;
+        for (var i = 0; i < liData.length; i++) {
+            var className = liData[i].className;
+            if (className === 'active') {
+                iflag = i;
+            }
+        }
+        if (iflag == undefined) {
+            liData[0].className = 'active';
+            console.log(liData[0].children[0].children[0].innerHTML)
+            return liData[0].children[0].children[0].innerHTML;
+        } else if (iflag + 1 == liData.length) {
+            liData[0].className = 'active';
+            liData[iflag].className = '';
+            return liData[0].children[0].children[0].innerHTML;
+        } else {
+            liData[iflag + 1].className = 'active';
+            liData[iflag].className = '';
+            return liData[iflag + 1].children[0].children[0].innerHTML;
+        }
+    }
+
+    // 部门数据更新
+    var updateGroup = function () {
+        $('#title').load('/kanban/JS/AJAXHEADER');
+        var liData = __$('liNav');
+        var liList = []
+        for (var i = 0; i < liData.length; i++) {
+            liList.push(liData[i].children[0].children[0].innerHTML);
+        }
+        console.log(liList);
+    }
+
+    // 点击业务员
+    var onclickSale = function () {
+        window.clearInterval(time2);
+        var obj_lis = document.getElementById("GroupUL").getElementsByTagName("li");
+        for (i = 0; i < obj_lis.length; i++) {
+            obj_lis[i].onclick = function () {
+                var sSaleName = this.children[0].children[0].innerHTML;
+                sSaleName = sSaleName.replace(' ', '');
+                for (var i = 0; i < this.parentNode.children.length; i++) {
+                    this.parentNode.children[i].className = ''
+                }
+                // console.log(this.parentNode.children.length);
+                this.className = 'active';
+                // console.log(sSaleName);
+                $('#content').load('/kanban/JS/AJAX/sSalesName/' + sSaleName);
+                // var time3 = setTimeout(function () {
+                //     turnOver();
+                // }, 3000)
+            }
+        }
+    }
+
+    // 页面初始
+    window.onload = function () {
+        // timename1=setInterval("update();",10000);
+        getScreen();
+    }
+
+    // 修改屏幕尺寸后进行div的更新
+    window.onresize = function () {
+        getScreen();
+    }
+
+</script>
+
+<script>
+    var overShow = function () {
+        $$('footer').children[0].style.display = "block";
+    }
+    var overHide = function () {
+        $$('footer').children[0].style.display = "none";
+    }
+
+    var ToWork = function () {
+        window.location.href = "http://198.168.6.56:5000/kanban/JS/sWorkingProcedureName/";
+    }
+</script>
+
+<script>
+    var PageCenter = function(){
+        var nLength = $$('fixed').children[0].children[0].children.length;
+        var nPageLength = nLength * 35;
+        var nWidth = document.body.clientWidth;
+        var nLeft = (nWidth - nPageLength) / 2;
+        $$('fixed').style.left = nLeft +'px'
+
+    }
+</script>
+
+<script>
+    //轮播图, 点击哪一个按钮
+    var showWhich = function(){
+        var allPage = $$('fixed').children[0].children[0].children;
+        // 页码表
+        for(var i = 0;i < allPage.length; i++){
+            var activePage = allPage[i].className;
+            // 判断页码是否激活
+            if (activePage == 'active'){
+                // 是否是最后一页
+                if (i != allPage.length - 1){
+                    // 下一页
+                    clickPage(i + 2);
+                    break;
+                }
+                // 最后一页则更换工段
+                else{
+                    // 取工段
+                    var workingList = $$('GroupUL').children;
+                    var nMaxNumber = 0;
+                    for (var a = 0; a < workingList.length - 1; a++){
+                        var activeWorking = workingList[a].className;
+                        // 判断工段是否激活
+                        if (activeWorking == 'active'){
+                            if (a != workingList.length -2){
+                                // 有激活则变量+1
+                                nMaxNumber = a + 1;
+                                // 取下一个工段
+                                var VarField = workingList[a + 1].id;
+                                onclickGroup(VarField);
+                                break;
+                            }
+                        }
+                    }
+                    // 没有被激活则是没有标记的工段
+                    if (nMaxNumber == 0){
+                        var VarField = workingList[0].id;
+                        onclickGroup(VarField);
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    // 跳转至营业部门页面
+    var ToWorking = function(){
+        window.location.href = "http://198.168.6.236/kanban/JS/sWorkingProcedureName";
+    }
+</script>
+
+<script>
+    // 设置定时轮转播放
+    var t2 = window.setInterval("showWhich()",30000); 
+    //去掉定时器的方法 
+    // window.clearInterval(t1); 
+
+</script>
+
+<script>
+
+    // 进行备注的翻页
+    var turnOver = function () {
+        console.log('----------------------')
+        var remarkArray = __$('remark');
+        for (var i in remarkArray) {
+            var sFlag = /open/;
+            var dict = remarkArray[i].innerHTML;
+            var str = dict.replace(/^\s*|\s*$/g, "");
+            var remarkParent = remarkArray[i].parentNode.parentNode;
+            if (str != 'None' && sFlag.test(remarkParent.className) == false) {
+                remarkParent.className += ' direct-chat-contacts-open';
+            } else if (str != 'None' && sFlag.test(remarkParent.className) == true) {
+                remarkParent.className = 'box direct-chat';
+            }
+        }
+    }
+
+
+</script>
+
+
+</html>

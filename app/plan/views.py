@@ -45,7 +45,7 @@ def PMCSearch(inputValue):
 
     print(sWoring + nCount)
     NoPlanData = Data_NoPlan(sWoring + nCount)
-    returnData = SearchAllData(sValue)
+    returnData = SearchAllData(sValue, sWoring)
     print(returnData)
     # returnHtml = ''
     returnHtml = '<ul id="bottom_ul" class="" style="margin: 0;padding: 0;">'

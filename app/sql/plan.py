@@ -61,7 +61,7 @@ def GetData_Plan(sWorkingProcedureName):
 
 
 # SQL: 查找没有的数据
-def GetData_AllNoPlan(sVarInput):
+def GetData_AllNoPlan(sVarInput, sWoring):
     return " \
     DECLARE @sVarStr NVARCHAR(20) \
     SET @sVarStr = '%s' \
@@ -78,8 +78,8 @@ def GetData_AllNoPlan(sVarInput):
     OR sColorNo LIKE '%%'+@sVarStr+'%%' \
     OR sWorkingProcedureNameCurrent LIKE '%%'+@sVarStr+'%%' \
     OR sSalesGroupName LIKE '%%'+@sVarStr+'%%' \
-    OR sSalesName LIKE '%%'+@sVarStr+'%%') AND bUsable = 1 \
+    OR sSalesName LIKE '%%'+@sVarStr+'%%') AND bUsable = 1 AND A.sWorkingProcedureName = '%s'\
     SELECT *FROM #TEMPTABLE \
 	WHERE IDB IS NULL \
 	DROP TABLE #TEMPTABLE \
-    " % (sVarInput)
+    " % (sVarInput, sWoring)

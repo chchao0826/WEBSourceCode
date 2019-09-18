@@ -7,9 +7,9 @@ app.debug = True
 from app.home import home as home_blueprint
 app.register_blueprint(home_blueprint)
 
-# KanBan
+# kanban
 from app.kanban import kanban as kanban_blueprint
-app.register_blueprint(kanban_blueprint, url_prefix = '/kanBan/')
+app.register_blueprint(kanban_blueprint, url_prefix = '/kanban/')
 
 
 # plan
