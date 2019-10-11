@@ -45,3 +45,12 @@ ul, li {
     margin: 0;
     list-style: none;
 }
+.bottom-total {
+    background-color: #eee;
+    position: fixed;
+    bottom: 0;
+}
+.bottom-total > ul >li{
+    line-height: 30px;
+    height: 40px;
+}

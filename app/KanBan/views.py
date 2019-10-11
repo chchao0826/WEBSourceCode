@@ -2,6 +2,8 @@
 from . import kanban
 from flask import render_template, Flask, request
 from app.views.kanban import emStatus, StoreStatus, wpStatus, JSData
+from app.models.kanban import DXKanBanData, DXKanBanChartData
+from app.models.plan import GetEquipment
 import json
 
 
@@ -78,6 +80,8 @@ def JSInformation():
 # AJAX
 @kanban.route('/JS/AJAX/sSaleGroupName2/<GetValue>')
 def JSDataAJAX(GetValue):
+    print('-----------------')
+    print(GetValue)
     sSaleGroupName = ''
     nPage = 1
     if GetValue.find('_') == -1:
@@ -85,6 +89,8 @@ def JSDataAJAX(GetValue):
     else:
         sSaleGroupName = GetValue.split('_')[0]
         nPage = GetValue.split('_')[1]
+    print(sSaleGroupName)
+    print(nPage)
 
     returnData = JSData(sSaleGroupName)[0]
     nReturnPage = JSData(sSaleGroupName)[8]
@@ -281,33 +287,24 @@ def JSPro():
     return render_template('kanban/JSWorkingProcedure.html', returnData = cardData, workingProcedureList = workingProcedureList, nPage = nPage)
 
 
-# # 技术部 工段页面
-# @kanban.route('/JS/sWorkingProcedureName/AJAX/<sWorkingProcedureName>')
-# def JSProAJAX(sWorkingProcedureName):
-#     returnData = JSData(sWorkingProcedureName)[6]
-#     returnHTML = ''
-#     # print(returnData)
-#     for i in returnData:
-#         returnHTML +='\
-#             <div class="col-md-2" style="height:400px;" onclick="turnOver()"> \
-#                 <div class="box direct-chat" style="height:400px; border-top: 6px solid %s"> \
-#                     <div class="box-header text-center"> \
-#                         <h3 class="box-title" style="font-size: 60px; font-weight: 900;">%s</h3> \
-#                     </div> \
-#                     <div class="box-body" style="margin-top:-8px; height: 350px;"> \
-#                         <div class="direct-chat-messages" style="height: 350px;"> \
-#                             <ul class="text-center" style="font-size:50px; font-weight: 500;"> \
-#                                 <li>%s</li> \
-#                                 <li>%s</li> \
-#                                 <li>%s</li> \
-#                                 <li>%s</li> \
-#                             </ul> \
-#                         </div> \
-#                         <div class="direct-chat-contacts" style="font-size: 50px; height: 350px;" name="remark"> \
-#                             %s \
-#                         </div> \
-#                     </div> \
-#                 </div> \
-#             </div>'%(i['borderColor'], i['sMaterialNo'], i['sCardNo'], i['tCardTime'], i['sWorkingProcedureName'], i['sSalesName'], i['sKanBanRemark'])
-#     returnHTML += '<script>scroll();</script>'
-#     return returnHTML
+# 定型看板
+@kanban.route('/DX/')
+def DXKanBan():
+    returnData = DXKanBanData()
+    EqList = GetEquipment('整理')
+    print(returnData)
+    print(EqList)
+    return render_template('kanban/plan_zl.html', returnData = returnData, equipmentData = EqList)
+
+
+# 定型看板-山积图
+@kanban.route('/DX/chart')
+def DXKanBan_Chart():
+    EqList = GetEquipment('整理')
+    DXKanBanChart = DXKanBanChartData()
+    print(EqList)
+    print('================')
+    print(DXKanBanChart)
+    return render_template('kanban/plan_zl_chart.html', EqList = EqList, DXKanBanChart = DXKanBanChart)
+
+

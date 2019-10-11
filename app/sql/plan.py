@@ -52,7 +52,7 @@ def GetData_Plan(sWorkingProcedureName):
     ,ISNULL(nFactInputQty,nPlanOutputQty) AS nFactInputQty,sWorkingProcedureNameCurrent \
     ,CONVERT(NVARCHAR(20),sFactEndTimeLast) AS tFactEndTimeLast,sNotDoneProcedure \
     ,nTJTime,nPSTime,nDyeingTime,nSETime,sCustomerName,sSalesName,sSalesGroupName,sColorBorder,sOverTime AS nOverTime,bUsable,B.uppTrackJobGUID \
-    ,CASE WHEN A.sLabel = '1' THEN 'sUrgent' WHEN B.bIsRush = 1 THEN 'ERPUrgent' ELSE '#FFF' END AS sLabel \
+    ,CASE WHEN A.sLabel = '2' THEN 'sUrgent' WHEN A.sLabel = '1' OR B.bIsRush = 1 THEN 'ERPUrgent' ELSE '#FFF' END AS sLabel \
     , B.sLocation,CONVERT(NVARCHAR(10),B.sRemark) AS sRemark,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameNext,B.sReplyDate AS dReplyDate,B.sDeliveryDate AS dDeliveryDate \
     FROM [dbo].pbCommonDataProductionScheduling A \
     JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
@@ -83,3 +83,8 @@ def GetData_AllNoPlan(sVarInput, sWoring):
 	WHERE IDB IS NULL \
 	DROP TABLE #TEMPTABLE \
     " % (sVarInput, sWoring)
+
+
+# 插入数据
+def InsertImportData():
+    return "INSERT INTO [dbo].[pbCommonDataProductionScheduling](sType,nRowNumber,uppTrackJobGUID,tUpdateTime,sLabel) VALUES (%s, %d,%s,%s,%s)"

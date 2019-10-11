@@ -120,7 +120,7 @@
         var ulList = $$('GroupUL').children;
         for (var i = 0; i < ulList.length; i++){
             if (ulList[i].className.indexOf('active') != -1){
-                return ulList[0].id
+                return ulList[i].id
             }
         }
     }
@@ -146,6 +146,7 @@
     // 点击页码
     var clickPage = function(nID){
         var GetHref = getActive();
+
         if (GetHref == undefined){
             GetHref = '';
         }

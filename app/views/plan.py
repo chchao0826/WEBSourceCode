@@ -4,8 +4,10 @@ from sqlalchemy import or_, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
-from app.sql.plan import SearchEquipmentSQL, GetData_NoPlan, GetData_Plan, GetData_AllNoPlan, SearchWoringSQL
+from app.sql.plan import SearchEquipmentSQL, GetData_NoPlan, GetData_Plan, GetData_AllNoPlan, SearchWoringSQL, InsertImportData
 from app.sql.DXplan import NoDXPlanSQL, DXPlanSQL
+from app.models.plan import IsInPMCPlan
+import time
 # from app.sql.ExecUpdate import ExecUpdateSql
 
 import re
@@ -15,6 +17,12 @@ import re
 base = declarative_base()
 session = sessionmaker(bind=engine_253)
 ses = session()
+
+
+# 获得当前时间
+def GetDate():
+    # localtime = time.localtime(time.time())
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
 # 工段名称解析
@@ -34,9 +42,9 @@ def GetWorking(sWorkingProcedureName):
 # 生管整理预排SQL
 def Data_NoPlan(sWorkingProcedureName):
     ReturnData = []
-    # print(sWorkingProcedureName)
+    print(sWorkingProcedureName)
     sSQL = GetData_NoPlan(sWorkingProcedureName)
-    # print(sSQL)
+    print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
@@ -217,18 +225,10 @@ def SearchEquipment(sEquipmentModelName):
 def Data_DXNoPlan(sWorkingProcedureName):
     # print(args)
     sSQL = NoDXPlanSQL(sWorkingProcedureName)
-    print(sWorkingProcedureName)
-    print('3213232')
-    print(sSQL)
-
     cursor = connect.cursor()
-    print('11112222')
     cursor.execute(sSQL)
-    print('22223333')
     row = cursor.fetchone()
-    print('44445555')
     returnData2 = []
-    print('gfdfg3232')
     while row:
         dictVar = {
             'sBorderColor': row[0],
@@ -249,8 +249,8 @@ def Data_DXNoPlan(sWorkingProcedureName):
             'sWorkingProcedureName': str(row[15]),
             'sLocation': str(row[16]),
         }
-        print('bbbbbffdsd')
-        print(dictVar)
+        # print('bbbbbffdsd')
+        # print(dictVar)
         returnData2.append(dictVar)
         row = cursor.fetchone()
     cursor.close()
@@ -259,10 +259,7 @@ def Data_DXNoPlan(sWorkingProcedureName):
 
 # 预排子表数据
 def Data_DXPlan(sEquipmentID):
-    print('---------------')
-    print(sEquipmentID)
     sSQL = DXPlanSQL(sEquipmentID)
-    print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
     row = cursor.fetchone()
@@ -304,4 +301,23 @@ def Data_DXPlan(sEquipmentID):
     return returnData
 
 
-
+# 生管导入EXCEL
+def importData_PMC(Data):
+    cursor = connect.cursor()
+    INSERTData = []
+    sql = InsertImportData()
+    for innerData in Data:
+        sType = innerData['sType']
+        dData = innerData['Data']
+        e = 0;
+        for i in dData:
+            # print('----------------')
+            if IsInPMCPlan(i['TrackJob']) != True:
+                sList = (sType, e, i['TrackJob'], GetDate(), i['加急'])
+                INSERTData.append(sList)
+                e += 1
+    cursor.executemany(sql, INSERTData)
+    connect.commit()
+    cursor.close()
+    # print(sql)
+    print('导入成功')

@@ -5,6 +5,8 @@ from sqlalchemy.orm import sessionmaker, relationship, query
 from flask import Flask, render_template, request
 from app.config import engine
 
+
+
 base = declarative_base()
 session = sessionmaker(bind=engine)
 ses = session()
@@ -88,6 +90,7 @@ def PMCPostData(data):
     for i in data:
         uppTrackJobGUID = i['uppTrackJobGUID']
         print(uppTrackJobGUID)
+        print(i)
         # sType = i['sType']
         # nRowNumber = i['nRowNumber']
         # bIsUrgent = i['bIsUrgent']

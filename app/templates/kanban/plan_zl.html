@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>整理预排看板</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='KanBan/css/SchedulingZL.css')}} " />
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+</head>
+
+<body id="body" class="content-wrapper">
+    {% for i in equipmentData %}
+    <div class="float_left bigBox">
+
+        <div class="padding-10 height100 bgColor">
+            <div class="eq_div">{{i.sEquipmentNo}}</div>
+            {% for a in returnData %}
+            {% if a.sEquipmentNo == i.sEquipmentNo %}
+            <div class="cardBg">
+                <ul>
+                    <li class="Card_Style">{{a.sCardNo}}</li>
+                    <li class="float_left other_style">{{a.sColorNo}}</li>
+                    <li class="other_style">{{a.sMaterialNo}}</li>
+                    <li class="other_style">投胚:{{a.nQty}}</li>
+                    <li class="float_left other_style">速度:{{a.nPSSpeed}}</li>
+                    <li class="other_style">温度:{{a.nPSTemp}}</li>
+                    <li class="float_left other_style">幅宽:{{a.sProductWidth}}</li>
+                    <li class="other_style">克重:{{a.nProductGMWT}}</li>
+                    <li class="other_style">{{a.sWorkingProcedureName}} / {{a.sType}}</li>
+                    <li class="other_style">{{a.sCustomerName}}</li>
+                    <li>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
+                                aria-valuemin="0" aria-valuemax="100" style="width: {{a.nPre}}%">
+                                <span class="sr-only">40% Complete (success)</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <br>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+    {%  endfor %}
+</body>
+
+
+<script>
+    // ClassName
+    var _$ = function (id) {
+        return document.getElementsByClassName(id);
+    }
+
+    // ID
+    var $$ = function (id) {
+        return document.getElementById(id);
+    }
+
+    // Name
+    var __$ = function (id) {
+        return document.getElementsByName(id);
+    }
+
+    // 尺寸修改
+    var getScreen = function () {
+        var nWidth = document.body.clientWidth;
+        var nHeight = document.documentElement.clientHeight;
+        var content = $$('body');
+        content.style.width = nWidth + 'px';
+        content.style.height = nHeight - 5 + 'px';
+    }
+
+    // 页面初始
+    window.onload = function () {
+        getScreen();
+        // fullScreen();
+    }
+
+    // 修改屏幕尺寸后进行div的更新
+    window.onresize = function () {
+        getScreen();
+    }
+</script>
+
+
+<script language="JavaScript">
+    function myrefresh() {
+        window.location.reload();
+    }
+    setTimeout('myrefresh()', 60000); //指定1秒刷新一次
+</script>
+
+</html>
