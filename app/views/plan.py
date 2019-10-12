@@ -248,6 +248,9 @@ def Data_DXNoPlan(sWorkingProcedureName):
             'uppTrackJobGUID': row[14],
             'sWorkingProcedureName': str(row[15]),
             'sLocation': str(row[16]),
+            'sWorkingProcedureNameLast': str(row[17]),
+            'sWorkingProcedureNameNext': str(row[18]),
+            'sMaterialType': str(row[19]),
         }
         # print('bbbbbffdsd')
         # print(dictVar)
@@ -287,6 +290,8 @@ def Data_DXPlan(sEquipmentID):
             'sEquipmentNo': row[17],
             'nHDRID': row[18],
             'nRowNumber': row[19],
+            'sWorkingProcedureNameLast': row[20],
+            'sWorkingProcedureNameNext': row[21],
         }
         equipmentDict = {
             'nHDRID': row[18],
@@ -299,6 +304,45 @@ def Data_DXPlan(sEquipmentID):
         row = cursor.fetchone()
     cursor.close()
     return returnData
+
+# 更新数据
+def Data_DXNoPlan_Type(sWorkingProcedureName, sMaterialType):
+    # print(args)
+    sSQL = NoDXPlanSQL(sWorkingProcedureName)
+    cursor = connect.cursor()
+    cursor.execute(sSQL)
+    row = cursor.fetchone()
+    returnData2 = []
+    while row:
+        if sMaterialType == str(row[19]):
+            dictVar = {
+                'sBorderColor': row[0],
+                'sCardNo': row[1],
+                'sMaterialNo': row[2],
+                'sMaterialLot': row[3],
+                'sColorNo': row[4],
+                'nFactInPutQty': row[5],
+                'sCustomerName': row[6],
+                'sSalesGroupName': row[7],
+                'nTemp': row[8],
+                'nSpeed': row[9],
+                'nTime': row[10],
+                'sProductWidth': row[11],
+                'sProductGMWT': row[12],
+                'sColorBorder': row[13],
+                'uppTrackJobGUID': row[14],
+                'sWorkingProcedureName': str(row[15]),
+                'sLocation': str(row[16]),
+                'sWorkingProcedureNameLast': str(row[17]),
+                'sWorkingProcedureNameNext': str(row[18]),
+                'sMaterialType': str(row[19]),
+            }
+            # print('bbbbbffdsd')
+            # print(dictVar)
+            returnData2.append(dictVar)
+        row = cursor.fetchone()
+    cursor.close()
+    return returnData2
 
 
 # 生管导入EXCEL

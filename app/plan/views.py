@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 from . import plan
 from flask import render_template, Flask, request, jsonify
-from app.views.plan import GetWorking, Data_NoPlan, Data_Plan, SearchAllData, SearchEquipment, Data_DXNoPlan, Data_DXPlan, importData_PMC
+from app.views.plan import GetWorking, Data_NoPlan, Data_Plan, SearchAllData, SearchEquipment, Data_DXNoPlan, Data_DXPlan, importData_PMC, Data_DXNoPlan_Type
 from app.models.plan import PMCPostData, GetEquipment, DXPostdata, DeleteDXPlan
 import time
 import os
@@ -142,7 +142,6 @@ def DXIndex(sWorkingProcedureName):
     ReturnData = Data_DXNoPlan(sWorkingName)
     ReturnEquipment = GetEquipment('整理')
     ReturnDtlData = Data_DXPlan(sEquipmentID)
-
     return render_template('plan/DX.html', ReturnData=ReturnData, ReturnEquipment=ReturnEquipment, ReturnDtlData=ReturnDtlData)
 
 
@@ -248,13 +247,9 @@ def AJAXRight(sEquipmentID):
     return RightPage
 
 
-# 右边页面刷新
+# 左边页面刷新
 @plan.route('/DX/AJAXLeftPage/<sWorkingProcedureName>', methods=['GET', 'POST'])
 def AJAXLeft(sWorkingProcedureName):
-    if sWorkingProcedureName.find('PS') != -1:
-        sWorkingProcedureName = '预定'
-    elif sWorkingProcedureName.find('SH') != -1:
-        sWorkingProcedureName = '成定'
     sWorkingName = GetWorking(sWorkingProcedureName)[0]
     ReturnData = Data_DXNoPlan(sWorkingName)
     LeftPage = '<tbody>'
@@ -262,17 +257,20 @@ def AJAXLeft(sWorkingProcedureName):
         LeftPage += ' \
         <tr onclick="onclicktr(\'%s\')" id="%s" style="background-color: %s"> \
             <td style="width: 10%%;">%s</td> \
+            <td style="width: 8%%;">%s</td> \
             <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
-            <td style="width: 10%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
             <td hidden>%s</td> \
-        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureName'], i['uppTrackJobGUID'])
+        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'], i['uppTrackJobGUID'])
 
     LeftPage += '</tbody>'
     return LeftPage
@@ -284,4 +282,37 @@ def AJAXSave():
     data = request.get_json()
     DXPostdata(data)
     return '123'
+
+
+@plan.route('/DX/AJAXMasterialType/<value>')
+def AJAXMasterialType(value):
+    # print(value)
+    value1 = value.split('_')[0]
+    value2 = value.split('_')[1]
+    sWorkingName = GetWorking(value1)[0]
+
+    ReturnData = Data_DXNoPlan_Type(sWorkingName, value2)
+    LeftPage = '<tbody>'
+    for i in ReturnData:
+        LeftPage += ' \
+        <tr onclick="onclicktr(\'%s\')" id="%s" style="background-color: %s"> \
+            <td style="width: 10%%;">%s</td> \
+            <td style="width: 8%%;">%s</td> \
+            <td style="width: 10%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td hidden>%s</td> \
+        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'], i['uppTrackJobGUID'])
+
+    LeftPage += '</tbody>'
+    return LeftPage
+
 

@@ -21,6 +21,10 @@
             font-size: 15px;
             font-weight: 700;
         }
+        .typeStyle {
+            font-size: 17px; 
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -37,6 +41,9 @@
                         <li><a href="#" onclick="refresh()">刷新</a><span class="sr-only"></span></a></li>
                         <li><a href="#" onclick="printPage()">打印<span class="sr-only"></span></a></li>
                         <li><a href="#" onclick="ExportExcel()">导出<span class="sr-only"></span></a></li>
+                        <li><a href="#" class="typeStyle" onclick="checkMasterialType('NET')">网布<span class="sr-only"></span></a></li>
+                        <li><a href="#" class="typeStyle" onclick="checkMasterialType('BW')">平布黑白<span class="sr-only"></span></a></li>
+                        <li><a href="#" class="typeStyle" onclick="checkMasterialType('Others')">平布其他<span class="sr-only"></span></a></li>
                     </ul>
                     <div class="navbar-form navbar-left">
                         <div class="form-group">
@@ -53,15 +60,18 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;">卡号</th>
-                        <th style="width: 10%;">布种</th>
+                        <th style="width: 8%;">布种</th>
                         <th style="width: 10%;">颜色</th>
-                        <th style="width: 10%;">幅宽</th>
-                        <th style="width: 10%;">克重</th>
-                        <th style="width: 10%;">投胚</th>
-                        <th style="width: 10%;">预计时间</th>
-                        <th style="width: 10%;">温度</th>
-                        <th style="width: 10%;">速度</th>
-                        <th style="width: 10%;">当前工段</th>
+                        <th style="width: 6%;">幅宽</th>
+                        <th style="width: 6%;">克重</th>
+                        <th style="width: 6%;">投胚</th>
+                        <th style="width: 6%;">耗时</th>
+                        <th style="width: 6%;">温度</th>
+                        <th style="width: 6%;">速度</th>
+                        <th style="width: 6%;">当前工段</th>
+                        <th style="width: 6%;">上工段</th>
+                        <th style="width: 6%;">下工段</th>
+                        <th style="width: 6%;">盒车</th>
                     </tr>
                 </thead>
             </table>
@@ -72,16 +82,19 @@
                 <tr onclick="onclicktr('{{i['uppTrackJobGUID']}}')" id="{{i['uppTrackJobGUID']}}"
                     style="background-color: {{i['sBorderColor']}}">
                     <td style="width: 10%;">{{i['sCardNo']}}</td>
-                    <td style="width: 10%;">{{i['sMaterialNo']}}</td>
+                    <td style="width: 8%;">{{i['sMaterialNo']}}</td>
                     <td style="width: 10%;">{{i['sColorNo']}}</td>
-                    <td style="width: 10%;">{{i['sProductWidth']}}</td>
-                    <td style="width: 10%;">{{i['sProductGMWT']}}</td>
-                    <td style="width: 10%;">{{i['nFactInPutQty']}}</td>
-                    <td style="width: 10%;">{{i['nTime']}}</td>
-                    <td style="width: 10%;">{{i['nTemp']}}</td>
-                    <td style="width: 10%;">{{i['nSpeed']}}</td>
-                    <td style="width: 10%;">{{i['sWorkingProcedureName']}}</td>
+                    <td style="width: 6%;">{{i['sProductWidth']}}</td>
+                    <td style="width: 6%;">{{i['sProductGMWT']}}</td>
+                    <td style="width: 6%;">{{i['nFactInPutQty']}}</td>
+                    <td style="width: 6%;">{{i['nTime']}}</td>
+                    <td style="width: 6%;">{{i['nTemp']}}</td>
+                    <td style="width: 6%;">{{i['nSpeed']}}</td>
+                    <td style="width: 6%;">{{i['sWorkingProcedureName']}}</td>
                     <td hidden>{{i['uppTrackJobGUID']}}</td>
+                    <td style="width: 6%;">{{i['sWorkingProcedureNameLast']}}</td>
+                    <td style="width: 6%;">{{i['sWorkingProcedureNameNext']}}</td>
+                    <td style="width: 6%;">{{i['sLocation']}}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -122,10 +135,10 @@
                             <div class="clearfix">
                                 <div class="div-card float-left">
                                     <div class="float-left"
-                                        style="width: 160px; border-right: 1px solid #111; height: 100%; text-align: center; line-height: 55px; text-align: center; line-height: 60px; background-color: {{i['sBorderColor']}}">
+                                        style="width: 120px; border-right: 1px solid #111; height: 100%; text-align: center; line-height: 55px; text-align: center; line-height: 60px; background-color: {{i['sBorderColor']}}">
                                         <span>{{i['sCardNo']}}</span>
                                     </div>
-                                    <div class="float-left" style="width: 123px;">
+                                    <div class="float-left" style="width: 96px; border-right: 1px solid #111;">
                                         <div
                                             style="border-bottom: 1px solid #111; height: 30px; text-align: center; line-height: 30px;">
                                             <span>{{i['sMaterialNo']}}</span>
@@ -136,6 +149,16 @@
                                         </div>
                                     </div>
                                     <div hidden>{{i['uppTrackJobGUID']}}</div>
+                                    <div class="float-left" style="width: 90px;">
+                                        <div
+                                            style="border-bottom: 1px solid #111; height: 30px; text-align: center; line-height: 30px;">
+                                            <span>{{i['sWorkingProcedureNameCurrent']}}</span>
+                                        </div>
+                                        <div style="text-align: center; line-height: 30px;">
+                                            <span>温度:</span>
+                                            <span>{{i['nTemp']}}</span>
+                                        </div>
+                                    </div>
                                     <div hidden>{{i['sCardNo']}}</div>
                                     <div hidden>{{i['sMaterialNo']}}</div>
                                     <div hidden>{{i['sColorNo']}}</div>
@@ -174,6 +197,7 @@
     <script type="text/javascript" src="/static/plan/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="/static/plan/js/dragslot-ZL.js"></script>
     <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script>
+    <script type="text/javascript" src="/static/plan/js/DX.js"></script>
 
 
 </body>

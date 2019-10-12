@@ -484,6 +484,7 @@ function openDownloadDialog(url, saveName) {
     aLink.dispatchEvent(event);
 }
 
+// 定型导出EXCEL
 var ExportExcel = function () {
     var ulList = $$('SedData').children;
     var sWork = GetThisWork();
@@ -531,4 +532,16 @@ var ExportExcel = function () {
     dateTime = getDateTime();
     var excelName = sWork + sthisEqFun + '排单' + dateTime + '.xlsx';
     openDownloadDialog(sheet2blob(sheet), excelName);
+}
+
+// 选择布种别
+var checkMasterialType = function(sType){
+    var thisURL = document.URL;
+    var thisWorking = thisURL.split('/')[5];
+    if (thisWorking.indexOf('#') != -1){
+        thisWorking = thisWorking.split('#')[0]
+    }
+    var returnValue = thisWorking + '_' + sType
+    $('#dataTable').load('AJAXMasterialType/' + returnValue);
+
 }
