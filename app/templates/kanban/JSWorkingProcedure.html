@@ -7,9 +7,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>看板 - 技术部 - 工段</title>
-    <link rel="stylesheet" href=" {{url_for('static', filename = 'kanban/css/bootstrap.min.css')}} ">
-    <link rel="stylesheet" href=" {{url_for('static', filename = 'kanban/css/AdminLTE.min.css')}} ">
-    <link rel="stylesheet" href=" {{url_for('static', filename = 'kanban/css/JSInformation.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/bootstrap.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/AdminLTE.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/JSInformation.css')}} ">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
         integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
@@ -130,7 +130,7 @@
     // 点击部门
     var onclickGroup = function (sSaleGroupName) {
         // AJAX处理点击的li
-        $('#content').load('/kanban/JS/AJAX/sSaleGroupName2/' + sSaleGroupName);
+        $('#content').load('/KanBan/JS/AJAX/sSaleGroupName2/' + sSaleGroupName);
         // 取得所有的ul中的li,并进行初始化
         var ulList = $$('GroupUL').children;
         for(var i = 0; i < ulList.length; i++){
@@ -151,7 +151,7 @@
             GetHref = '';
         }
         var returnValue = GetHref + '_' + nID;
-        $('#content').load('/kanban/JS/AJAX/sSaleGroupName2/' + returnValue);
+        $('#content').load('/KanBan/JS/AJAX/sSaleGroupName2/' + returnValue);
         console.log(returnValue);
     }
 

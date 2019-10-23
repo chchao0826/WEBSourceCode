@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from . import home
+from . import Home
 from flask import Flask, render_template, jsonify, request
 import json
 
 
 # 主页
-@home.route('/')
+@Home.route('/')
 def index():
-    return render_template('home/index.html')
+    return render_template('Home/Index.html')
 
 

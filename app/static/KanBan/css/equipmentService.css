@@ -1,0 +1,89 @@
+.wrapper_var1 {
+    padding: 20px;
+    background: linear-gradient(RGB(208, 216, 219), 10%, RGB(217, 228, 232));
+    ;
+    border: 3px solid RGB(178, 188, 190);
+    border-radius: 25px;
+}
+
+.body_var {
+    padding: 10px;
+    background: linear-gradient(RGB(208, 216, 219), 10%, RGB(217, 228, 232));
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper_var2 {
+    background-color: #FFF;
+    box-shadow: 10px 10px 5px RGB(151, 156, 150);
+    border-radius: 25px;
+}
+
+.corner_Top_Left {
+    width: 30px;
+    height: 30px;
+    background-color: RGB(189, 180, 165);
+}
+
+.float_left {
+    float: left;
+}
+
+.title_var {
+    font-family: "STLiti";
+    font-size: 60px;
+    text-align: center;
+    line-height: 80px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    /* border: 2px solid #111; */
+}
+
+.col_style {
+    background-color: bisque;
+    box-shadow: 5px 5px 5px 5px RGB(151, 156, 150);
+    border-radius: 25px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 30px;
+}
+
+.circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+    margin-left: 45%;
+    box-shadow: 2px 2px 2px RGB(151, 156, 150);
+}
+
+.col_title {
+    font-family: "FangSong";
+    font-size: 40px;
+    font-weight: 1000;
+}
+
+.ul_style {
+    font-size: 25px;
+}
+
+.content {
+    margin-top: -30px;
+}
+
+.page_style {
+    position: fixed;
+    bottom: 0px;
+}

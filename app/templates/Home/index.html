@@ -32,15 +32,23 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="  {{ url_for('kanban.floorPlan') }}  ">工厂平面图</a>
+                                <a href="  {{ url_for('KanBan.floorPlan') }}  ">工厂平面图</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href=" {{ url_for('kanban.JSInformation') }} ">技术部看板</a>
+                                <a href=" {{ url_for('KanBan.JSInformation') }} ">技术部看板</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
                                 <a href=" # ">取样看板</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href=" {{ url_for('KanBan.equipmentService') }} ">故障检修看板</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href=" {{ url_for('KanBan.DXKanBan') }} ">定型预排看板</a>
                             </li>
                         </ul>
                     </li>
@@ -51,17 +59,29 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href=" {{ url_for('plan.PMCIndex', sWorkingProcedureName = 'PS' ) }} ">定型预排-生管</a>
+                                <a href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'PS' ) }} ">定型预排-生管</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href=" {{ url_for('plan.DXIndex', sWorkingProcedureName = 'ps' ) }} ">定型预排-预定</a>
+                                <a href=" {{ url_for('Plan.DXIndex', sWorkingProcedureName = 'ps' ) }} ">定型预排-预定</a>
                             </li>
 
                             <li role="separator" class="divider"></li>
                             <li>
                                 <a href="#">染色预排</a>
                             </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false">
+                            数据对比<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href=" {{ url_for('CheckData.JSCheckData') }} ">研发数据对比</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
                         </ul>
                     </li>
                     <li class="dropdown">

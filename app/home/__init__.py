@@ -2,6 +2,6 @@
 
 from flask import Blueprint
 
-home = Blueprint('home',__name__)
+Home = Blueprint('Home',__name__)
 
 from . import views

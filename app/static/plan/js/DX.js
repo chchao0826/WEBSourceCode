@@ -535,10 +535,10 @@ var ExportExcel = function () {
 }
 
 // 选择布种别
-var checkMasterialType = function(sType){
+var checkMasterialType = function (sType) {
     var thisURL = document.URL;
     var thisWorking = thisURL.split('/')[5];
-    if (thisWorking.indexOf('#') != -1){
+    if (thisWorking.indexOf('#') != -1) {
         thisWorking = thisWorking.split('#')[0]
     }
     var returnValue = thisWorking + '_' + sType

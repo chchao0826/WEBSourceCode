@@ -241,10 +241,13 @@ var ToPlan = function () {
 var DeleteLabelData = function () {
     var topli = $$('top-div').children[0].children;
     var removeLi = []
+    var returnGUID = []
     for (var i = 0; i < topli.length; i++) {
         if (topli[i].className.indexOf('currentli') != -1) {
             var thisLi = topli[i];
             var thisLocation = topli[i].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
+            var thisGUID = topli[i].children[0].children[0].children[0].children[0].children[0].children[16].innerHTML;
+            returnGUID.push(thisGUID)
             for (var a = topli.length - 1; a >= 0; a--) {
                 var varLocation = topli[a].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
                 if (thisLocation == varLocation) {
@@ -254,6 +257,17 @@ var DeleteLabelData = function () {
             }
         }
     }
+
+    $.ajax({
+        type: 'POST',
+        url: 'Delete',
+        data: JSON.stringify(returnGUID),
+        contentType: 'application/json; charset=UTF-8',
+        dataType: 'json',
+        success: function (data) {},
+    });
+
+
     for (var i = removeLi.length - 1; i >= 0; i--) {
         removeLi[i].classList.remove("currentli");
         removeLi[i].className += ' noPlan';
@@ -548,6 +562,20 @@ var ExportExcel = function () {
     openDownloadDialog(sheet2blob(sheet), excelName);
 }
 
+//判断表格中是否少字段
+var IsHaveFeild = function (exelData) {
+    var nMaxRow = exelData.length - 1;
+    if (exelData[nMaxRow]['TrackJob'] == undefined) {
+        alert('导入失败, 没有TrackJob列');
+        return false;
+    }
+    if (exelData[nMaxRow]['加急'] == undefined) {
+        alert('导入失败,没有加急列');
+        return false;
+    }
+    return true;
+}
+
 //开始导入
 function importf(obj) {
     // 导入EXCEL
@@ -558,6 +586,7 @@ function importf(obj) {
         return;
     }
     var f = obj.files[0];
+    var bUable = true;
     var reader = new FileReader();
     reader.onload = function (e) {
         var data = e.target.result;
@@ -571,20 +600,23 @@ function importf(obj) {
             var sSheetName = sSheetNames[i];
             if (sSheetName.indexOf('水洗') != -1) {
                 var excelJson = XLSX.utils.sheet_to_json(wb.Sheets[sSheetName]);
+                bUable = IsHaveFeild(excelJson);
                 var returnJson = {
                     'sType': sSheetName,
                     'Data': excelJson,
                 }
                 GetJsonData.push(returnJson);
-            } else if (sSheetName == '预定') {
+            } else if (sSheetName == '预定' || sSheetName == '預定') {
                 var excelJson = XLSX.utils.sheet_to_json(wb.Sheets[sSheetName]);
+                bUable = IsHaveFeild(excelJson);
                 var returnJson = {
-                    'sType': sSheetName,
+                    'sType': '预定',
                     'Data': excelJson,
                 }
                 GetJsonData.push(returnJson);
             } else if (sSheetName == '成定') {
                 var excelJson = XLSX.utils.sheet_to_json(wb.Sheets[sSheetName]);
+                bUable = IsHaveFeild(excelJson);
                 var returnJson = {
                     'sType': sSheetName,
                     'Data': excelJson,
@@ -592,23 +624,24 @@ function importf(obj) {
                 GetJsonData.push(returnJson);
             }
         }
-        $.ajax({
-            async: false,
-            cache: false,
-            type: 'POST',
-            url: 'ImportData',
-            data: JSON.stringify(GetJsonData),
-            contentType: 'application/json; charset=UTF-8',
-            dataType: 'json',
-            success: function (data) {
-                alert('导入成功');
-            },
-            error: function (data) {
-                alert('导入成功');
-            },
-        });
-        Refresh();
-        console.log(GetJsonData);
+        if (bUable == true) {
+            $.ajax({
+                async: false,
+                cache: false,
+                type: 'POST',
+                url: 'ImportData',
+                data: JSON.stringify(GetJsonData),
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json',
+                success: function (data) {
+                    alert('导入成功');
+                },
+                error: function (data) {
+                    alert('导入成功');
+                },
+            });
+            Refresh();
+        }
     };
     reader.readAsBinaryString(f);
 }

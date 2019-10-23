@@ -1,15 +1,16 @@
 # -*-coding:utf-8-*-
-from . import plan
+from . import Plan
 from flask import render_template, Flask, request, jsonify
-from app.views.plan import GetWorking, Data_NoPlan, Data_Plan, SearchAllData, SearchEquipment, Data_DXNoPlan, Data_DXPlan, importData_PMC, Data_DXNoPlan_Type
-from app.models.plan import PMCPostData, GetEquipment, DXPostdata, DeleteDXPlan
+from app.Plan.SQLExec.plan import GetWorking, Data_NoPlan, Data_Plan, SearchAllData, SearchEquipment, Data_DXNoPlan, Data_DXPlan, importData_PMC, Data_DXNoPlan_Type
+
+from app.Plan.Models.plan import PMCPostData, GetEquipment, DXPostdata, DeleteDXPlan, DeletePMCData
 import time
 import os
 
 
 # --------------------- 生管
 # 生管预排
-@plan.route('/PMC/<sWorkingProcedureName>')
+@Plan.route('/PMC/<sWorkingProcedureName>')
 def PMCIndex(sWorkingProcedureName):
     nCount = ''
     if sWorkingProcedureName in ('SXJ1', 'SXJ2'):
@@ -19,14 +20,16 @@ def PMCIndex(sWorkingProcedureName):
         nCount = sWorkingProcedureName[nRow:]
         sWorkingProcedureName = sWorkingProcedureName[:nRow]
 
-    sWorkingName = GetWorking(sWorkingProcedureName)[0]
+    sWorkingName = GetWorking(sWorkingProcedureName)[0] + str(nCount)
+    print(sWorkingProcedureName)
+    print(sWorkingName)
     NoPlanData = Data_NoPlan(sWorkingName)
-    PlanData = Data_Plan(sWorkingName + str(nCount))
+    PlanData = Data_Plan(sWorkingName)
     return render_template('plan/PMC_DX.html', NoPlanData=NoPlanData, PlanData=PlanData)
 
 
 # 生管预排搜索数据库中的数据
-@plan.route('/PMC/Search/<inputValue>')
+@Plan.route('/PMC/Search/<inputValue>')
 def PMCSearch(inputValue):
     sValue = inputValue.split('_')[0]
     sWoring = inputValue.split('_')[1]
@@ -39,7 +42,7 @@ def PMCSearch(inputValue):
         nCount = sWoring[nRow:]
     sWoring = GetWorking(sWoring)[0]
 
-    NoPlanData = Data_NoPlan(sWoring + nCount)
+    NoPlanData = Data_NoPlan(sWoring + str(nCount))
     returnData = SearchAllData(sValue, sWoring)
 
     returnHtml = '<ul id="bottom_ul" class="" style="margin: 0;padding: 0;">'
@@ -111,7 +114,7 @@ def PMCSearch(inputValue):
 
 
 # 生管预排 POST资料
-@plan.route('/PMC/PostData', methods=['GET', 'POST'])
+@Plan.route('/PMC/PostData', methods=['GET', 'POST'])
 def PMC_PostData():
     data = request.get_json()
     PMCPostData(data)
@@ -119,13 +122,13 @@ def PMC_PostData():
 
 
 # PMC操作说明
-@plan.route('/PMC/Operation')
+@Plan.route('/PMC/Operation')
 def PMC_Operation():
     return render_template('plan/PMC_Operation.html')
 
 
 # 导入数据
-@plan.route('/PMC/ImportData', methods=['GET', 'POST'])
+@Plan.route('/PMC/ImportData', methods=['GET', 'POST'])
 def PMC_ImportData():
     data = request.get_json()
     importData_PMC(data)
@@ -133,9 +136,18 @@ def PMC_ImportData():
     return '导入成功'
 
 
+# 删除数据
+@Plan.route('/PMC/Delete', methods=['GET', 'POST'])
+def PMC_Delete():
+    data = request.get_json()
+    for i in data:
+        DeletePMCData(i)
+    return '123'
+
+
 # 定型
 # 定型预排
-@plan.route('/DX/<sWorkingProcedureName>')
+@Plan.route('/DX/<sWorkingProcedureName>')
 def DXIndex(sWorkingProcedureName):
     sEquipmentID = ''
     sWorkingName = GetWorking(sWorkingProcedureName)[0]
@@ -147,7 +159,7 @@ def DXIndex(sWorkingProcedureName):
 
 # 定型AJAX
 # 点击机台号进行数据的刷新
-@plan.route('/DX/AJAXDtl/<sEquipmentID>')
+@Plan.route('/DX/AJAXDtl/<sEquipmentID>')
 def checkEquipmentAJAX(sEquipmentID):
     data = Data_DXPlan(sEquipmentID)
     returnHTML = ''
@@ -188,7 +200,7 @@ def checkEquipmentAJAX(sEquipmentID):
 
 
 # 更新insert Data
-@plan.route('/DX/AJAXInsertData', methods=['GET', 'POST'])
+@Plan.route('/DX/AJAXInsertData', methods=['GET', 'POST'])
 def AJAXInsertData():
     data = request.get_json()
     DXPostdata(data)
@@ -196,7 +208,7 @@ def AJAXInsertData():
 
 
 # 删除数据
-@plan.route('/DX/AJAXDelete', methods=['GET', 'POST'])
+@Plan.route('/DX/AJAXDelete', methods=['GET', 'POST'])
 def AJAXDelete():
     data = request.get_json()
     for i in data:
@@ -205,7 +217,7 @@ def AJAXDelete():
 
 
 # 右边页面刷新
-@plan.route('/DX/AJAXRightPage/<sEquipmentID>', methods=['GET', 'POST'])
+@Plan.route('/DX/AJAXRightPage/<sEquipmentID>', methods=['GET', 'POST'])
 def AJAXRight(sEquipmentID):
     RightPage = ''
     print(sEquipmentID)
@@ -248,7 +260,7 @@ def AJAXRight(sEquipmentID):
 
 
 # 左边页面刷新
-@plan.route('/DX/AJAXLeftPage/<sWorkingProcedureName>', methods=['GET', 'POST'])
+@Plan.route('/DX/AJAXLeftPage/<sWorkingProcedureName>', methods=['GET', 'POST'])
 def AJAXLeft(sWorkingProcedureName):
     sWorkingName = GetWorking(sWorkingProcedureName)[0]
     ReturnData = Data_DXNoPlan(sWorkingName)
@@ -266,31 +278,30 @@ def AJAXLeft(sWorkingProcedureName):
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
             <td hidden>%s</td> \
-        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'], i['uppTrackJobGUID'])
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['uppTrackJobGUID'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'])
 
     LeftPage += '</tbody>'
     return LeftPage
 
 
 # 移动后保存按钮
-@plan.route('/DX/AJAXSave', methods=['GET', 'POST'])
+@Plan.route('/DX/AJAXSave', methods=['GET', 'POST'])
 def AJAXSave():
     data = request.get_json()
     DXPostdata(data)
     return '123'
 
 
-@plan.route('/DX/AJAXMasterialType/<value>')
+@Plan.route('/DX/AJAXMasterialType/<value>')
 def AJAXMasterialType(value):
     # print(value)
     value1 = value.split('_')[0]
     value2 = value.split('_')[1]
     sWorkingName = GetWorking(value1)[0]
-
     ReturnData = Data_DXNoPlan_Type(sWorkingName, value2)
     LeftPage = '<tbody>'
     for i in ReturnData:
@@ -304,15 +315,13 @@ def AJAXMasterialType(value):
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
             <td hidden>%s</td> \
-        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'], i['uppTrackJobGUID'])
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+        </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['uppTrackJobGUID'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'])
 
     LeftPage += '</tbody>'
     return LeftPage
-
-

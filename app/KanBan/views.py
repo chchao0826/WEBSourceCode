@@ -1,20 +1,24 @@
 # -*-coding:utf-8-*-
-from . import kanban
+from . import KanBan
 from flask import render_template, Flask, request
-from app.views.kanban import emStatus, StoreStatus, wpStatus, JSData
-from app.models.kanban import DXKanBanData, DXKanBanChartData
-from app.models.plan import GetEquipment
+
+from app.KanBan.Models.DX import DXKanBanData, DXKanBanChartData
+from app.KanBan.SQLExec.EquipmentService import equipmentServiceData
+from app.KanBan.SQLExec.FloorPlan import emStatus, StoreStatus, wpStatus
+from app.KanBan.SQLExec.JSInformation import JSData
+from app.Plan.Models.plan import GetEquipment
+
 import json
 
 
 # 主页
-@kanban.route('/')
+@KanBan.route('/')
 def index():
-    return render_template('kanban/base.html')
+    return render_template('KanBan/base.html')
 
 
 # 工厂平面图
-@kanban.route('/floorplan/')
+@KanBan.route('/floorplan/')
 def floorPlan():
     statusVar = emStatus()
     WIP = wpStatus()
@@ -57,11 +61,11 @@ def floorPlan():
     DJ_eq = statusVar[15]
     YB_eq = statusVar[16]
 
-    return render_template('kanban/floorPlan.html', TJ_eq = TJ_eq, MM_eq = MM_eq, Dye_eq1 = Dye_eq1, Dye_eq2 = Dye_eq2, Dye_eq3 = Dye_eq3, Dye_eq4 = Dye_eq4, Dye_eq5 = Dye_eq5, Dye_eq6 = Dye_eq6, PB_eq = PB_eq, DB_eq = DB_eq, TS_eq = TS_eq, FB_eq = FB_eq, SX_eq = SX_eq, DX_eq1 = DX_eq1, DX_eq2 = DX_eq2, DJ_eq = DJ_eq, YB_eq = YB_eq, TJ_WIP = TJ_WIP, SX_WIP = SX_WIP, YD_WIP = YD_WIP, Dye_WIP = Dye_WIP, DX_WIP = DX_WIP, YB_WIP = YB_WIP, DJ_WIP = DJ_WIP, FP = FP, STA = STA, STC = STC)
+    return render_template('KanBan/floorPlan.html', TJ_eq = TJ_eq, MM_eq = MM_eq, Dye_eq1 = Dye_eq1, Dye_eq2 = Dye_eq2, Dye_eq3 = Dye_eq3, Dye_eq4 = Dye_eq4, Dye_eq5 = Dye_eq5, Dye_eq6 = Dye_eq6, PB_eq = PB_eq, DB_eq = DB_eq, TS_eq = TS_eq, FB_eq = FB_eq, SX_eq = SX_eq, DX_eq1 = DX_eq1, DX_eq2 = DX_eq2, DJ_eq = DJ_eq, YB_eq = YB_eq, TJ_WIP = TJ_WIP, SX_WIP = SX_WIP, YD_WIP = YD_WIP, Dye_WIP = Dye_WIP, DX_WIP = DX_WIP, YB_WIP = YB_WIP, DJ_WIP = DJ_WIP, FP = FP, STA = STA, STC = STC)
 
  
 # 技术部看板
-@kanban.route('/JS/')
+@KanBan.route('/JS/')
 def JSInformation():
     cardData = []
     returnData = JSData()
@@ -74,11 +78,11 @@ def JSInformation():
     # cardData = returnData[0]
     salesGroupList = returnData[1]
     nPage = returnData[8] 
-    return render_template('kanban/JSInformation.html', returnData = cardData, salesGroupList = salesGroupList, nPage = nPage)
+    return render_template('KanBan/JSInformation.html', returnData = cardData, salesGroupList = salesGroupList, nPage = nPage)
 
 
 # AJAX
-@kanban.route('/JS/AJAX/sSaleGroupName2/<GetValue>')
+@KanBan.route('/JS/AJAX/sSaleGroupName2/<GetValue>')
 def JSDataAJAX(GetValue):
     print('-----------------')
     print(GetValue)
@@ -146,7 +150,7 @@ def JSDataAJAX(GetValue):
 
 
 # AJAX 头部标题
-@kanban.route('/JS/AJAXHEADER')
+@KanBan.route('/JS/AJAXHEADER')
 def JSDataAJAXHeader():
     returnData = JSData()[1]
     returnHtml ='<ul class="nav nav-pills nav-justified " style="background-color:#F5F5F5;" id="GroupUL">'
@@ -163,7 +167,7 @@ def JSDataAJAXHeader():
 
 
 # AJAX Title 营业部门 转至 业务员
-@kanban.route('/JS/AJAX/sSaleGroupName/<sSaleGroupName>')
+@KanBan.route('/JS/AJAX/sSaleGroupName/<sSaleGroupName>')
 def JSDataAJAXSalesGroup(sSaleGroupName):
     sSalesGroupName_2 = ''
     if sSaleGroupName == 'YF':
@@ -196,7 +200,7 @@ def JSDataAJAXSalesGroup(sSaleGroupName):
 
 
 # AJAX Title 业务员 更新 wrapper
-@kanban.route('/JS/AJAX/sSalesName2/<sSaleName>')
+@KanBan.route('/JS/AJAX/sSalesName2/<sSaleName>')
 def JSDateAJAXSale2(sSaleName):
     returnData = JSData(sSaleName)[4]
     returnHTML = ''
@@ -228,7 +232,7 @@ def JSDateAJAXSale2(sSaleName):
 
 
 # AJAX Title 业务员 更新 wrapper + 循环
-@kanban.route('/JS/AJAX/sSalesName/<sSaleName>')
+@KanBan.route('/JS/AJAX/sSalesName/<sSaleName>')
 def JSDateAJAXSale(sSaleName):
     # print('11111')
     returnData = JSData(sSaleName)[4]
@@ -274,7 +278,7 @@ def JSDateAJAXSale(sSaleName):
 
 
 # 技术部工段
-@kanban.route('/JS/sWorkingProcedureName/')
+@KanBan.route('/JS/sWorkingProcedureName/')
 def JSPro():
     # print('12222')
     returnData = JSData()
@@ -288,17 +292,17 @@ def JSPro():
 
 
 # 定型看板
-@kanban.route('/DX/')
+@KanBan.route('/DX/')
 def DXKanBan():
     returnData = DXKanBanData()
     EqList = GetEquipment('整理')
     print(returnData)
     print(EqList)
-    return render_template('kanban/plan_zl.html', returnData = returnData, equipmentData = EqList)
+    return render_template('KanBan/plan_zl.html', returnData = returnData, equipmentData = EqList)
 
 
 # 定型看板-山积图
-@kanban.route('/DX/chart')
+@KanBan.route('/DX/chart')
 def DXKanBan_Chart():
     EqList = GetEquipment('整理')
     DXKanBanChart = DXKanBanChartData()
@@ -306,5 +310,66 @@ def DXKanBan_Chart():
     print('================')
     print(DXKanBanChart)
     return render_template('kanban/plan_zl_chart.html', EqList = EqList, DXKanBanChart = DXKanBanChart)
+
+
+# 故障检修看板
+@KanBan.route('/service')
+def equipmentService():
+    returnData = equipmentServiceData()
+    return render_template('KanBan/equipmentService.html', returnData = returnData[0], nCount = returnData[1], nAllPage = returnData[2])
+
+
+# 故障看板点击页码
+@KanBan.route('/service/page/<nPage>')
+def ServiceAJAXPage(nPage):
+    returnData = equipmentServiceData(nPage)[0]
+    returnHTML = ''
+    print(returnData)
+    for i in returnData:
+        print('================')
+        print(i)
+        returnHTML += '\
+            <div class="col-md-2 col_style"> \
+                <ul class="ul_style"> \
+                    <li> \
+                        <div class="circle" style="background-color: %s;"></div> \
+                    </li> \
+                    <li class="col_title"> \
+                        <span>%s单</span> \
+                    </li> \
+                    <li> \
+                        <div style="border-top: 2px dashed #111;"></div> \
+                    </li> \
+                    <li> \
+                        <span>%s</span> \
+                        <span> - </span> \
+                        <span>%s</span> \
+                    </li> \
+                    <li> \
+                        <span>%s</span> \
+                    <li> \
+                        <span>%s</span> \
+                        <span> - </span> \
+                        <span>%s</span> \
+                    <li style="height:70px;"> \
+                        <span>%s</span> \
+                    </li> \
+                    <li> \
+                        <div style="border-top: 2px solid #111;"></div> \
+                    </li> \
+                    <li> \
+                        <span>受理人员:</span> \
+                        <span>%s</span> \
+                    </li> \
+                    <li> \
+                        <span>目前状态:</span> \
+                        <span>%s</span> \
+                    </li> \
+                    <li> \
+                        <span>%s</span> \
+                    </li> \
+                </ul> \
+            </div>' %(i['sStatus'], i['sServiceType'], i['sWorkCentreName'], i['sReportName'], i['sEquipmentNo'], i['sEquipmentDetailType'], i['sEquipmentDetail'], i['sFaultReason'], i['sServiceName'], i['sServiceStatus'], i['sTime'])
+    return returnHTML
 
 

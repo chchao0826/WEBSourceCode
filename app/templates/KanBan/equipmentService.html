@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备检修看板</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap-theme.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap-theme.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static', filename = 'KanBan/css/equipmentService.css')}} ">
+
+</head>
+
+<body id="body" class="body_var">
+    <div class="wrapper_var1 float_left" id="wrapper1">
+        <div class="wrapper_var2" id="wrapper2">
+            <div class="title_var">
+                <span>设备检修板</span>
+            </div>
+            <div class="content" id="content">
+                {% for i in returnData %}
+                <div class="col-md-2 col_style">
+                    <ul class="ul_style">
+                        <li>
+                            <div class="circle" style="background-color: {{i.sStatus}};"></div>
+                        </li>
+                        <li class="col_title">
+                            <span>{{i.sServiceType}}单</span>
+                        </li>
+                        <li>
+                            <div style="border-top: 2px dashed #111;"></div>
+                        </li>
+                        <li>
+                            <span>{{i.sWorkCentreName}}</span>
+                            <span> - </span>
+                            <span>{{i.sReportName}}</span>
+                        </li>
+                        <li>
+                            <span>{{i.sEquipmentNo}}</span>
+                        <li>
+                            <span>{{i.sEquipmentDetailType}}</span>
+                            <span> - </span>
+                            <span>{{i.sEquipmentDetail}}</span>
+                        <li style="height:70px;">
+                            <span>{{i.sFaultReason}}</span>
+                        </li>
+                        <li>
+                            <div style="border-top: 2px solid #111;"></div>
+                        </li>
+                        <li>
+                            <span>受理人员:</span>
+                            <span>{{i.sServiceName}}</span>
+                        </li>
+                        <li>
+                            <span>目前状态:</span>
+                            <span>{{i.sServiceStatus}}</span>
+                        </li>
+                        <li>
+                            <!-- <span>提交日期:</span> -->
+                            <span>{{i.sTime}}</span>
+                        </li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+            <nav class="page_style" id="page">
+                <ul class="pagination pagination-lg">
+                    {% for i in range(nAllPage) %}
+                    <li>
+                        <a href="#" id="{{i + 1}}" onclick="onclickPage('{{i + 1}}')">{{i + 1}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript" src="{{url_for('static',filename='KanBan/js/jQuery-2.2.0.min.js')}}"></script>
+
+
+<script>
+    // ClassName
+    var _$ = function (id) {
+        return document.getElementsByClassName(id);
+    }
+
+    // ID
+    var $$ = function (id) {
+        return document.getElementById(id);
+    }
+
+    // Name
+    var __$ = function (id) {
+        return document.getElementsByName(id);
+    }
+</script>
+
+<script>
+    // 页码居中
+    var pageCenter = function () {
+        var nWidth = document.body.clientWidth;
+        var nPageWidth = $$('page').children[0].clientWidth;
+        var nMargin = ((nWidth - nPageWidth) / 2) - 30;
+        $$('1').parentNode.className += 'active';
+        console.log(nMargin);
+        $$('page').children[0].style.marginLeft = nMargin + 'px';
+    
+    }
+
+</script>
+
+<script>
+    // 尺寸修改
+    var getScreen = function () {
+        var nWidth = document.body.clientWidth;
+        var nHeight = document.documentElement.clientHeight;
+        var body = $$('body');
+        body.style.width = nWidth + 'px';
+        body.style.height = nHeight + 'px';
+        var wrapper1 = $$('wrapper1');
+        wrapper1.style.width = nWidth - 20 + 'px';
+        wrapper1.style.height = nHeight - 20 + 'px';
+        var wrapper2 = $$('wrapper2');
+        wrapper2.style.width = nWidth - 80 + 'px';
+        wrapper2.style.height = nHeight - 80 + 'px';
+    }
+</script>
+
+<script>
+    // 页面初始
+    window.onload = function () {
+        getScreen();
+        pageCenter();
+        // fullScreen();
+    }
+</script>
+
+<script>
+    var onclickPage = function (nPage) {
+        // 获得对应页面的数据
+        console.log(nPage)
+        $('#content').load('/KanBan/service/page/' + nPage);
+
+        var PageList = $$('page').children[0].children;
+        for (var i = 0; i < PageList.length; i++){
+            $$('page').children[0].children[i].className = '';
+        }
+
+        $$(nPage).parentNode.className += 'active';
+    }
+</script>
+
+</html>
