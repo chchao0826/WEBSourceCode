@@ -11,7 +11,7 @@ import re
 
 base = declarative_base()
 # 236
-session = sessionmaker(bind=engine_253)
+session = sessionmaker(bind=engine)
 ses = session()
 
 
@@ -22,6 +22,16 @@ def JSSearchData(*args):
     sMaterialNoList = args[1]
     # print(sWorkingProcedureName)
     # print(sMaterialNoList)
+    sMaterialNo1 = ''
+    sMaterialNo2 = ''
+    sMaterialNo3 = ''
+    sMaterialNo4 = ''
+    sMaterialNo5 = ''
+    sMaterialNo6 = ''
+    sMaterialNo7 = ''
+    sMaterialNo8 = ''
+    sMaterialNo9 = ''
+
     varList0 = []
     varList1 = []
     varList2 = []
@@ -32,32 +42,205 @@ def JSSearchData(*args):
     varList7 = []
     varList8 = []
     varList9 = []
+    nNumber = 0
     for i in sMaterialNoList:
-        sSQL = JSSearchDataSQL(sWorkingProcedureName, i)
-        cursor = connect.cursor()
-        # 创建一个游标对象,python里的sql语句都要通过cursor来执行
-        cursor.execute(sSQL)
-        # 执行sql语句
-        row = cursor.fetchone()
-        while row:
-            nLength = len(row)
-            varList0.append(row[0])
-            varList1.append(row[1])
-            varList2.append(row[2])
-            varList3.append(row[3])
+        if nNumber == 0:
+            sMaterialNo1 = i
+        elif nNumber == 1:
+            sMaterialNo2 = i
+        elif nNumber == 2:
+            sMaterialNo3 = i
+        elif nNumber == 3:
+            sMaterialNo4 = i
+        elif nNumber == 4:
+            sMaterialNo5 = i
+        elif nNumber == 5:
+            sMaterialNo6 = i
+        elif nNumber == 6:
+            sMaterialNo7 = i
+        elif nNumber == 7:
+            sMaterialNo8 = i
+        elif nNumber == 8:
+            sMaterialNo9 = i
+        nNumber += 1                  
+
+
+
+    sSQL = JSSearchDataSQL(sWorkingProcedureName, sMaterialNo1, sMaterialNo2, sMaterialNo3, sMaterialNo4, sMaterialNo5, sMaterialNo6, sMaterialNo7, sMaterialNo8, sMaterialNo9)
+    cursor = connect.cursor()
+    # 创建一个游标对象,python里的sql语句都要通过cursor来执行
+    cursor.execute(sSQL)
+    # 执行sql语句
+    row = cursor.fetchone()
+    varList0 = []
+    varList1 = []
+    varList2 = []
+    varList3 = []
+    varList4 = []
+    varList5 = []
+    varList6 = []
+    varList7 = []
+    varList8 = []
+    varList9 = []
+    returnList = []
+    while row:
+        varList0.append(row[0])
+        varList1.append(row[1])
+        varList2.append(row[2])
+        varList3.append(row[3])
+        if len(row) >= 5:
             varList4.append(row[4])
-            if nLength >= 9:
-                varList5.append(row[5])
-                varList6.append(row[6])
-                varList7.append(row[7])
-                varList8.append(row[8])
-            if nLength == 10:
-                varList9.append(row[9])
-            row = cursor.fetchone()
-        cursor.close()
+        if len(row) >= 6:
+            varList5.append(row[5])
+        if len(row) >= 9:
+            varList6.append(row[6])
+            varList7.append(row[7])
+            varList8.append(row[8])
+        if len(row) >= 10:
+            varList9.append(row[9])        
+        row = cursor.fetchone()
+    cursor.close()
+
+    nNumber = len(varList0)
+
+    if nNumber == 1:
+        for i in range(9):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('')
+    elif nNumber == 2:
+        for i in range(8):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('')     
+    elif nNumber == 3:
+        for i in range(7):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('') 
+    elif nNumber == 4:
+        for i in range(6):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('')       
+    elif nNumber == 5:
+        for i in range(5):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('')                  
+    elif nNumber == 6:
+        for i in range(4):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('')
+    elif nNumber == 7:
+        for i in range(3):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('')    
+    elif nNumber == 8:
+        for i in range(2):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('') 
+    elif nNumber == 9:
+        for i in range(1):
+            varList0.append('')
+            varList1.append('')
+            varList2.append('')
+            varList3.append('')
+            varList4.append('')
+            varList5.append('')
+            varList6.append('')
+            varList7.append('')
+            varList8.append('')
+            varList9.append('') 
+
+    returnList.append(varList0)
+    returnList.append(varList1)
+    returnList.append(varList2)
+    returnList.append(varList3)
+    returnList.append(varList4)
+    returnList.append(varList5)
+    returnList.append(varList6)
+    returnList.append(varList7)
+    returnList.append(varList8)
+    returnList.append(varList9)    
 
 
-    return varList0, varList1, varList2, varList3, varList4, varList5, varList6, varList7, varList8, varList9
+
+    nNumber = len(returnList[0])
+    # if nNumber == 1:
+    #     returnList[0].
+
+
+    print('-------------232323-----------')
+    print(varList0)
+    print('-------------212881-----------')
+    print(returnList)
+    print('-------------1299999-----------')
+
+    return returnList
+
+
+
+
     # # 卡号列表 / 物料编号 / 手感号 / 来源名称 / LOT号 / 规格 / 表ID
     # sCardNoList = []
     # sMaterialNoList = []

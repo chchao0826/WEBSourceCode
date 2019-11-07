@@ -7,7 +7,7 @@ from app.config import engine_253, connect_253, engine, connect
 
 from app.Plan.SQL.DX import NoDXPlanSQL, DXPlanSQL
 from app.Plan.SQL.PMCDX import SearchWoringSQL, SearchEquipmentSQL, GetData_NoPlan, GetData_Plan, GetData_AllNoPlan, InsertImportData
-from app.Plan.Models.plan import IsInPMCPlan
+from app.Plan.Models.plan import IsInPMCPlan, UpdateDtl_PMC
 
 import time
 # from app.sql.ExecUpdate import ExecUpdateSql
@@ -17,7 +17,7 @@ import re
 
 # 236
 base = declarative_base()
-session = sessionmaker(bind=engine_253)
+session = sessionmaker(bind=engine)
 ses = session()
 
 
@@ -84,6 +84,8 @@ def Data_NoPlan(sWorkingProcedureName):
 def Data_Plan(sWorkingProcedureName):
     ReturnData = []
     sSQL = GetData_Plan(sWorkingProcedureName)
+    print('================')
+    print(sWorkingProcedureName)
     print(sSQL)
     cursor = connect.cursor()
     cursor.execute(sSQL)
@@ -346,13 +348,15 @@ def importData_PMC(Data):
     for innerData in Data:
         sType = innerData['sType']
         dData = innerData['Data']
+        print(dData)
         e = 0
         for i in dData:
-            # print('----------------')
-            if IsInPMCPlan(i['TrackJob']) != True:
-                sList = (sType, e, i['TrackJob'], GetDate(), i['加急'])
-                INSERTData.append(sList)
-                e += 1
+            sList = (sType, e, i['TrackJob'], GetDate(), i['加急'], i['生产卡号'])
+            print(sList)
+            INSERTData.append(sList)
+            e += 1
+            print('============插入===========')
+           
     cursor.executemany(sql, INSERTData)
     connect.commit()
     cursor.close()

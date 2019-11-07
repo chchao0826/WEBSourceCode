@@ -6,7 +6,6 @@ from flask import Flask, render_template, request
 from app.config import engine
 
 
-
 base = declarative_base()
 session = sessionmaker(bind=engine)
 ses = session()
@@ -33,6 +32,7 @@ class PlanDtl(base):
     tCreateTime = Column(DateTime, nullable=True)
     tUpdateTime = Column(DateTime, nullable=True)
     uppTrackJobGUID = Column(String(100), nullable=True)
+    bUsable = Column(Boolean, nullable=True, default=1)
 
     def __str__(self):
         return self.id
@@ -63,11 +63,17 @@ def UpdateDtl_PMC(data):
     # 更新Dtl数据
     nRowNumber = data['nRowNumber']
     uppTrackJobGUID = data['uppTrackJobGUID']
+    tUpdateTime = data['tUpdateTime']
     sLabel = data['sLabel']
+    sType = data['sType']
     print(sLabel)
-    target = ses.query(Plan).filter(Plan.uppTrackJobGUID == uppTrackJobGUID).first()
+    target = ses.query(Plan).filter(
+        Plan.uppTrackJobGUID == uppTrackJobGUID).first()
     target.nRowNumber = nRowNumber
     target.sLabel = sLabel
+    target.tUpdateTime = tUpdateTime
+    target.sType = sType
+    print('==============更新成功===========')
     ses.commit()
     ses.close()
 
@@ -79,7 +85,8 @@ def InsertDtl_PMC(data):
     nRowNumber = data['nRowNumber']
     uppTrackJobGUID = data['uppTrackJobGUID']
     sLabel = data['sLabel']
-    InsertDtl = Plan(sType=sType, nRowNumber=nRowNumber, uppTrackJobGUID=uppTrackJobGUID, sLabel=sLabel)
+    InsertDtl = Plan(sType=sType, nRowNumber=nRowNumber,
+                     uppTrackJobGUID=uppTrackJobGUID, sLabel=sLabel)
     ses.add(InsertDtl)
     ses.commit()
     ses.close()
@@ -118,7 +125,8 @@ def GetEquipment(sType):
 
 # 删除数据
 def DeletePMCData(uppTrackJobGUID):
-    target = ses.query(Plan).filter(Plan.uppTrackJobGUID == uppTrackJobGUID).first()
+    target = ses.query(Plan).filter(
+        Plan.uppTrackJobGUID == uppTrackJobGUID).first()
     ses.delete(target)
     ses.commit()
     ses.close()
@@ -132,7 +140,8 @@ def InsertDtl(data):
     nHDRID = data['nHDRID']
     tCreateTime = data['tTime']
     uppTrackJobGUID = data['uppTrackJobGUID']
-    InsertDtl = PlanDtl(nRowNumber=nRowNumber, nHDRID=nHDRID, uppTrackJobGUID=uppTrackJobGUID, tCreateTime=tCreateTime, tUpdateTime=tCreateTime)
+    InsertDtl = PlanDtl(nRowNumber=nRowNumber, nHDRID=nHDRID,
+                        uppTrackJobGUID=uppTrackJobGUID, tCreateTime=tCreateTime, tUpdateTime=tCreateTime)
     ses.add(InsertDtl)
     ses.commit()
     ses.close()
@@ -156,7 +165,10 @@ def UpdateDtl(data):
 def IsInDXPlan(uppTrackJobGUID):
     # 按照卡号查询预排表
     iFlag = False
-    for i in ses.query(PlanDtl).filter(PlanDtl.uppTrackJobGUID == uppTrackJobGUID).all():
+    for i in ses.query(PlanDtl).filter(PlanDtl.uppTrackJobGUID == uppTrackJobGUID, PlanDtl.bUsable == True).all():
+        print('=========3333==========')
+        print(i.bUsable)
+        print('==========222=========')
         iFlag = True
     return iFlag
 
@@ -167,23 +179,24 @@ def DXPostdata(data):
         uppTrackJobGUID = i['uppTrackJobGUID']
         print('======================')
         print(uppTrackJobGUID)
-        print(IsInDXPlan(uppTrackJobGUID) )
+        print(IsInDXPlan(uppTrackJobGUID))
         if IsInDXPlan(uppTrackJobGUID) == True:
             UpdateDtl(i)
-            print('定型预排更新数据')
         else:
             InsertDtl(i)
-            print('定型预排插入数据')
+
     return 'DX POST'
 
 
 # 定型预排删除
 def DeleteDXPlan(data):
     uppTrackJobGUID = data['uppTrackJobGUID']
-    target = ses.query(PlanDtl).filter(PlanDtl.uppTrackJobGUID == uppTrackJobGUID).first()
+    target = ses.query(PlanDtl).filter(
+        PlanDtl.uppTrackJobGUID == uppTrackJobGUID).first()
     ses.delete(target)
     ses.commit()
     ses.close()
+
 
 
 def GetDtlData():
@@ -221,14 +234,20 @@ def GetDtlData():
     return ReturnList
 
 
+# 清空数据
+def ClearData():
+    for i in ses.query(PlanDtl).filter(PlanDtl.bUsable == True).all():
+        target = ses.query(PlanDtl).filter(PlanDtl.id == i.id).first()
+        print('============')
+        target.bUsable = False
+        ses.commit()
+    ses.commit()
+    ses.close()
+    return '123'
+        # print(i)
 
 
-
-
-
-
-
-
+# 不使用
 def DeleteDtl(data):
     # 删除数据
     uppTrackJobGUID = data['uppTrackJobGUID']
@@ -255,9 +274,6 @@ def IsHaveCard_PMC(uppTrackJobGUID):
     for i in ses.query(Plan).filter(Plan.uppTrackJobGUID == uppTrackJobGUID).all():
         iFlag = True
     return iFlag
-
-
-
 
 
 def UpdateLabel_PMC_True(uppTrackJobGUID):

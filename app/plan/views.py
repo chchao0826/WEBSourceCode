@@ -1,9 +1,9 @@
 # -*-coding:utf-8-*-
 from . import Plan
 from flask import render_template, Flask, request, jsonify
-from app.Plan.SQLExec.plan import GetWorking, Data_NoPlan, Data_Plan, SearchAllData, SearchEquipment, Data_DXNoPlan, Data_DXPlan, importData_PMC, Data_DXNoPlan_Type
+from app.Plan.SQLExec.plan import GetWorking, Data_Plan, SearchAllData, SearchEquipment, Data_DXNoPlan, Data_DXPlan, importData_PMC, Data_DXNoPlan_Type
 
-from app.Plan.Models.plan import PMCPostData, GetEquipment, DXPostdata, DeleteDXPlan, DeletePMCData
+from app.Plan.Models.plan import PMCPostData, GetEquipment, DXPostdata, DeleteDXPlan, DeletePMCData, ClearData
 import time
 import os
 
@@ -13,7 +13,7 @@ import os
 @Plan.route('/PMC/<sWorkingProcedureName>')
 def PMCIndex(sWorkingProcedureName):
     nCount = ''
-    if sWorkingProcedureName in ('SXJ1', 'SXJ2'):
+    if sWorkingProcedureName in ('SXJ1', 'SXJ2', 'SE1', 'SE2'):
         nRow = sWorkingProcedureName.find('1')
         if nRow == -1:
             nRow = sWorkingProcedureName.find('2')
@@ -21,11 +21,11 @@ def PMCIndex(sWorkingProcedureName):
         sWorkingProcedureName = sWorkingProcedureName[:nRow]
 
     sWorkingName = GetWorking(sWorkingProcedureName)[0] + str(nCount)
-    print(sWorkingProcedureName)
-    print(sWorkingName)
-    NoPlanData = Data_NoPlan(sWorkingName)
+
+    # NoPlanData = Data_NoPlan(sWorkingName)
+
     PlanData = Data_Plan(sWorkingName)
-    return render_template('plan/PMC_DX.html', NoPlanData=NoPlanData, PlanData=PlanData)
+    return render_template('plan/PMC_DX.html', PlanData=PlanData)
 
 
 # 生管预排搜索数据库中的数据
@@ -150,7 +150,16 @@ def PMC_Delete():
 @Plan.route('/DX/<sWorkingProcedureName>')
 def DXIndex(sWorkingProcedureName):
     sEquipmentID = ''
-    sWorkingName = GetWorking(sWorkingProcedureName)[0]
+    nCount = ''
+    if sWorkingProcedureName in ('SXJ1', 'SXJ2', 'SE1', 'SE2'):
+        nRow = sWorkingProcedureName.find('1')
+        if nRow == -1:
+            nRow = sWorkingProcedureName.find('2')
+        nCount = sWorkingProcedureName[nRow:]
+        sWorkingProcedureName = sWorkingProcedureName[:nRow]
+
+    sWorkingName = GetWorking(sWorkingProcedureName)[0] + str(nCount)
+
     ReturnData = Data_DXNoPlan(sWorkingName)
     ReturnEquipment = GetEquipment('整理')
     ReturnDtlData = Data_DXPlan(sEquipmentID)
@@ -169,10 +178,10 @@ def checkEquipmentAJAX(sEquipmentID):
         <li class="slot-item" style="border: 0px;"> \
             <div class="clearfix"> \
                 <div class="div-card float-left"> \
-                    <div class="float-left" style="width: 160px; border-right: 1px solid #111; height: 100%%; text-align: center; line-height: 55px; text-align: center; line-height: 60px; background-color: %s"> \
+                    <div class="float-left" style="width: 120px; border-right: 1px solid #111; height: 100%%; text-align: center; line-height: 55px; text-align: center; line-height: 60px; background-color: %s"> \
                         <span>%s</span> \
                     </div> \
-                    <div class="float-left" style="width: 123px;"> \
+                    <div class="float-left" style="width: 96px; border-right: 1px solid #111;"> \
                         <div style="border-bottom: 1px solid #111; height: 30px; text-align: center; line-height: 30px;"> \
                             <span>%s</span> \
                         </div> \
@@ -182,6 +191,15 @@ def checkEquipmentAJAX(sEquipmentID):
                         </div> \
                     </div> \
                     <div hidden>%s</div> \
+                    <div class="float-left" style="width: 90px;"> \
+                        <div style="border-bottom: 1px solid #111; height: 30px; text-align: center; line-height: 30px;"> \
+                            <span>%s</span> \
+                        </div> \
+                        <div style="text-align: center; line-height: 30px;"> \
+                            <span>温度:</span> \
+                            <span>%s</span> \
+                        </div> \
+                    </div> \
                     <div hidden>%s</div> \
                     <div hidden>%s</div> \
                     <div hidden>%s</div> \
@@ -195,7 +213,7 @@ def checkEquipmentAJAX(sEquipmentID):
                 </div> \
                 <div class="float-left" style="width: 21px; height:60px; background-color:%s; text-align:  center;"></div> \
             </div> \
-        </li> ' % (i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['nTime'], i['uppTrackJobGUID'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameCurrent'], i['sColorBorder'])
+        </li> ' % (i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['nTime'], i['uppTrackJobGUID'], i['sWorkingProcedureNameCurrent'], i['nTemp'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameCurrent'], i['sColorBorder'])
     return returnHTML
 
 
@@ -262,14 +280,23 @@ def AJAXRight(sEquipmentID):
 # 左边页面刷新
 @Plan.route('/DX/AJAXLeftPage/<sWorkingProcedureName>', methods=['GET', 'POST'])
 def AJAXLeft(sWorkingProcedureName):
-    sWorkingName = GetWorking(sWorkingProcedureName)[0]
+    nCount = ''
+    if sWorkingProcedureName in ('SXJ1', 'SXJ2', 'SE1', 'SE2'):
+        nRow = sWorkingProcedureName.find('1')
+        if nRow == -1:
+            nRow = sWorkingProcedureName.find('2')
+        nCount = sWorkingProcedureName[nRow:]
+        sWorkingProcedureName = sWorkingProcedureName[:nRow]
+
+    sWorkingName = GetWorking(sWorkingProcedureName)[0] + str(nCount)
+
     ReturnData = Data_DXNoPlan(sWorkingName)
     LeftPage = '<tbody>'
     for i in ReturnData:
         LeftPage += ' \
         <tr onclick="onclicktr(\'%s\')" id="%s" style="background-color: %s"> \
+            <td style="width: 13%%;">%s</td> \
             <td style="width: 10%%;">%s</td> \
-            <td style="width: 8%%;">%s</td> \
             <td style="width: 10%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
@@ -277,11 +304,11 @@ def AJAXLeft(sWorkingProcedureName):
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
+            <td style="width: 7%%;">%s</td> \
             <td hidden>%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
+            <td style="width: 7%%;">%s</td> \
+            <td style="width: 7%%;">%s</td> \
+            <td style="width: 10%%;">%s</td> \
         </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['uppTrackJobGUID'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'])
 
     LeftPage += '</tbody>'
@@ -301,27 +328,49 @@ def AJAXMasterialType(value):
     # print(value)
     value1 = value.split('_')[0]
     value2 = value.split('_')[1]
-    sWorkingName = GetWorking(value1)[0]
+    nCount = ''
+    if value1 in ('SXJ1', 'SXJ2', 'SE1', 'SE2'):
+        nRow = value1.find('1')
+        if nRow == -1:
+            nRow = value1.find('2')
+        nCount = value1[nRow:]
+        value1 = value1[:nRow]
+
+    sWorkingName = GetWorking(value1)[0] + str(nCount)
+
     ReturnData = Data_DXNoPlan_Type(sWorkingName, value2)
+    print(ReturnData)
     LeftPage = '<tbody>'
     for i in ReturnData:
         LeftPage += ' \
         <tr onclick="onclicktr(\'%s\')" id="%s" style="background-color: %s"> \
+            <td style="width: 13%%;">%s</td> \
             <td style="width: 10%%;">%s</td> \
-            <td style="width: 8%%;">%s</td> \
             <td style="width: 10%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
             <td style="width: 6%%;">%s</td> \
+            <td style="width: 6%%;">%s</td> \
+            <td style="width: 7%%;">%s</td> \
             <td hidden>%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
-            <td style="width: 6%%;">%s</td> \
+            <td style="width: 7%%;">%s</td> \
+            <td style="width: 7%%;">%s</td> \
+            <td style="width: 10%%;">%s</td> \
         </tr>' % (i['uppTrackJobGUID'], i['uppTrackJobGUID'], i['sBorderColor'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sProductWidth'], i['sProductGMWT'], i['nFactInPutQty'], i['nTime'], i['nTemp'], i['nSpeed'], i['sWorkingProcedureNameLast'], i['uppTrackJobGUID'], i['sWorkingProcedureName'], i['sWorkingProcedureNameNext'], i['sLocation'])
 
     LeftPage += '</tbody>'
     return LeftPage
+
+
+# 定型预排清空数据
+@Plan.route('/DX/AJAXClear', methods=['GET', 'POST'])
+def AJAXClear():
+    ClearData()
+    return '清空成功'
+
+
+@Plan.route('/DX/AJAXClearDtl')
+def AJAXClearDtl():
+    return ''

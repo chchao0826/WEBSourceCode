@@ -79,6 +79,7 @@ var GetDate = function () {
 var GetThisWork = function () {
     var thisURL = document.URL;
     var thisWorking = thisURL.split('/')[5];
+    thisWorking = thisWorking.toUpperCase();
     if (thisWorking.indexOf('PS') != -1) {
         thisWorking = '预定';
     } else if (thisWorking.indexOf('SE') != -1) {
@@ -86,6 +87,7 @@ var GetThisWork = function () {
     }
     return thisWorking;
 }
+
 
 //得到当前机台
 var GetThisEquipemnt = function () {
@@ -429,7 +431,7 @@ var printPage = function () {
 var getDateTime = function () {
     var myDate = new Date()
     var myDay = myDate.getDate();
-    var myMonth = myDate.getMonth();
+    var myMonth = myDate.getMonth() + 1;
     var myYear = myDate.getFullYear();
     if (myDay.toString().length < 2) {
         myDay = 0 + myDay.toString();
@@ -490,30 +492,37 @@ var ExportExcel = function () {
     var sWork = GetThisWork();
     var sthisEqFun = thisEqFun()[0]['sEquipmentName'];
     var aoa = [];
-    var excelT = [sWork + sthisEqFun + '预排', null, null, null, null, null, null, null, null, null];
+    var excelT = [sWork + sthisEqFun + '预排',,,,];
     aoa.push(excelT);
 
     var excelTitle = ['卡号', '物料编号', '色号', '幅宽', '克重', '投胚量', '预计花费时间', '温度', '速度', '工段', '类别'];
     aoa.push(excelTitle);
 
+    var nSUMTime = 0;
+    var nCount = 0;
+    var nSumQty = 0
     for (var i = 0; i < ulList.length; i++) {
-        var sCardNo = ulList[i].children[0].children[0].children[3].innerHTML
-        var sMaterialNo = ulList[i].children[0].children[0].children[4].innerHTML
-        var sColorNo = ulList[i].children[0].children[0].children[5].innerHTML
-        var sProductWidth = ulList[i].children[0].children[0].children[6].innerHTML
-        var sProductGMWT = ulList[i].children[0].children[0].children[7].innerHTML
-        var nFactInPutQty = ulList[i].children[0].children[0].children[8].innerHTML
-        var nTime = ulList[i].children[0].children[0].children[9].innerHTML
-        var nTemp = ulList[i].children[0].children[0].children[10].innerHTML
-        var nSpeed = ulList[i].children[0].children[0].children[11].innerHTML
-        var sWorkingProcedureName = ulList[i].children[0].children[0].children[12].innerHTML
+        var sCardNo = ulList[i].children[0].children[0].children[4].innerHTML;
+        var sMaterialNo = ulList[i].children[0].children[0].children[5].innerHTML;
+        var sColorNo = ulList[i].children[0].children[0].children[6].innerHTML;
+        var sProductWidth = ulList[i].children[0].children[0].children[7].innerHTML;
+        var sProductGMWT = ulList[i].children[0].children[0].children[8].innerHTML;
+        var nFactInPutQty = ulList[i].children[0].children[0].children[9].innerHTML;
+        var nTime = ulList[i].children[0].children[0].children[10].innerHTML;
+        var nTemp = ulList[i].children[0].children[0].children[11].innerHTML;
+        var nSpeed = ulList[i].children[0].children[0].children[12].innerHTML;
+        var sWorkingProcedureName = ulList[i].children[0].children[0].children[13].innerHTML;
         var excelVar = [
             sCardNo, sMaterialNo, sColorNo, sProductWidth, sProductGMWT, nFactInPutQty, nTime,
             nTemp, nSpeed, sWorkingProcedureName
         ];
         aoa.push(excelVar);
-
+        nCount += 1;
+        nSUMTime += parseFloat(nTime);
+        nSumQty += parseFloat(nFactInPutQty);
     }
+    var sumExcel = ['合计', , , , nCount, nSumQty, nSUMTime, , , ]
+    aoa.push(sumExcel);
     console.log(aoa);
     var sheet = XLSX.utils.aoa_to_sheet(aoa);
     sheet['!merges'] = [
@@ -525,7 +534,7 @@ var ExportExcel = function () {
             },
             e: {
                 r: 0,
-                c: 16
+                c: 11
             }
         }
     ];
@@ -544,4 +553,29 @@ var checkMasterialType = function (sType) {
     var returnValue = thisWorking + '_' + sType
     $('#dataTable').load('AJAXMasterialType/' + returnValue);
 
+}
+
+
+// 定型预排过的数据前端清空
+var AJAXClearDtl = function(){
+    $('#SedData').load('AJAXClearDtl');
+}
+
+
+// AJAX更新数据
+var ClearData = function(){
+    console.log('----o0-212')
+    var returnData;
+    $.ajax({
+        type: 'POST',
+        url: 'AJAXClear',
+        data: JSON.stringify(returnData),
+        contentType: 'application/json; charset=UTF-8',
+        dataType: 'json',
+        success: function (data) {
+            console.log('--------------');
+        },
+    });
+    AJAXClearDtl();
+    AJAXLeftPage();
 }

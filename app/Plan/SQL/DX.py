@@ -3,45 +3,27 @@
 
 # 获得卡号的详细信息
 def NoDXPlanSQL(sWorkingProcedureName):
-    return "DECLARE @sWorkingProcedureName NVARCHAR(100) \
+    return "DECLARE @sWorkingProcedureName NVARCHAR(100),@tTime DATETIME \
             SET @sWorkingProcedureName = '%s' \
-            CREATE TABLE #TEMP( \
-            sWorkingProcedureName NVARCHAR(100), \
-            tUpdateTime DATETIME, \
-            sLabel NVARCHAR(100), \
-            sCardNo NVARCHAR(100), \
-            bUsable BIT, \
-            upptrackJobGUID uniqueidentifier \
-            ) \
-            iF @sWorkingProcedureName = '预定' \
-            BEGIN \
-            INSERT INTO #TEMP \
-            SELECT '预定' AS sWorkingProcedureName  \
-            ,tUpdateTime, sLabel,CONVERT(NVARCHAR(100),NULL) AS sCardNo,CONVERT(BIT,1) AS bUsable,upptrackJobGUID AS upptrackJobGUID  \
-            FROM [dbo].[pbCommonDataProductionScheduling] A \
-            WHERE A.bIsFinish IS NULL AND sType iN ('预定', '水洗1', '水洗2') \
-            AND upptrackJobGUID NOT IN (SELECT uppTrackJobGUID FROM pbCommonDataProductionSchedulingDTL) \
-            END \
-            iF @sWorkingProcedureName = '成定型' \
-            BEGIN \
-            INSERT INTO #TEMP \
-            SELECT '成定型' AS sWorkingProcedureName  \
-            ,tUpdateTime, sLabel,CONVERT(NVARCHAR(100),NULL) AS sCardNo,CONVERT(BIT,1) AS bUsable,upptrackJobGUID AS upptrackJobGUID \
-            FROM [dbo].[pbCommonDataProductionScheduling] A \
-            WHERE A.bIsFinish IS NULL AND sType iN ('成定型') \
-            AND upptrackJobGUID NOT IN (SELECT uppTrackJobGUID FROM pbCommonDataProductionSchedulingDTL) \
-            END \
-            SELECT CASE WHEN bISRush = 1 OR A.sLabel = '1' THEN '#FFFF00' WHEN A.sLabel = '#FFA54F' OR A.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
+            /*找到最后一次更新的数据*/ \
+            SELECT TOP 1 @tTime = tUpdateTime  \
+            FROM [dbo].[pbCommonDataProductionScheduling] \
+            WHERE sType = @sWorkingProcedureName \
+            ORDER BY tUpdateTime DESC \
+            SELECT \
+            CASE WHEN B.sIsRush = 1 OR A.sLabel = '1' THEN '#FFFF00' WHEN A.sLabel = '#FFA54F' OR A.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
             ,B.sCardNo,sMaterialNo,sMaterialLot,sColorNo,nFactInPutQty \
             ,sCustomerName,sSalesGroupName \
-            ,CASE WHEN A.sWorkingProcedureName = @sWorkingProcedureName THEN nPS2Temp3_7 ELSE nSETemp3_7 END nTemp \
-            ,CASE WHEN A.sWorkingProcedureName = @sWorkingProcedureName THEN nPSSpeed ELSE nSESpeed END AS nSpeed \
-            ,CASE WHEN A.sWorkingProcedureName = @sWorkingProcedureName THEN nPSTime  ELSE nSETime END AS nTime \
-            ,sProductWidth,sProductGMWT,sColorBorder,B.uppTrackJobGUID,sWorkingProcedureNameCurrent,B.sLocation \
-            ,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameNext,B.sMaterialType \
-            FROM #TEMP A \
-            JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase B ON A.upptrackJobGUID = B.upptrackJobGUID \
-            DROP TABLE #TEMP"%(sWorkingProcedureName)
+            ,CASE WHEN A.sType IN ('预定', '水洗1', '水洗2') THEN B.nPSTemp ELSE B.nSETemp END nTemp \
+            ,CASE WHEN A.sType IN ('预定', '水洗1', '水洗2') THEN B.nPSSpeed ELSE B.nSESpeed END AS nSpeed \
+            ,CASE WHEN A.sType IN ('预定', '水洗1', '水洗2') THEN B.nPSTime  ELSE B.nSETime END AS nTime \
+            ,sProductWidth,sProductGMWT,sColorBorder,A.uppTrackJobGUID,sWorkingProcedureNameCurrent,B.sLocation \
+            ,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameNext,B.sType \
+            FROM [dbo].[pbCommonDataProductionScheduling] A \
+            JOIN [WebDataBase].[dbo].pbCommonDataProductionSchedulingBase B ON A.sCardNo = B.sCardNo \
+            WHERE A.sType = @sWorkingProcedureName AND tUpdateTime = @tTime AND ISNULL(A.bIsFinish,0) = 0 \
+            AND A.uppTrackJobGUID NOT IN (SELECT uppTrackJobGUID FROM pbCommonDataProductionSchedulingDTL WHERE bUsable = 1) \
+            ORDER BY nRowNumber"%(sWorkingProcedureName)
 
 
 # 已经预排的数据,没有输入机台号即为所有
@@ -58,20 +40,27 @@ def DXPlanSQL(nHDRID):
         nHDRID3 = 3
         nHDRID4 = 4
         nHDRID5 = 5
-    return "SELECT \
-            CASE WHEN bISRush = 1 OR C.sLabel = '1' THEN '#FFFF00' WHEN C.sLabel = '#FFA54F' OR C.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
+    return "SELECT uppTrackJobGUID,MAX(tUpdateTime) AS tUpdateTime \
+            iNTO #TEMP \
+            FROM [pbCommonDataProductionScheduling] \
+            WHERE bIsFinish IS NULL \
+            GROUP BY uppTrackJobGUID \
+            SELECT \
+            CASE WHEN sISRush = 1 OR C.sLabel = '1' THEN '#FFFF00' WHEN C.sLabel = '#FFA54F' OR C.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
             ,D.sCardNo,sMaterialNo,sMaterialLot,sColorNo,nFactInPutQty \
             ,sCustomerName,sSalesGroupName \
-            ,CASE WHEN sWorkingProcedureName = '预定' THEN nPS2Temp3_7 ELSE nSETemp3_7 END nTemp \
-            ,CASE WHEN sWorkingProcedureName = '预定' THEN nPSSpeed ELSE nSESpeed END AS nSpeed \
-            ,CASE WHEN sWorkingProcedureName = '预定' THEN nPSTime ELSE nSETime END AS nTime \
+            ,CASE WHEN C.sType IN ('预定','水洗1','水洗2') THEN nPSTemp ELSE nSETemp END nTemp \
+            ,CASE WHEN C.sType IN ('预定','水洗1','水洗2') THEN nPSSpeed ELSE nSESpeed END AS nSpeed \
+            ,CASE WHEN C.sType IN ('预定','水洗1','水洗2') THEN nPSTime ELSE nSETime END AS nTime \
             ,sProductWidth,sProductGMWT,sColorBorder,A.uppTrackJobGUID,sWorkingProcedureNameCurrent,D.sLocation ,B.sEquipmentNo, A.nHDRID, A.nRowNumber \
             ,D.sWorkingProcedureNameLast \
             ,D.sWorkingProcedureNameNext \
-            ,D.sMaterialType \
+            ,D.sType AS sMaterialType \
             FROM pbCommonDataProductionSchedulingDTL A \
             JOIN pbCommonDataProductionSchedulingHDR B ON A.nHDRID = B.ID \
             JOIN [dbo].[pbCommonDataProductionScheduling] C ON A.uppTrackJobGUID = C.uppTrackJobGUID \
-            JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase D ON A.uppTrackJobGUID = D.uppTrackJobGUID \
-            WHERE C.bIsFinish IS NULL AND A.nHDRID IN ('%s', '%s', '%s', '%s', '%s') \
-            ORDER BY A.nRowNumber" % (nHDRID1, nHDRID2, nHDRID3, nHDRID4, nHDRID5)
+            JOIN [dbo].pbCommonDataProductionSchedulingBase D ON C.sCardNo = D.sCardNo  \
+            JOIN #TEMP E ON E.uppTrackJobGUID = C.uppTrackJobGUID AND E.tUpdateTime = C.tUpdateTime \
+            WHERE C.bIsFinish IS NULL AND A.nHDRID IN ('%s', '%s', '%s', '%s', '%s') AND A.bUsable = 1 \
+            ORDER BY A.nRowNumber \
+            DROP TABLE #TEMP " % (nHDRID1, nHDRID2, nHDRID3, nHDRID4, nHDRID5)

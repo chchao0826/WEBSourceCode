@@ -152,44 +152,4 @@
 		new Dragslot(this, options);
 	}
 
-	// var AJAXData = function () {
-	// 	var ReturnList = [];
-	// 	var topli = $$('top-div').children[0].children;
-	// 	var LiList = topli;
-	// 	var Working = GetCurrentWork();
-	// 	console.log(Working)
-	// 	// console.log(LiList)
-	// 	for (var i = 0; i < LiList.length; i++) {
-	// 		// console.log(LiList[i])
-	// 		var uppTrackJobGUID = LiList[i].children[0].children[0].children[0].children[0].children[0].children[16].innerText;
-	// 		console.log(uppTrackJobGUID)
-	// 		var tdDict = {
-	// 			'uppTrackJobGUID': uppTrackJobGUID,
-	// 			'sType': Working,
-	// 			'nRowNumber': i,
-	// 		}
-	// 		if (uppTrackJobGUID != '') {
-	// 			ReturnList.push(tdDict);
-	// 		}
-	// 	}
-	// 	console.log('ReturnList')
-	// 	console.log(ReturnList)
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: 'ZL/AJAX/Move',
-	// 		data: JSON.stringify(ReturnList),
-	// 		contentType: 'application/json; charset=UTF-8',
-	// 		dataType: 'json',
-	// 		success: function (ReturnList) {
-	// 			// AjaxPage();
-	// 		},
-	// 	});
-	// 	console.log(111)
-	// 	getCount();
-	// 	// $('#top-div').load('AJAX/page');
-	// 	// console.log(LiList)
-
-	// }
-
-
 })(window.jQuery, window, document);

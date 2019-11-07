@@ -47,6 +47,11 @@
         .sUrgent {
             background-color: #FFA54F !important;
         }
+
+        /* 完成标记 */
+        .sFinish {
+            background-color: #7FFFAA !important;
+        }
     </style>
 
 </head>
@@ -58,17 +63,18 @@
                 <a class="navbar-brand" href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'PS' ) }} ">预定</a>
                 <a class="navbar-brand" href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'SXJ1' ) }} ">水洗1</a>
                 <a class="navbar-brand" href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'SXJ2' ) }} ">水洗2</a>
-                <a class="navbar-brand" href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'SE' ) }} ">成定</a>
+                <a class="navbar-brand" href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'SE1' ) }} ">成定型1</a>
+                <a class="navbar-brand" href=" {{ url_for('Plan.PMCIndex', sWorkingProcedureName = 'SE2' ) }} ">成定型2</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a>|</a></li>
                     <li><a href="#" onclick="GetLabel()">标记&取消特急</a></li>
                     <li><a>|</a></li>
-                    <li><a href="#" onclick="ToPlan()">标记预排</a></li>
+                    <!-- <li><a href="#" onclick="ToPlan()">标记预排</a></li> -->
                     <li><a href="#" onclick="DeleteLabelData()">取消预排</a></li>
                     <li><a>|</a></li>
-                    <li><a href="#" onclick="unCheck('up')">取消选中</a></li>
+                    <li><a href="#" onclick="unCheck('up')">选中</a></li>
                     <li><a>|</a></li>
                     <li><a href="#" style="color : perus;" onclick="saveData()">确定</a></li>
                     <li><a>|</a></li>
@@ -216,60 +222,6 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div style="background-color:#000; height:5px; margin-top: -12px;"></div>
-                            <div class="bottom-div" id="bottom-div" style="overflow-y:scroll;" style="position: fixed;">
-                                <!-- <div id="section_var_PMC2" class="section_var_PMC2" style="overflow-y:scroll;"> -->
-                                <ul id="bottom_ul" class="" style="margin: 0;padding: 0;">
-                                    <!-- <div style="margin-top: 30px;" style="position: fixed;"> -->
-                                    {% for i in NoPlanData %}
-                                    <li class="slot-item height40 marginLeft40 {{i.sLabel}}"
-                                        style="padding: 0;">
-                                        <div class="clearfix height40">
-                                            <div class="hover_PMC" style="width:100%;">
-                                                <table class="table">
-                                                    <tr style="text-align: center;">
-                                                        <!--  -->
-                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
-                                                            {{i.nOverTime}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
-                                                            {{i.sCustomerName}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sLocation}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.sMaterialNo}}</td>
-                                                        <td style="width: 3%; line-height: 25px;" class="border-left">
-                                                            {{i.sMaterialLot}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.sCardNo}}</td>
-                                                        <td style="width: 9%; line-height: 25px;" class="border-left">
-                                                            {{i.sColorNo}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.nFactInputQty}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sWorkingProcedureNameLast}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sWorkingProcedureNameCurrent}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sWorkingProcedureNameNext}}</td>
-                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
-                                                            {{i.dReplyDate }}</td>
-                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
-                                                            {{i.dDeliveryDate }}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.nPSTime}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.sSalesGroupName}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
-                                                            {{i.sRemark}}</td>
-                                                        <td hidden>{{i.uppTrackJobGUID}}</td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
                         </div>
                     </section>
                 </form>
@@ -280,7 +232,7 @@
     <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
 
     <script>
-        window.jQuery || document.write('<script src="../static/Plan/js/jquery-1.11.0.min.js"><\/script>')
+        window.jQuery || document.write('<script src="../static/Plan/js/jQuery-2.2.0.min.js"><\/script>')
     </script>
 
     <script type="text/javascript" src="/static/Plan/js/dragslot-PMC.js"></script>
@@ -290,7 +242,22 @@
     <script type="text/javascript" src="/static/xlsx/js/xlsx.full.min.js"></script>
 
     <script type="text/javascript" src="/static/Plan/js/PMC_DX.js"></script>
-    
+
+    <script type="text/javascript" src="/static/bootstrap/js/basics.js"></script>
+
+    <script type="text/javascript" src="/static/bootstrap/js/GetDate.js"></script>
+
+    <script>
+        jQuery(function ($) {
+            $('#dragslot').dragslot({
+                dropCallback: function (el) {
+                    //	alert(el);
+                }
+            });
+        });
+    </script>
+
+
 </body>
 
 </html>

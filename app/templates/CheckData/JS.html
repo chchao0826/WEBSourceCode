@@ -11,15 +11,15 @@
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/AdminLTE.min.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='CheckData/css/CheckTest.css')}} ">
 
-    <!-- <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/font-awesome.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/ionicons.min.css')}} ">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <!-- <link rel="stylesheet" href="../dist/css/AdminLTE.min.css"> -->
 
     <style>
         .currentLi {
-            color: #228B22;
+            background-color: #FAFAD2;
             /* font-size: 30px; */
             font-weight: 800;
         }
@@ -36,10 +36,11 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <div class="navbar-form navbar-left">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="卡号" id="inputVar">
+                        <input type="text" class="form-control" placeholder="布种" id="inputVar">
                     </div>
                     <button type="submit" class="btn btn-default" onclick="AddData()">增加</button>
                     <button type="submit" class="btn btn-default" onclick="DeleteData()">删除</button>
+                    <button type="submit" class="btn btn-default" onclick="checkData()">对比数据</button>
                     <button type="submit" class="btn btn-default" onclick="ExportExcel()">导出EXCEL</button>
                 </div>
             </div>
@@ -65,17 +66,17 @@
                                         <td></td>
                                         <td></td>
                                     </tr>
-                                    <tr>
+                                    <tr id="sMaterialNo">
                                         <td>布种/LOT</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td id="1" onclick="SignMain('1')"></td>
+                                        <td id="2" onclick="SignMain('2')"></td>
+                                        <td id="3" onclick="SignMain('3')"></td>
+                                        <td id="4" onclick="SignMain('4')"></td>
+                                        <td id="5" onclick="SignMain('5')"></td>
+                                        <td id="6" onclick="SignMain('6')"></td>
+                                        <td id="7" onclick="SignMain('7')"></td>
+                                        <td id="8" onclick="SignMain('8')"></td>
+                                        <td id="9" onclick="SignMain('9')"></td>
                                     </tr>
                                     <tr>
                                         <td>来源名称</td>
@@ -111,8 +112,8 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">配检布</h3>
                             <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                        class="fa fa-plus"></i>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
@@ -582,7 +583,6 @@
                         </div>
                         <!-- /.box-body -->
                     </div>
-                    <!-- /.box -->
                 </div>
                 <div class="col-md-12">
                     <div class="box box-warning collapsed-box box_center">
@@ -738,28 +738,124 @@
 <script>
     var AddData = function () {
         var GetInput = $$('inputVar').value;
-        var tdList = $$('tableData').children[0].children[0].children[0].children[0].children[0].children[0]
-            .children;
-        var sCardList = [];
+        var tdList = $$('sMaterialNo').children;
+        var sMaterialNoList = [];
         for (var i = 1; i < tdList.length; i++) {
-            var sCardNo = tdList[i].innerHTML;
-            if (sCardNo != '') {
-                sCardList.push(tdList[i].innerHTML)
+            var sMaterialNo = tdList[i].innerHTML;
+            if (sMaterialNo != '') {
+                sMaterialNoList.push(tdList[i].innerHTML)
             }
         }
-        sCardList.push(GetInput);
-        console.log(sCardList);
+        sMaterialNoList.push(GetInput);
+        console.log(sMaterialNoList);
 
-        $('#mainTable').load('AJAX/' + '主表_' + sCardList);
-        $('#PRTable').load('AJAX/' + '配检布_' + sCardList);
-        $('#FSTable').load('AJAX/' + '沸缩_' + sCardList);
-        $('#SCTable').load('AJAX/' + '精炼_' + sCardList);
-        $('#PSTable').load('AJAX/' + '预定_' + sCardList);
-        $('#DYTable').load('AJAX/' + '染色_' + sCardList);
-        $('#SETable').load('AJAX/' + '成定_' + sCardList);
+        $('#mainTable').load('AJAX/' + 'title_' + sMaterialNoList);
+        $('#PRTable').load('AJAX/' + 'PR_' + sMaterialNoList);
+        $('#FSTable').load('AJAX/' + 'FS_' + sMaterialNoList);
+        $('#SCTable').load('AJAX/' + 'SC_' + sMaterialNoList);
+        $('#PSTable').load('AJAX/' + 'PS_' + sMaterialNoList);
+        $('#DYTable').load('AJAX/' + 'DY_' + sMaterialNoList);
+        $('#SETable').load('AJAX/' + 'SE_' + sMaterialNoList);
 
 
     }
 </script>
+
+<script>
+    // collapsed-box
+    var exportExcel = function () {
+        var tableList = $$('tableData').children;
+        for (var i = 0; i < tableList.length; i++) {
+            var tableClass = tableList[i].children[0].className;
+            // 取主表的数据
+
+
+            // 没有折叠的数据
+            if (tableClass.indexOf('collapsed-box') == -1) {
+
+            }
+        }
+    }
+
+
+    // 更改颜色函数
+    var changeColor = function (MainData, ID) {
+        var TdList = MainData.children;
+        console.log(TdList);
+        for (var a = 0; a < TdList.length; a++) {
+            if (a == ID) {
+                TdList[a].className = 'currentLi';
+            } else {
+                TdList[a].className = '';
+            }
+        }
+    }
+
+
+    // 标记对比主体
+    var ExecFun = function (TableName, ID) {
+        var TableData = $$(TableName).children[1].children;
+        // console(TableData)
+        console.log(TableData);
+        console.log(TableData);
+        console.log(TableData);
+        console.log(TableData);
+        console.log(TableData);
+        for (var i = 0; i < TableData.length; i++) {
+            console.log(TableData[i])
+            changeColor(TableData[i], ID);
+        }
+    }
+
+
+    // 表单颜色更新
+    var SignMain = function (ID) {
+        console.log('mainTable');
+        ExecFun('mainTable', ID);
+
+        console.log('PRTable');
+        ExecFun('PRTable', ID);
+
+        console.log('FSTable');
+        ExecFun('FSTable', ID);
+
+        console.log('SCTable');
+        ExecFun('SCTable', ID);
+
+        console.log('PSTable');
+        ExecFun('PSTable', ID);
+
+        console.log('DYTable');
+        ExecFun('DYTable', ID);
+
+        console.log('SETable');
+        ExecFun('SETable', ID);
+    }
+
+
+    // 数据对比
+    var checkData = function () {
+        var TableData = $$('PSTable').children[1].children;
+        for (var i = 0; i < TableData.length; i++) {
+            var nMainValue = ''
+            var TDList = TableData[i].children;
+            for (var a = 0; a < TDList.length; a++) {
+                if (TDList[a].className == 'currentLi') {
+                    nMainValue = TDList[a].innerHTML;
+                } else {
+                    var GetValue = TDList[a].innerHTML;
+                    if (GetValue.indexOf('中:') != -1) {
+                        var GetValue = parseFloat(GetValue.split('中:')[1]);
+                        console.log(GetValue);
+                    }
+                }
+                console.log(nMainValue);
+                console.log(GetValue);
+            }
+            console.log('==============');
+        }
+    }
+</script>
+
 
 </html>

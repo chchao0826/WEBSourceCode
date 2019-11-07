@@ -53,33 +53,30 @@ def GetData_NoPlan(sWorkingProcedureName):
 
 # SQL: 已预排的数据
 def GetData_Plan(sWorkingProcedureName):
-    return "SELECT \
-        CASE WHEN sType LIKE '%%1%%' OR sType LIKE '%%2%%' THEN '预定' ELSE sType END AS  sWorkingProcedureName  \
-        ,tUpdateTime, sLabel,CONVERT(NVARCHAR(100),NULL) AS sCardNo,CONVERT(BIT,1) AS bUsable,upptrackJobGUID AS upptrackJobGUID  \
-        INTO #TEMP \
-        FROM [WebDataBase].[dbo].[pbCommonDataProductionScheduling] A \
-        WHERE sType = '%s' AND ISNULL(bIsFinish,0) = 0 \
-        UPDATE #TEMP \
-        SET sCardNo = B.sCardNo \
-        FROM #TEMP A \
-        JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase B ON A.upptrackJobGUID = B.upptrackJobGUID \
-        UPDATE #TEMP \
-        SET bUsable = 0 \
-        FROM #TEMP A \
-        JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase B ON A.sCardNo = B.sCardNo AND A.sWorkingProcedureName = B.sWorkingProcedureName AND B.bUsable = 0 \
-        DELETE #TEMP WHERE bUsable = 0 \
-        SELECT sOverTime AS nOverTime,sCustomerName \
-        ,A.sLocation,sMaterialNo,sMaterialLot,A.sCardNo,sColorNo \
-        ,ISNULL(nFactInputQty,nPlanOutputQty) AS nFactInputQty \
-        ,A.sWorkingProcedureNameLast,A.sWorkingProcedureNameCurrent,A.sWorkingProcedureNameNext  \
-        ,A.sReplyDate AS dReplyDate,A.sDeliveryDate AS dDeliveryDate \
-        ,nTJTime,nPSTime,nDyeingTime,nSETime,sSalesGroupName  \
-        ,CONVERT(NVARCHAR(10),A.sRemark) AS sRemark \
-        ,CASE WHEN B.sLabel = '2' THEN 'sUrgent' WHEN A.bIsRush = '1' THEN 'ERPUrgent' ELSE '#FFF' END AS sLabel \
-        ,A.uppTrackJobGUID \
-        FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonDataProductionSchedulingBase A \
-        JOIN #TEMP B ON A.upptrackJobGUID = B.upptrackJobGUID \
-        DROP TABLE #TEMP" % (sWorkingProcedureName)
+    return "DECLARE @sType NVARCHAR(100), @tTime DATETIME \
+            SET @sType = '%s' \
+            /*找到最后一次更新的数据*/ \
+            SELECT TOP 1 @tTime = tUpdateTime  \
+            FROM [dbo].[pbCommonDataProductionScheduling] \
+            WHERE sType = @sType \
+            ORDER BY tUpdateTime DESC \
+            SELECT  \
+            CASE WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) <=12 THEN '12' \
+            WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) <=24 THEN '12-24' \
+            WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) <=72 THEN '24-72' \
+            WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) >72 THEN '72' END AS  sOverTime \
+            ,B.sCustomerName  \
+            ,B.sLocation,B.sMaterialNo,B.sMaterialLot,B.sCardNo,B.sColorNo,B.nFactInputQty  \
+            ,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameCurrent,B.sWorkingProcedureNameNext  \
+            ,B.dReplyDate,B.dDeliveryDate \
+            ,B.nTJTime,B.nPSTime,B.nDyeingTime,B.nSETime,B.sSalesGroupName  \
+            ,B.sRemark \
+            ,CASE WHEN A.bIsFinish = 1 THEN 'sFinish' WHEN A.sLabel = '2' THEN 'sUrgent' WHEN B.sIsRush = '1' or A.sLabel = '1' THEN 'ERPUrgent' ELSE '#FFF' END AS sLabel \
+            ,A.uppTrackJobGUID \
+            FROM [WebDataBase].[dbo].[pbCommonDataProductionScheduling] A \
+            JOIN [WebDataBase].[dbo].pbCommonDataProductionSchedulingBase B ON A.sCardNo = B.sCardNo \
+            WHERE A.sType = @sType AND A.tUpdateTime = @tTime \
+            ORDER BY bIsFinish,nRowNumber" % (sWorkingProcedureName)
 
 
 # SQL: 查找没有的数据
@@ -109,4 +106,4 @@ def GetData_AllNoPlan(sVarInput, sWoring):
 
 # 插入数据
 def InsertImportData():
-    return "INSERT INTO [dbo].[pbCommonDataProductionScheduling](sType,nRowNumber,uppTrackJobGUID,tUpdateTime,sLabel) VALUES (%s, %d,%s,%s,%s)"
+    return "INSERT INTO [dbo].[pbCommonDataProductionScheduling](sType,nRowNumber,uppTrackJobGUID,tUpdateTime,sLabel,sCardNo) VALUES (%s, %d,%s,%s,%s,%s)"

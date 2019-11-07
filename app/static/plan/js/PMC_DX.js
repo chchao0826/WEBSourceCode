@@ -13,89 +13,12 @@ var workToChinese = function (sWork) {
         return '水洗1'
     } else if (sWork.indexOf('SXJ2') != -1) {
         return '水洗2'
-    } else if (sWork.indexOf('SE') != -1) {
-        return '成定型'
+    } else if (sWork.indexOf('SE1') != -1) {
+        return '成定型1'
+    } else if (sWork.indexOf('SE2') != -1) {
+        return '成定型2'
     }
 }
-
-// 获取时间
-var GetDate = function () {
-    var day2 = new Date();
-    var sYear = day2.getFullYear();
-    var sMonth = day2.getMonth() + 1;
-    var sDate = day2.getDate();
-    var sHour = day2.getHours();
-    var sMin = day2.getMinutes();
-    var sSec = day2.getSeconds();
-    if ((sMonth.toString().length) == 1) {
-        sMonth = '0' + sMonth.toString()
-    }
-    if ((sDate.toString().length) == 1) {
-        sDate = '0' + sDate.toString()
-    }
-    if ((sHour.toString().length) == 1) {
-        sHour = '0' + sHour.toString()
-    }
-    if ((sMin.toString().length) == 1) {
-        sMin = '0' + sMin.toString()
-    }
-    if ((sDate.toString().length) == 1) {
-        sSec = '0' + sSec.toString()
-    }
-    var dateTime = sYear + "-" + sMonth + "-" + sDate + ' ' + sHour + ':' + sMin + ':' + sSec;
-    return dateTime
-}
-
-// ClassName
-var _$ = function (id) {
-    return document.getElementsByClassName(id);
-}
-
-// ID
-var $$ = function (id) {
-    return document.getElementById(id);
-}
-
-// Name
-var __$ = function (id) {
-    return document.getElementsByName(id);
-}
-
-// 尺寸修改
-var getScreen = function () {
-    var nWidth = document.body.clientWidth;
-    var nHeight = document.documentElement.clientHeight;
-    var content = $$('body');
-
-    $$('top-div').style.height = (nHeight / 2) - 50 + 'px';
-    $$('bottom-div').style.height = (nHeight / 2) - 80 + 'px';
-    $$('top-div').style.nWidth = nWidth + 'px';
-    $$('dragslot').style.nWidth = nWidth + 'px';
-    $$('dragslot').style.height = nHeight - 92 + 'px';
-
-    content.style.width = nWidth + 'px';
-    content.style.height = nHeight - 5 + 'px';
-
-}
-
-// 页面初始
-window.onload = function () {
-    getScreen();
-    getCount();
-}
-
-// 修改屏幕尺寸后进行div的更新
-window.onresize = function () {
-    getScreen();
-}
-
-jQuery(function ($) {
-    $('#dragslot').dragslot({
-        dropCallback: function (el) {
-            //	alert(el);
-        }
-    });
-});
 
 // 取消上部分选中 // top-div      
 var unCheck = function (UpOrDown) {
@@ -179,10 +102,6 @@ var GetLabel = function () {
                             nRow2 = v;
                         }
                     }
-
-
-                    console.log(nRow1);
-                    console.log(nRow2);
                     // 同布车内有急件,且为最后一个,需要将取消的急件,放置到最后,其他不变
                     if (nRow1 > nRow2) {
                         topli[nRow1 + 1].before(topli[i]);
@@ -206,36 +125,6 @@ var GetLabel = function () {
     }
 }
 
-//  标记预排
-var ToPlan = function () {
-    var bottomli = $$('bottom-div').children[0].children;
-    var PlanList = [];
-    for (var i = 0; i < bottomli.length; i++) {
-        var liClassName = bottomli[i].className;
-        console.log(liClassName);
-        if (liClassName.indexOf('currentli') != -1) {
-            var getLocation = bottomli[i].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
-
-            for (var a = bottomli.length - 1; a >= 0; a--) {
-                var thisLocation = bottomli[a].children[0].children[0].children[0].children[0].children[0].children[2].innerHTML;
-                if (thisLocation == getLocation) {
-                    PlanList.push(bottomli[a]);
-                    bottomli[a].remove();
-                }
-            }
-            // break;
-        }
-    }
-    // console.log(PlanList)
-    // console.log(PlanList.length)
-    for (var i = PlanList.length - 1; i >= 0; i--) {
-        // console.log(PlanList[i]);
-        PlanList[i].classList.remove("currentli");
-        PlanList[i].className += ' nowPlan'
-        $$('ul_var').append(PlanList[i]);
-    }
-    console.log(PlanList)
-}
 
 // 删除数据
 var DeleteLabelData = function () {
@@ -275,10 +164,6 @@ var DeleteLabelData = function () {
     }
 }
 
-//刷新页面
-var Refresh = function () {
-    location.reload();
-}
 
 // 查找数据函数
 var findInBrowser = function (findData, inputVar, sFlag) {
@@ -397,21 +282,6 @@ var getCount = function () {
     $$('count_tr').innerHTML = nCountVar;
 }
 
-//获取当前时间
-var getDateTime = function () {
-    var myDate = new Date()
-    var myDay = myDate.getDate();
-    var myMonth = myDate.getMonth();
-    var myYear = myDate.getFullYear();
-    if (myDay.toString().length < 2) {
-        myDay = 0 + myDay.toString();
-    }
-    if (myMonth.toString().length < 2) {
-        myMonth = 0 + (myMonth + 1).toString();
-    }
-    var DataTime = myYear + '-' + myMonth + '-' + myDay;
-    return DataTime
-}
 
 // 保存按钮
 var saveData = function () {
@@ -614,7 +484,7 @@ function importf(obj) {
                     'Data': excelJson,
                 }
                 GetJsonData.push(returnJson);
-            } else if (sSheetName == '成定') {
+            } else if (sSheetName.indexOf('成定型') != -1 ) {
                 var excelJson = XLSX.utils.sheet_to_json(wb.Sheets[sSheetName]);
                 bUable = IsHaveFeild(excelJson);
                 var returnJson = {
@@ -624,6 +494,7 @@ function importf(obj) {
                 GetJsonData.push(returnJson);
             }
         }
+        console.log(GetJsonData)
         if (bUable == true) {
             $.ajax({
                 async: false,
