@@ -1,0 +1,189 @@
+{% extends 'PlanDye/base.html' %}
+
+{% block title %}染色预排_群组{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href=" {{url_for('static',filename='PlanDye/css/planDye.css')}} ">
+<link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/dragslot.css')}} ">
+{% endblock %}
+
+
+{% block main %}
+<div class="htmleaf-container">
+    <section class="">
+        <div id="dragslot" class="dragslot">
+            {% for Eq in EquipmentData%}
+            <div class="section">
+                <ul id="Eq_{{Eq.ID}}" class="slot-list">
+                    <div class="">
+                        <input class="title_var" type="text" readOnly="true" value={{Eq.sEquipmentNo}}>
+                        <span class="input-group-addon title_span_var"
+                            style="background-color:#FFFF00; width:250px; font-size: 12px;"
+                            id="basic-addon1">{{Eq.sEquipmentName}}</span>
+                    </div>
+                    {% for sVar in Cardlist %}
+                    {% if sVar.sEquipmentNo == Eq.sEquipmentNo %}
+                    <li class="slot-item li_style" id="Card_{{sVar.ID}}"
+                        style="border-left:10px solid {{sVar.sWorkCode}}; border-right:10px solid {{sVar.sColorCode}}; ">
+                        <div class="clearfix">
+                            <div class="float_left left_div border_right">
+                                <div type="text" class="left_1 hover border_bottom" style="background-color: {{sVar.bISCheck}};">
+                                    <span>{{sVar.sCardNo}}</span>
+                                </div>
+                                <div class="left_2 border_bottom">
+                                    <span>{{sVar.sWorkingProcedureNameLast}} -->
+                                        {{sVar.sWorkingProcedureNameCurrent}}</span>
+                                </div>
+                                <div class="left_3">
+                                    <span>{{sVar.sCustomerName}}</span>
+                                </div>
+                            </div>
+                            <div class="float_left right_div">
+                                <div class="right_1 border_bottom border_right float_left right_1_left"
+                                    style="background-color: {{sVar.sPSColor}}; ">
+                                    <span>预</span>
+                                </div>
+                                <div class="right_1 border_bottom border_right float_left right_1_mid"
+                                    style="background-color: {{sVar.sIsHYS}}; ">
+                                    <span>化</span>
+                                </div>
+                                <div class="right_1 border_bottom border_right float_left right_1_right"
+                                    style="background-color: {{sVar.sDyeingColor}}; ">
+                                    <span>染{{sVar.sDyeingCount}}</span>
+                                </div>
+                                <div class="right_2 border_bottom">
+                                    <span>投胚: {{sVar.nFactInputQty}} </span>
+                                </div>
+                                <div class="right_3 border_bottom">
+                                    <span>滞留: {{sVar.sOverTime}} </span>
+                                </div>
+                                <div class="right_4 border_bottom">
+                                    <span>{{sVar.sMaterialNo}} </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+
+{% block js %}
+
+
+<script>
+    // ClassName
+    var _$ = function (id) {
+        return document.getElementsByClassName(id);
+    }
+
+    // ID
+    var $$ = function (id) {
+        return document.getElementById(id);
+    }
+
+    // Name
+    var __$ = function (id) {
+        return document.getElementsByName(id);
+    }
+
+    // // 尺寸修改
+    // var getScreen = function () {
+    //     var nWidth = document.body.clientWidth;
+    //     var nHeight = document.documentElement.clientHeight;
+    //     var content = $$('body');
+    //     content.style.width = nWidth + 'px';
+    //     content.style.height = nHeight + 150 + 'px';
+    // }
+
+    // 修改屏幕尺寸后进行div的更新
+    window.onresize = function () {
+        addClear();
+        addEmpty();
+    }
+
+
+    // 获取时间
+    var GetDate = function () {
+        var day2 = new Date();
+        var sYear = day2.getFullYear();
+        var sMonth = day2.getMonth() + 1;
+        var sDate = day2.getDate();
+        var sHour = day2.getHours();
+        var sMin = day2.getMinutes();
+        var sSec = day2.getSeconds();
+        if ((sMonth.toString().length) == 1) {
+            sMonth = '0' + sMonth.toString()
+        }
+        if ((sDate.toString().length) == 1) {
+            sDate = '0' + sDate.toString()
+        }
+        if ((sHour.toString().length) == 1) {
+            sHour = '0' + sHour.toString()
+        }
+        if ((sMin.toString().length) == 1) {
+            sMin = '0' + sMin.toString()
+        }
+        if ((sSec.toString().length) == 1) {
+            sSec = '0' + sSec.toString()
+        }
+        var dateTime = sYear + "-" + sMonth + "-" + sDate + ' ' + sHour + ':' + sMin + ':' + sSec;
+        return dateTime
+    }
+</script>
+
+<script>
+    window.jQuery || document.write('<script src="../static/js/jquery-1.11.0.min.js"><\/script>')
+</script>
+
+<script type="text/javascript" src="/static/PlanDye/js/dragslot.js"></script>
+
+
+<script>
+    jQuery(function ($) {
+        $('#dragslot').dragslot({
+            dropCallback: function (el) {
+                //	alert(el);
+            }
+        });
+    });
+</script>
+
+
+<!-- <script>
+    var calWidth = function () {
+        var sEqList = _$('section');
+        var nEqCount = sEqList.length;
+        var title_spanList = _$('title_span_var');
+
+        var nWidth = document.body.clientWidth;
+        var nEachWidth = (nWidth - 12) / nEqCount;
+
+        for (var i = 0; i < nEqCount; i++) {
+            sEqList[i].style.width = nEachWidth + 'px';
+            title_spanList[i].style.width = nEachWidth - 20 + 'px';
+        }
+
+        sEqList, nEqCount, nWidth, nEachWidth = undefined;
+
+    }
+</script> -->
+
+<script>
+    // 页面初始
+    window.onload = function () {
+        addClear();
+        addEmpty();
+        // calWidth();
+    }
+</script>
+
+
+{% endblock %}

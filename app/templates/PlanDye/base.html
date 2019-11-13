@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <style type="text/css">
+        .currentli {
+            color: #186ecc;
+            font-weight: 700;
+        }
+
+        .clearli {
+            color: #111;
+            font-weight: 100;
+        }
+    </style>
+
+    <style>
+        .title_li>li {
+            width: 12.5%;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .title_li {
+            width: 100%;
+        }
+    </style>
+
+    {% block head %}{% endblock %}
+
+</head>
+
+<body id="body" style="overflow-x: scroll;">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav title_li" id="title_ul">
+                    <li id="A">
+                        <a href=" {{url_for('PlanDye.index', sEquipmentModelName='A') }} ">
+                            <span>A群组</span>
+                        </a>
+                    </li>
+                    <li id="B">
+                        <a href=" {{url_for('PlanDye.index', sEquipmentModelName='B') }} ">
+                            <span>B群组</span>
+                        </a>
+                    </li>
+                    <li id="C">
+                        <a href=" {{url_for('PlanDye.index', sEquipmentModelName='C') }} ">
+                            <span>C群组</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="saveData()">
+                            <span>确定</span>
+                        </a>
+                    </li>
+                    <li id="D">
+                        <a href=" {{url_for('PlanDye.index', sEquipmentModelName='D') }} ">
+                            <span>D群组</span>
+                        </a>
+                    </li>
+                    <li id="E">
+                        <a href=" {{url_for('PlanDye.index', sEquipmentModelName='E') }} ">
+                            <span>E群组</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <span>图形视图</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="btnRemark()">
+                            <span>显示备注</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 备注信息默认隐藏 -->
+        <div class="panel-footer hidden" id="sRemark">
+            <div class="top_left">
+                <span>左侧边框颜色: 距离染色工段个数的颜色,由红(7,6,5)-->黄(4,3)-->绿(2,1,0);</span>
+                <span style="background-color: #F5A89A;">7 --></span>
+                <span style="background-color: #E54646;">6 --></span>
+                <span style="background-color: #C50023;">5 --></span>
+                <span style="background-color: #FFF68F;">4 --></span>
+                <span style="background-color: #FFD700;">3 --></span>
+                <span style="background-color: #AFD788;">2 --></span>
+                <span style="background-color: #5BBD2B;">1 --></span>
+                <span style="background-color: #489620;">0(染色)</span>
+                &nbsp;&nbsp;&nbsp;
+                <span> 右侧边框为色号颜色;</span>
+            </div>
+            <div class="top_right">
+                <span>若此卡已经预排定型,则'预'灯亮</span><span style="background-color: #83C75D;">绿灯</span>
+                <span>若此卡已经此卡需要经过化验室则'化'灯亮</span><span style="background-color: #83C75D;">绿灯</span>
+                <span>若此卡已经此卡已经预排进ORGATEX</span>
+                <span style="background-color: #3CB371;">染1亮</span>
+                <span style="background-color: #83C75D;">染2亮</span>
+                <span style="background-color: #90EE90;">染3亮</span>
+
+            </div>
+        </div>
+    </nav>
+    <div class="main_var" id="main_var">
+        {% block main %}{% endblock %}
+    </div>
+    <script type="text/javascript" src="/static/bootstrap/js/jQuery-2.2.0.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+
+    <script>
+        // 备注信息的显示与隐藏
+        var btnRemark = function () {
+            var RemarkClassName = $$('sRemark').className;
+            if (RemarkClassName.indexOf('hidden') != -1) {
+                $$('sRemark').className = 'panel-footer';
+                $$('main_var').style.marginTop = 120 + 'px';
+            } else {
+                $$('sRemark').className = 'panel-footer hidden';
+                $$('main_var').style.marginTop = 60 + 'px';
+            }
+            RemarkClassName = undefined;
+        }
+    </script>
+
+    <!-- <script>
+        // 选择机台
+        var btnEquipment = function(ID){
+            console.log(ID);
+            var titleList = $$('title_ul').children;
+            console.log(titleList);
+            for (var i = 0; i < titleList.length; i++){
+                var varID = titleList[i].id;
+                console.log(varID);
+                console.log(ID);
+                if (varID == ID){
+                    $$(ID).className = 'active';
+                }
+                else{
+                    $$(ID).varID = '';
+                }
+            }
+            $('#dragslot').load('AJAX/'+ ID);
+        }
+    
+    </script> -->
+
+    <script>
+        // 判断虚拟机台有无洗缸没有进行添加
+        var addClear = function () {
+            var sList = $$('Eq_35').children;
+
+            var ulObj = document.createElement("li");
+            ulObj.className = 'slot-item li_style';
+            ulObj.style = 'line-height: 80px;';
+            ulObj.innerHTML = '<div><div><div><span>空白</span></div></div></div>';
+            if (sList.length < 2) {
+                $$('Eq_35').appendChild(ulObj);
+            }
+        }
+    </script>
+
+    <script>
+        // 保存按钮
+        var saveData = function () {
+            var getList = $$('dragslot').children;
+            var JsonData = []
+            for (var i = 0; i < getList.length; i++) {
+                var sEquipment = getList[i].children[0].id;
+                var CardList = getList[i].children[0].children;
+                var b = 0;
+                for (var a = 1; a < CardList.length; a++) {
+
+                    var sCardNo = CardList[a].children[0].children[0].children[0].children[0].innerHTML;
+                    var id = CardList[a].id
+                    if (sCardNo != '空白' && sCardNo != '空机台') {
+                        var sDict = {
+                            'nHDRID': sEquipment.split('_')[1],
+                            'sCardNo': sCardNo,
+                            'id': id.split('_')[1],
+                            'nRowNumber': b,
+                            'tUpdateTime': GetDate(),
+                        }
+                        JsonData.push(sDict);
+                        b += 1
+                    }
+
+                    sCardNo, id, sDict = undefined;
+                }
+                sEquipment, CardList = undefined;
+            }
+            console.log(JsonData);
+
+            $.ajax({
+                type: 'POST',
+                url: 'AjaxData',
+                data: JSON.stringify(JsonData),
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json',
+                success: function (data) {},
+                error: function (data) {},
+            });
+
+            getList, JsonData = undefined;
+        }
+    </script>
+
+    <script>
+        // 机台中未有数据的写空机台
+        var addEmpty = function () {
+            var lotList = $$('dragslot').children;
+            for (var i = 0; i < lotList.length; i++) {
+                var eachList = lotList[i].children[0].children;
+                if (eachList.length < 2) {
+                    var ulObj = document.createElement("li");
+                    ulObj.className = 'slot-item li_style';
+                    ulObj.style = 'line-height: 80px;';
+                    ulObj.innerHTML = '<div><div><div><span>空机台</span></div></div></div>';
+                    $$('dragslot').children[i].children[0].appendChild(ulObj);
+                    ulObj = undefined;
+                }
+            }
+        }
+    </script>
+
+
+    {% block js %}{% endblock %}
+
+
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}染色预排_详细{% endblock %}
+{% block head %}
+
+{% endblock %}
+{% block main %}
+<div class="outer_div">
+    <div class="htmleaf-container">
+        <form name = "form" method="POST">
+            <section class="">
+                <div class="form_control nar_var">
+                    <ul class="nav nav-pills">
+                        <li role="presentation"><a href="{{url_for('sCardNo_Detail',sEquipmentPrepareNo_var = 'A_B')}}">A,B</a></li>
+                        <li role="presentation"><a href="{{url_for('sCardNo_Detail',sEquipmentPrepareNo_var = 'C_D')}}">C,D</a></li>
+                        <li role="presentation"><a href="{{url_for('sCardNo_Detail',sEquipmentPrepareNo_var = 'E')}}">E</a></li>
+                        <li role="presentation"><a href="{{url_for('sCardNo_Walkthrough',sEquipmentPrepareNo_var = 'C_D')}}">精简页面</a></li>
+                        <li role="presentation">
+                            <button class="btn btn-default btn-block btu_var">确认</button>
+                        </li>
+                    </ul>
+                </div>
+                <div id="dragslot" class="">
+                    <div class="wait_var">
+                        <ul>
+                            {% for sEquipmentPrepareNo in sEquipmentPrepareNo_list_wait%}
+                            <div class="">
+                                <input class="title_var" type="text" readOnly="true" name="sCardNo{{sEquipmentPrepareNo.sEquipmentPrepareNo}}" id="sCardNo{{sEquipmentPrepareNo.sEquipmentPrepareNo}}" value={{sEquipmentPrepareNo.sEquipmentPrepareNo}}>       
+                            </div>
+                            <div id="dragslot2" class="">
+                            {% for sCardNo_wait in sCardNo__list_wait %}
+                                <li class="slot-item" style="border-left:5px solid {{sCardNo_wait.sWorkNameColor16}}; border-right:10px solid {{sCardNo_wait.sColor16}};">
+                                    <div class="clearfix">
+                                        <div type="text" class="text_var hover">
+                                            <tr>
+                                                <td class="">
+                                                    <input class="input_var" type="text" readOnly="true" name="sCardNo{{sCardNo_wait.id}}" id="sCardNo{{sCardNo_wait.id}}" value={{sCardNo_wait.sCardNo}}>
+                                                </td>
+                                                <td><span class="span_var">{{sCardNo_wait.sMaterialNo}}</span></td>
+                                                <td><span class="span_var">{{sCardNo_wait.sCardNo}}</span></td>
+                                                <td><span class="span_var">{{sCardNo_wait.sCustomerName}}</span></td>
+                                                <td><span class="span_var">{{sCardNo_wait.nFactInputQty}}</span></td>
+                                                
+                                            </tr> 
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    {% for sEquipmentPrepareNo in sEquipmentPrepareNo_list%}
+                    <div class="section_var">
+                        <ul id="{{sEquipmentPrepareNo.sEquipmentPrepareNo}}" class="">
+                            <div class="">
+                                <input class="title_var" type="text" readOnly="true" name="sCardNo{{sEquipmentPrepareNo.sEquipmentPrepareNo}}" id="sCardNo{{sEquipmentPrepareNo.sEquipmentPrepareNo}}" value={{sEquipmentPrepareNo.sEquipmentPrepareNo}}>  
+                                <span class="input-group-addon" style="background-color:#FFFF00; width:140px; font-size: 12px;" id="basic-addon1">{{sEquipmentPrepareNo.sEquipmentType}}</span>      
+                            </div>
+                            {% for sCardNo in sCardNo_list %}
+                                {% if sCardNo.sEquipmentPrepareNo == sEquipmentPrepareNo.sEquipmentPrepareNo %}
+                                <li class="slot-item" style="border-left:5px solid {{sCardNo.sWorkNameColor16}}; border-right:5px solid {{sCardNo.sColor16}};">
+                                    <div class="clearfix">
+                                        <tr class="tr_var">
+                                            <td class="">
+                                                <input class="input_var" type="text" readOnly="true" name="sCardNo{{sCardNo.id}}" id="sCardNo{{sCardNo.id}}" value={{sCardNo.sCardNo}}><br>
+                                            </td>
+                                            {% if sCardNo.sCardNo not in ('故障','洗缸')%}
+                                            <td class="">
+                                                <span class="span_var">{{sCardNo.sMaterialNo}}</span><br>
+                                            </td>
+                                            <td class="">
+                                                <span class="span_var">{{sCardNo.sColorNo}}</span><br>
+                                            </td>
+                                            <td class="">
+                                                <span class="span_var">{{sCardNo.sCustomerName}}</span><br>
+                                            </td>
+                                            <td><span class="span_var">{{sCardNo.nFactInputQty}}</span></td>     
+                                            {% endif %}                                       
+                                        </tr> 
+                                    </div>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul> 
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </form>
+    </div>     
+</div>
+
+
+{% endblock %}
+
+
+
+{% block js %}
+<script>
+    var StrUrl = window.location.href;
+    function forSubmit(){
+        var StrUrl = StrUrl.split('/');
+        var StrUrl = StrUrl[3]
+        alert(StrUrl)
+        document.form.action = "{{url_for('sCardNo_Detail',sEquipmentPrepareNo_var = "+StrUrl+" )}}";
+        var 
+    }
+</script>
+
+{% endblock %}

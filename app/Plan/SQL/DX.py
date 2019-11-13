@@ -43,7 +43,7 @@ def DXPlanSQL(nHDRID):
     return "SELECT uppTrackJobGUID,MAX(tUpdateTime) AS tUpdateTime \
             iNTO #TEMP \
             FROM [pbCommonDataProductionScheduling] \
-            WHERE bIsFinish IS NULL \
+            WHERE ISNULL(bIsFinish,0) = 0 \
             GROUP BY uppTrackJobGUID \
             SELECT \
             CASE WHEN sISRush = 1 OR C.sLabel = '1' THEN '#FFFF00' WHEN C.sLabel = '#FFA54F' OR C.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
@@ -61,6 +61,6 @@ def DXPlanSQL(nHDRID):
             JOIN [dbo].[pbCommonDataProductionScheduling] C ON A.uppTrackJobGUID = C.uppTrackJobGUID \
             JOIN [dbo].pbCommonDataProductionSchedulingBase D ON C.sCardNo = D.sCardNo  \
             JOIN #TEMP E ON E.uppTrackJobGUID = C.uppTrackJobGUID AND E.tUpdateTime = C.tUpdateTime \
-            WHERE C.bIsFinish IS NULL AND A.nHDRID IN ('%s', '%s', '%s', '%s', '%s') AND A.bUsable = 1 \
+            WHERE ISNULL(C.bIsFinish,0) = 0 AND A.nHDRID IN ('%s', '%s', '%s', '%s', '%s') AND A.bUsable = 1 \
             ORDER BY A.nRowNumber \
             DROP TABLE #TEMP " % (nHDRID1, nHDRID2, nHDRID3, nHDRID4, nHDRID5)

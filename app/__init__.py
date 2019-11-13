@@ -16,6 +16,12 @@ app.register_blueprint(kanban_blueprint, url_prefix = '/KanBan/')
 from app.Plan import Plan as plan_blueprint
 app.register_blueprint(plan_blueprint, url_prefix = '/Plan/')
 
+
+# plan
+from app.PlanDye import PlanDye as planDye_blueprint
+app.register_blueprint(planDye_blueprint, url_prefix = '/PlanDye/')
+
+
 # CheckData
 from app.CheckData import CheckData as checkData_blueprint
 app.register_blueprint(checkData_blueprint, url_prefix = '/CheckData/')
