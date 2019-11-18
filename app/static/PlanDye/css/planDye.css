@@ -8,11 +8,12 @@
     float: left;
     text-align: center;
     padding: 0 10px;
+    width: 270px;
 }
 
 .main_var {
     height: 100%;
-    margin-top: 60px;
+    margin-top: 105px;
 }
 
 .dragslot {
@@ -41,7 +42,7 @@ li {
 }
 
 .li_style {
-    height: 84px;
+    height: 110px;
     border-bottom: 2px solid #999 !important;
     padding: 0 !important;
 }
@@ -60,11 +61,21 @@ li {
     border-right: 1px solid #bbb;
 }
 
-.left_1 {
-    height: 28px;
+.left_1,
+.left_2,
+.left_3 {
+    height: 27px;
     text-align: center;
-    line-height: 27px;
+    line-height: 25px;
     font-size: 16px !important;
+    font-weight: 700;
+}
+
+.left_4 {
+    height: 26px;
+    text-align: center;
+    line-height: 25px;
+    font-size: 13px !important;
     font-weight: 700;
 }
 
@@ -72,46 +83,39 @@ li {
     border-bottom: 1px solid #bbb;
 }
 
-.left_2 {
-    height: 26px;
-    text-align: center;
-    line-height: 26px;
-    font-size: 12px !important;
-}
-
-.left_3 {
-    height: 26px;
-    text-align: center;
-    line-height: 26px;
-    font-size: 11px !important;
-}
-
 .right_div {
     width: 40%;
     font-size: 14px !important;
 }
 
-.right_1 .right_2 .right_3 .right_4 {
-    height: 19px;
+.right_1 .right_2 .right_3 {
+    height: 20px;
 }
 
+.right_4 {
+    height: 46px;
+    font-size: 13px !important;
+    line-height: 22px;
+}
 
 .right_1_left {
-    width: 25%;
+    width: 22%;
+    height: 20px;
 }
 
 .right_1_mid {
-    width: 25%;
+    width: 22%;
+    height: 20px;
 }
 
 .right_1_right {
-    width: 50%;
+    width: 56%;
+    height: 20px;
 }
 
 .top_left .top_right {
     width: 100%;
 }
-
 
 .top_remark {
     padding: 0px 5px;
@@ -121,9 +125,4 @@ li {
 
 a {
     cursor: pointer;
-}
-
-.section {
-    width: 14.2%;
-    display: inline-block;
 }

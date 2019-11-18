@@ -169,7 +169,8 @@ var AJAXSave = function () {
         }
         saveList.push(sDict);
     }
-
+    console.log(saveList)
+    console.log(type(saveList))
     $.ajax({
         type: 'POST',
         url: 'AJAXSave',

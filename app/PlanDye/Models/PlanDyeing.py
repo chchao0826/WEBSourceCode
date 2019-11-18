@@ -7,8 +7,7 @@ from app.config import engine
 
 
 base = declarative_base()
-session = sessionmaker(bind=engine)
-ses = session()
+
 
 
 # 预排主表 机台表
@@ -25,6 +24,10 @@ class PlanDyeDTL(base):
 
 # 更新Dtl数据
 def UpdateDtl_PMC(data):
+
+    session = sessionmaker(bind=engine)
+    ses = session()
+
     ID = data['id']
     nHDRID = data['nHDRID']
     nRowNumber = data['nRowNumber']

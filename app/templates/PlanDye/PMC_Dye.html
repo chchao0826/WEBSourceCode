@@ -12,60 +12,14 @@
 <div class="htmleaf-container">
     <section class="">
         <div id="dragslot" class="dragslot">
-            {% for Eq in EquipmentData%}
-            <div class="section">
-                <ul id="Eq_{{Eq.ID}}" class="slot-list">
-                    <div class="">
-                        <input class="title_var" type="text" readOnly="true" value={{Eq.sEquipmentNo}}>
+            {% for Eq in range(7)%}
+            <div class="section" id="section_{{Eq}}">
+                <ul class="slot-list">
+                    <div>
+                        <input class="title_var" type="text" readOnly="true" value=待选择>
                         <span class="input-group-addon title_span_var"
-                            style="background-color:#FFFF00; width:250px; font-size: 12px;"
-                            id="basic-addon1">{{Eq.sEquipmentName}}</span>
+                            style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span>
                     </div>
-                    {% for sVar in Cardlist %}
-                    {% if sVar.sEquipmentNo == Eq.sEquipmentNo %}
-                    <li class="slot-item li_style" id="Card_{{sVar.ID}}"
-                        style="border-left:10px solid {{sVar.sWorkCode}}; border-right:10px solid {{sVar.sColorCode}}; ">
-                        <div class="clearfix">
-                            <div class="float_left left_div border_right">
-                                <div type="text" class="left_1 hover border_bottom" style="background-color: {{sVar.bISCheck}};">
-                                    <span>{{sVar.sCardNo}}</span>
-                                </div>
-                                <div class="left_2 border_bottom">
-                                    <span>{{sVar.sWorkingProcedureNameLast}} -->
-                                        {{sVar.sWorkingProcedureNameCurrent}}</span>
-                                </div>
-                                <div class="left_3">
-                                    <span>{{sVar.sCustomerName}}</span>
-                                </div>
-                            </div>
-                            <div class="float_left right_div">
-                                <div class="right_1 border_bottom border_right float_left right_1_left"
-                                    style="background-color: {{sVar.sPSColor}}; ">
-                                    <span>预</span>
-                                </div>
-                                <div class="right_1 border_bottom border_right float_left right_1_mid"
-                                    style="background-color: {{sVar.sIsHYS}}; ">
-                                    <span>化</span>
-                                </div>
-                                <div class="right_1 border_bottom border_right float_left right_1_right"
-                                    style="background-color: {{sVar.sDyeingColor}}; ">
-                                    <span>染{{sVar.sDyeingCount}}</span>
-                                </div>
-                                <div class="right_2 border_bottom">
-                                    <span>投胚: {{sVar.nFactInputQty}} </span>
-                                </div>
-                                <div class="right_3 border_bottom">
-                                    <span>滞留: {{sVar.sOverTime}} </span>
-                                </div>
-                                <div class="right_4 border_bottom">
-                                    <span>{{sVar.sMaterialNo}} </span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </li>
-                    {% endif %}
-                    {% endfor %}
                 </ul>
             </div>
             {% endfor %}
