@@ -2,12 +2,14 @@
 
 from . import PlanDye
 from flask import render_template, Flask, request, jsonify, json
-from app.PlanDye.SQLExec.Dyeing import DyeingData, DyeingEquipment, IDGetData, IDGetEquipment
-from app.PlanDye.Models.PlanDyeing import UpdateDtl_PMC
-
+from app.PlanDye.SQLExec.Dyeing import DyeingData, DyeingEquipment, IDGetData, IDGetEquipment, searchValue
+from app.PlanDye.Models.PlanDyeing import UpdateDtl_PMC, UpdateXG_PMC, DeleteXG_PMC, IsHaveXG
+from app.PlanDye.SQLExec.DyeingExport import DyeingData
 import time
 import os
 
+
+# 主页
 @PlanDye.route('/')
 def index():
     # sEquipmentModelName = ''
@@ -18,6 +20,7 @@ def index():
     # , EquipmentData = getEquipmentData, Cardlist = getData
     return render_template('PlanDye/PMC_Dye.html')
 
+
 # AJAX 点击机台组别更新机台号
 @PlanDye.route('/AJAX/equipment/<equipmentNo>', methods=['GET', 'POST'])
 def AjaxData(equipmentNo):
@@ -26,10 +29,10 @@ def AjaxData(equipmentNo):
     returnHTML = ''
     nLength = str(round(99 / len(getEuqList), 2)) + '%'
     for i in getEuqList:
-        returnHTML += '<li id="equ_%s" style="width: %s"><a onclick="btnEqui(\'equ_%s\')">%s</a></li>'%(i['ID'], nLength, i['ID'], i['sEquipmentNo'])
+        returnHTML += '<li id="equ_%s" style="width: %s"><a onclick="btnEqui(\'equ_%s\')">%s</a></li>' % (
+            i['ID'], nLength, i['ID'], i['sEquipmentNo'])
 
     return returnHTML
-
 
 
 # AJAX 得到点击的机台的信息
@@ -46,56 +49,217 @@ def Equipment(equipmentNo):
                                 <input class="title_var" type="text" readOnly="true" value=%s> \
                                 <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:1250px; font-size: 12px;" id="basic-addon1">%s</span> \
                                 <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:1250px; font-size: 12px;" id="basic-addon1">共: %s 卡</span> \
-                            </div>' %(i['ID'], i['sEquipmentNo'], i['sEquipmentName'], i['nCardCount'])
+                            </div>' % (i['ID'], i['sEquipmentNo'], i['sEquipmentName'], i['nCardCount'])
 
     for i in returnData:
-        returnHTML += ' \
-                <li class="slot-item li_style" id="Card_%s" \
-                    style="border-left:10px solid %s; border-right:10px solid %s; "> \
-                    <div class="clearfix"> \
-                        <div class="float_left left_div border_right"> \
-                            <div type="text" class="left_1 hover border_bottom" style="background-color: %s;"> \
-                                <span>%s</span> \
+        if i['sType'] == '洗缸':
+            returnHTML += '\
+                <li class="slot-item XG_li" id="Card_%s"> \
+                    <div class="clearfix XG_div"> \
+                        <div> \
+                            <div> \
+                                <span>洗缸</span> \
                             </div> \
-                            <div class="left_2 border_bottom"> \
-                                <span>%s</span> \
-                            </div> \
-                            <div class="left_3 border_bottom"> \
-                                <span>%s</span> \
-                            </div> \
-                            <div class="left_4"> \
-                                <span>%s -> %s</span> \
-                            </div> \
-                        </div> \
-                        <div class="float_left right_div"> \
-                            <div class="right_1 border_bottom border_right float_left right_1_left" style="background-color: %s; "> <span>预</span> </div> \
-                            <div class="right_1 border_bottom border_right float_left right_1_mid" style="background-color: %s; "> <span>化</span> </div> \
-                            <div class="right_1 border_bottom border_right float_left right_1_right" style="background-color:%s"> <span>%s</span> </div> \
-                            <div class="right_2 border_bottom"> <span>投胚: %s</span> </div> \
-                            <div class="right_3 border_bottom" > <span>滞留: %s</span> </div> \
-                            <div class="right_4 border_bottom"> \
-                                <span>%s</span> \
+                            <div> \
+                                <span></span> \
                             </div> \
                         </div> \
                     </div> \
-                </li> '%(i['ID'], i['sWorkCode'], i['sColorCode'], i['bISCheck'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sPSColor'], i['sIsHYS'], i['sDyeingColor'], i['sDyeingCount'], i['nFactInputQty'], i['sOverTime'], i['sCustomerName'])
+                </li>'%(i['ID'])
+        else:
+            returnHTML += ' \
+                    <li class="slot-item li_style" id="Card_%s" \
+                        style="border-left:10px solid %s; border-right:10px solid %s; "> \
+                        <div class="clearfix"> \
+                            <div class="float_left left_div border_right"> \
+                                <div type="text" class="left_1 hover border_bottom" style="background-color: %s;"> \
+                                    <span>%s</span> \
+                                </div> \
+                                <div class="left_2 border_bottom"> \
+                                    <span>%s</span> \
+                                </div> \
+                                <div class="left_3 border_bottom"> \
+                                    <span>%s</span> \
+                                </div> \
+                            </div> \
+                            <div class="float_left right_div"> \
+                                <div class="right_1 border_bottom border_right float_left right_1_left" style="background-color: %s; "> <span>预</span> </div> \
+                                <div class="right_1 border_bottom border_right float_left right_1_mid" style="background-color: %s; "> <span>化</span> </div> \
+                                <div class="right_1 border_bottom border_right float_left right_1_right" style="background-color:%s"> <span>%s</span> </div> \
+                                <div class="right_2 border_bottom"> <span>投胚: %s</span> </div> \
+                                <div class="right_3 border_bottom" > <span>滞留: %s</span> </div> \
+                                <div class="right_4 border_bottom"> \
+                                    <span>%s</span> \
+                                </div> \
+                            </div> \
+                            <div class="left_4"> \
+                                <span>%s --> %s --> %s</span> \
+                            </div> \
+                        </div> \
+                    </li> ' % (i['ID'], i['sWorkCode'], i['sColorCode'], i['bISCheck'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sPSColor'], i['sIsHYS'], i['sDyeingColor'], i['sDyeingCount'], i['nFactInputQty'], i['sOverTime'], i['sCustomerName'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'])
     returnHTML += '</ul>'
 
     print(returnHTML)
     return returnHTML
 
 
+# 保存按钮
 @PlanDye.route('/AJAXPOST', methods=['GET', 'POST'])
 def AJAXPost():
     data_byte = request.get_data()
     data_str = data_byte.decode()
     data_dict = json.loads(data_str)
-
+    iFlag = False
+    a = 0
+    sXGList = []
+    sEqui = []
     for i in data_dict:
-        UpdateDtl_PMC(i)
+        if i['sCardNo'] != '洗缸':
+            UpdateDtl_PMC(i)
+        else:
+            UpdateXG_PMC(i)
+            print(i)
+            sDict = {
+                'nHDRID': i['nHDRID'],
+                'sType': i['sCardNo']
+            }
+            if sDict not in sXGList:
+                sXGList.append(sDict)
+        if i['nHDRID'] not in sEqui:
+            sEqui.append(i['nHDRID'])
+    for i in sEqui:
+        # 所有有的数据
+        iFlag = False
+        returnData = IsHaveXG(i)
+        print('------------=============------------121')
+        print(returnData)
+        print(sXGList)
+        for i in returnData:
+            if i not in sXGList:
+                print('==================')
+                print(i)
+                DeleteXG_PMC(i)
 
+            print(i)
     return '123'
 
+
+# 化验室区分
+@PlanDye.route('/HYS')
+def HYS():
+    return render_template('PlanDye/PMC_Dye_HYS.html')
+
+
+# 搜索更新标题栏
+@PlanDye.route('/Search/<inputValue>')
+def Search(inputValue):
+    retundata = searchValue(inputValue)
+    returnHTML = ''
+    print(retundata)
+    for i in retundata:
+        print(i)
+        returnHTML += '<span id="span_%s" style="color:#F00;" > %s / %s / %s / %s &nbsp|||</span>' % (
+            i['nHDRID'], i['sCardNo'], i['sEquipmentNo'], i['sMaterialNo'], i['sWorkingProcedureNameCurrent'])
+    return returnHTML
+
+
+# 搜索更新机台列表
+@PlanDye.route('/SearchUpdateEqui/<inputValue>')
+def SearchUpdateEuqi(inputValue):
+
+    sGetEqui = searchValue(inputValue)[0]
+    print('==============212121121212===========')
+    print(sGetEqui)
+    sVar = 'a' + '_' + str(sGetEqui['nHDRID'])
+    returnHTML = Equipment(sVar)
+
+    return returnHTML
+
+
+# 右侧机台更新
+@PlanDye.route('SearchUpdateRightEqui/<inputValue>')
+def SearchUpdateRightEqui(inputValue):
+    sInputvalue = inputValue.split('_')[0]
+    sHasEqui = ''.join(inputValue.split('_')[1])
+    sHasEquiList = sHasEqui.split(',')
+    sGetEqui = searchValue(sInputvalue)[0]
+    sEquipmentList = []
+    returnHTML = ''
+    a = 0
+    for c in sHasEquiList:
+        sEquiList = IDGetEquipment(c)
+        if sEquiList != []:
+            for i in sEquiList:
+                sDict = {
+                    'nHDRID': i['ID'],
+                    'sEquipmentNo': i['sEquipmentNo'],
+                }
+            if sDict not in sEquipmentList:
+                sEquipmentList.append(sDict)
+                a += 1
+    sDict = {
+        'nHDRID': sGetEqui['nHDRID'],
+        'sEquipmentNo': sGetEqui['sEquipmentNo'],
+    }
+    if sDict not in sEquipmentList:
+        sEquipmentList.append(sDict)
+        a += 1
+    nWidth = str(round((100 / a), 2))
+    for i in sEquipmentList:
+        print(nWidth)
+        returnHTML += "<li style=\"width: %s%%;\" id=\"addEuqi_equ_%s\"><a onclick=\"clearEqui('addEuqi_equ_%s')\">%s</a></li>" % (
+            nWidth, i['nHDRID'], i['nHDRID'], i['sEquipmentNo'])
+    return returnHTML
+
+
+@PlanDye.route('AJAXExport')
+def AJAXExport():
+    returnData = DyeingData()
+    print(returnData)
+    returnHTML = '<table class="table"> \
+                    <tr> \
+                        <th>sEquipmentNo</th> \
+                        <th>sPlanEquipmentNo</th> \
+                        <th>sOverTime</th> \
+                        <th>sCustomerName</th> \
+                        <th>sCardNo</th> \
+                        <th>sMaterialNo</th> \
+                        <th>sMaterialLot</th> \
+                        <th>sColorNo</th> \
+                        <th>nFactInputQty</th> \
+                        <th>sWorkingProcedureNameLast</th> \
+                        <th>sWorkingProcedureNameCurrent</th> \
+                        <th>sWorkingProcedureNameNext</th> \
+                        <th>nDyeingTime</th> \
+                        <th>sLocation</th> \
+                        <th>sRemark</th> \
+                        <th>sOrderNo</th> \
+                    </tr>'
+    a = 0
+    for i in returnData:
+        returnHTML +=' \
+                <tr> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                    <td>%s</td> \
+                </tr>'%(i['sEquipmentNo'], i['sPlanEquipmentNo'], i['sOverTime'], i['sCustomerName'], i['sCardNo'], i['sMaterialNo'], i['sMaterialLot'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['nDyeingTime'], i['sLocation'], i['sRemark'], i['sOrderNo'])
+        a += 1
+    returnHTML += '</table>'
+    print(a)
+    return returnHTML
 
 
 # # 根据机台号AJAX数据
@@ -151,12 +315,11 @@ def AJAXPost():
 #                                         </div> \
 #                                     </div> \
 #                                 </li>'%(sVar['ID'], sVar['sWorkCode'], sVar['sColorCode'], sVar['sCardNo'], sVar['sWorkingProcedureNameLast'], sVar['sWorkingProcedureNameCurrent'], sVar['sCustomerName'], sVar['sPSColor'], sVar['sIsHYS'], sVar['sDyeingColor'], sVar['sDyeingCount'], sVar['nFactInputQty'], sVar['sOverTime'], sVar['sMaterialNo'])
-        
+
 #         returnHtml += '</ul> \
 #                 </div>'
 
 #     return returnHtml
-
 
 
 # {% for Eq in EquipmentData%}
@@ -221,8 +384,6 @@ def AJAXPost():
 #                 {% endfor %}
 
 
-
-
 # # 机台分组列表显示
 # @app.route('/<sEquipmentPrepareNo_var>/',methods=['GET', 'POST'])
 # def sCardNo_Walkthrough(sEquipmentPrepareNo_var):
@@ -231,14 +392,13 @@ def AJAXPost():
 #         data = data.decode()
 #         # 更新数据
 #         update_rownumber(data)
-        
+
 #         # 获取当前地址
 #         path_var = request.path
 #         # path_var = path_var.decode()
 #         path_var = path_var.split('/')[1:]
 #         path_var = ''.join(path_var)
 #         path_var = path_var.split('/')[:1]
-
 
 
 #     # print(search_list(sEquipmentPrepareNo_var)[0])

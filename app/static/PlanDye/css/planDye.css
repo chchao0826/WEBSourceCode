@@ -67,8 +67,17 @@ li {
     height: 27px;
     text-align: center;
     line-height: 25px;
-    font-size: 16px !important;
     font-weight: 700;
+}
+
+.left_1,
+.left_2 {
+    font-size: 16px !important;
+
+}
+
+.left_3 {
+    font-size: 13px !important;
 }
 
 .left_4 {
@@ -93,9 +102,9 @@ li {
 }
 
 .right_4 {
-    height: 46px;
+    height: 19px;
     font-size: 13px !important;
-    line-height: 22px;
+    line-height: 19px;
 }
 
 .right_1_left {
@@ -125,4 +134,135 @@ li {
 
 a {
     cursor: pointer;
+}
+
+.currentli {
+    color: #186ecc;
+    font-weight: 700;
+}
+
+.clearli {
+    color: #111;
+    font-weight: 100;
+}
+
+.XG_div {
+    text-align: center;
+    height: 110px;
+    line-height: 110px;
+    font: 40px;
+}
+
+a {
+    color: #111 !important;
+}
+
+.title_li>li {
+    width: 9.1%;
+    text-align: center;
+    font-size: 20px;
+}
+
+.title_li {
+    width: 100%;
+}
+
+.equ_li {
+    width: 20%;
+    text-align: center;
+    font-size: 15px;
+    border-right: 2px solid #ccc;
+}
+
+#title_2,
+#title_3 {
+    width: 50%;
+    font-size: 18px;
+}
+
+#title_4 {
+    width: 100%;
+    font-size: 18px;
+}
+
+#title_5 {
+    width: 100%;
+    font-size: 18px;
+}
+
+#title_3 {
+    background-color: #C8E2B1;
+    text-align: center;
+}
+
+#title_3>li {
+    border-left: 2px solid #ccc;
+}
+
+#Search,
+#sRemark {
+    height: 70px;
+}
+
+#title_4 {
+    height: 50px;
+}
+
+.saveLi {
+    background-color: #83C75D;
+    font-weight: 800;
+}
+
+.input_style {
+    width: 200px !important;
+}
+
+.input-var {
+    width: 170px !important;
+}
+
+.search_left,
+.search_right {
+    height: 50px;
+}
+
+.search_left {
+    width: 60px;
+    text-align: center;
+    background-color: #FFFAF0;
+    border-radius: 10px;
+}
+
+.search_right {
+    padding-left: 20px;
+}
+
+.search_get {
+    background: #FFF68F;
+}
+
+.bottom_Search {
+    background-color: #E9E9E9;
+    border-color: #e7e7e7;
+    height: 20px !important;
+    line-height: 20px;
+    text-align: left;
+}
+
+.container {
+    width: auto !important;
+    color: #FF0000;
+    font-weight: 700;
+}
+
+.XG_li{
+    height: 60px;
+    line-height: 60px;
+    background-color:#8DEEEE
+}
+
+.XG_div{
+
+    height: 55px;
+    line-height: 55px;
 }

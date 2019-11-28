@@ -44,7 +44,6 @@ window.onresize = function () {
     getScreen();
 }
 
-
 // 获取时间
 var GetDate = function () {
     var day2 = new Date();
@@ -73,8 +72,6 @@ var GetDate = function () {
     return dateTime
 }
 
-
-
 // 得到当前工段
 var GetThisWork = function () {
     var thisURL = document.URL;
@@ -88,7 +85,6 @@ var GetThisWork = function () {
     return thisWorking;
 }
 
-
 //得到当前机台
 var GetThisEquipemnt = function () {
     var eqList = $$('eqLi').children;
@@ -98,7 +94,6 @@ var GetThisEquipemnt = function () {
         }
     }
 }
-
 
 // 向上
 var AJAXUp = function () {
@@ -157,8 +152,10 @@ var AJAXSave = function () {
         alert('未选择机台!');
         return;
     }
+
     var ulList = $$('SedData').children;
     var saveList = [];
+
     for (var i = 0; i < ulList.length; i++) {
         var uGUID = ulList[i].children[0].children[0].children[2].innerHTML;
         var sDict = {
@@ -169,6 +166,7 @@ var AJAXSave = function () {
         }
         saveList.push(sDict);
     }
+
     console.log(saveList)
     console.log(type(saveList))
     $.ajax({
@@ -496,13 +494,15 @@ var ExportExcel = function () {
     var excelT = [sWork + sthisEqFun + '预排',,,,];
     aoa.push(excelT);
 
-    var excelTitle = ['卡号', '物料编号', '色号', '幅宽', '克重', '投胚量', '预计花费时间', '温度', '速度', '工段', '类别'];
+    var excelTitle = ['序号', '卡号', '物料编号', '色号', '幅宽', '克重', '投胚量', '预计花费时间', '温度', '速度', '工段', '类别'];
     aoa.push(excelTitle);
 
     var nSUMTime = 0;
     var nCount = 0;
-    var nSumQty = 0
+    var nSumQty = 0;
+    var nRow = 1;
     for (var i = 0; i < ulList.length; i++) {
+        nRow += 1
         var sCardNo = ulList[i].children[0].children[0].children[4].innerHTML;
         var sMaterialNo = ulList[i].children[0].children[0].children[5].innerHTML;
         var sColorNo = ulList[i].children[0].children[0].children[6].innerHTML;
@@ -514,7 +514,7 @@ var ExportExcel = function () {
         var nSpeed = ulList[i].children[0].children[0].children[12].innerHTML;
         var sWorkingProcedureName = ulList[i].children[0].children[0].children[13].innerHTML;
         var excelVar = [
-            sCardNo, sMaterialNo, sColorNo, sProductWidth, sProductGMWT, nFactInPutQty, nTime,
+            nRow, sCardNo, sMaterialNo, sColorNo, sProductWidth, sProductGMWT, nFactInPutQty, nTime,
             nTemp, nSpeed, sWorkingProcedureName
         ];
         aoa.push(excelVar);
@@ -556,12 +556,10 @@ var checkMasterialType = function (sType) {
 
 }
 
-
 // 定型预排过的数据前端清空
 var AJAXClearDtl = function(){
     $('#SedData').load('AJAXClearDtl');
 }
-
 
 // AJAX更新数据
 var ClearData = function(){

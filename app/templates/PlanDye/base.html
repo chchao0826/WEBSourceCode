@@ -7,66 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
-    <style type="text/css">
-        .currentli {
-            color: #186ecc;
-            font-weight: 700;
-        }
-
-        .clearli {
-            color: #111;
-            font-weight: 100;
-        }
-    </style>
-
-    <style>
-        a {
-            color: #111 !important;
-        }
-
-        .title_li>li {
-            width: 14.28%;
-            text-align: center;
-            font-size: 20px;
-        }
-
-        .title_li {
-            width: 100%;
-        }
-
-        .equ_li {
-            width: 20%;
-            text-align: center;
-            font-size: 15px;
-            border-right: 2px solid #ccc;
-        }
-
-        #title_2,
-        #title_3 {
-            width: 50%;
-            font-size: 18px;
-        }
-
-        #title_3 {
-            background-color: #C8E2B1;
-            text-align: center;
-        }
-
-        #title_3>li {
-            border-left: 2px solid #ccc;
-        }
-
-        .saveLi {
-            background-color: #83C75D;
-            font-weight: 800;
-        }
-    </style>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/dragslot.css')}} ">
 
     {% block head %}{% endblock %}
 
 </head>
 
-<body id="body" style="overflow-x: scroll;">
+<body id="body">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="collapse navbar-collapse">
@@ -77,7 +24,25 @@
                     <li id="C"><a onclick="btnEquiModel('C')">C群组</a></li>
                     <li id="D"><a onclick="btnEquiModel('D')">D群组</a></li>
                     <li id="E"><a onclick="btnEquiModel('E')">E群组</a></li>
-                    <li id="E"><a onclick="btnRemark()">显示备注</a></li>
+                    <!-- <li id="E"><a onclick="showORhidden('showSearch', 'Search')" id="showSearch">显示搜索</a></li> -->
+                    <li><a href=" {{ url_for('PlanDye.HYS') }} ">划分化验室</a></li>
+                    <li id="btnExport"><a onclick="btnReadyData()">准备导出数据</a></li>
+                    <li><a onclick="showORhidden('showsRemark', 'sRemark')" id="showsRemark">显示备注</a></li>
+                    <li style="width: 18%">
+                        <div class="nav navbar-nav" id="title_4">
+                            <div class="nav navbar-nav float_left" id="title_5">
+                                <div class="navbar-form navbar-left">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control input-var" id="searchValue"
+                                            placeholder="生产卡号">
+                                    </div>
+                                    <button class="btn btn-default" onclick="IsSearch()">搜索</button>
+                                    <button class="btn btn-default" onclick="ClearSearch()">清空</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
                 </ul>
                 <ul class="nav navbar-nav equ_li" id="title_2">
 
@@ -86,269 +51,37 @@
 
                 </ul>
             </div>
-            <div class="hidden" id="sRemark" style="font-size: 16px;">
+            <div style="font-size: 16px;" class="panel-footer hidden" id="sRemark">
                 <span style="background-color:#FF0000;">当前工段<改染,進缸还原洗,染色,缸練></span>
                 <span style="background-color:#FF34B3;">下工段<改染,進缸还原洗,染色,缸練></span>
-                <span style="background-color:#EC870E;">下工段<成品套色,打色,復色,亚博试染,半成品套色></span>
-                <span style="background-color:#EEEE00;">下工段<烘干,成定型,预定,大定,精煉></span> <br>
-                <span style="background-color:#00BFFF;">下工段<水洗></span>
-                <span style="background-color:#00EE00;">下工段<退卷></span>
-                <span style="background-color:#FFAEB9;">下工段<脫水+展布,剖布,剖布+展布,展布></span>
-                <span style="background-color:#C6E2FF;">下工段<驗布,灵泰测试></span>
-                <span style="background-color:#BA55D3;">下工段<雙面磨毛,磨毛></span>
-                <span style="background-color:#FFFFFF;">下工段<退回工务></span>
+                <span style="background-color:#FFAEB9;">下下工段<改染,進缸还原洗,染色,缸練></span> <br>
+                <span style="background-color:#EC870E;">当前工段<成品套色,打色,復色,亚博试染,半成品套色></span>
+                <span style="background-color:#F5B16D;">下工段<成品套色,打色,復色,亚博试染,半成品套色></span>
+                <span style="background-color:#FFE7BA;">下工段<成品套色,打色,復色,亚博试染,半成品套色></span>
             </div>
         </div>
     </nav>
     <div class="main_var" id="main_var">
         {% block main %}{% endblock %}
     </div>
+    <nav class="navbar-fixed-bottom bottom_Search">
+        <div class="container" id="search_value">
+        </div>
+    </nav>
+
+    <div class="hidden" id="divExport">
+
+    </div>
 
     <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="/static/bootstrap/js/jQuery-2.2.0.min.js"></script>
-
-    <script>
-        // 备注信息的显示与隐藏
-        var btnRemark = function () {
-            var RemarkClassName = $$('sRemark').className;
-            if (RemarkClassName.indexOf('hidden') != -1) {
-                $$('sRemark').className = 'panel-footer';
-                $$('main_var').style.marginTop = 170 + 'px';
-            } else {
-                $$('sRemark').className = 'panel-footer hidden';
-                $$('main_var').style.marginTop = 105 + 'px';
-            }
-            RemarkClassName = undefined;
-        }
-    </script>
-
-    <script>
-        // 增加活动标识
-        var addactive = function (ID) {
-            var chidList = $$(ID).parentNode.children;
-            for (var i = 0; i < chidList.length; i++) {
-                if (chidList[i].className.indexOf('active') != -1) {
-                    chidList[i].className = '';
-                }
-            }
-            $$(ID).className += 'active';
-        }
-    </script>
-
-    <script>
-        //选择机台后在右侧增加点击的机台,并且执行AJAX
-        var addEuqi = function (sName, iID) {
-            var rightEq = $$('title_3').children;
-            console.log(rightEq);
-            var nLength = rightEq.length + 1;
-            console.log('====2323312');
-            var iFlag = false;
-            for (var i = 0; i < rightEq.length; i++) {
-                var eqID = rightEq[i].id;
-                if (eqID == 'addEuqi_' + iID) {
-                    iFlag = true;
-                }
-            }
-
-
-            if (iFlag == true) {
-                alert('已经添加该机台,请确认!');
-            } else {
-                var ulObj = document.createElement("li");
-                ulObj.style = 'width: ' + ((100 / nLength).toFixed(2) + '%');
-                ulObj.id = 'addEuqi_' + iID
-                ulObj.innerHTML = '<a onclick="clearEqui(\'addEuqi_' + iID + '\')">' + sName + '</a>';
-                // 判断机台列表中是否包含
-
-                $$('title_3').appendChild(ulObj);
-                calwidth();
-                addData(iID);
-            }
-        }
-
-        // 增加机台的同时,下方数据列进行AJAX更新
-        var addData = function (ID) {
-            var sectionList = $$('dragslot').children;
-            for (var i = 0; i < sectionList.length; i++) {
-                var varID = '#' + sectionList[i].id;
-                if (sectionList[i].children[0].id == '') {
-                    $(varID).load('AJAX/Data/' + ID);
-                    break;
-                }
-            }
-        }
-
-        // 重新计算width
-        var calwidth = function () {
-            var title3 = $$('title_3').children;
-            var nLength = (99 / title3.length).toFixed(2);
-            for (var i = 0; i < title3.length; i++) {
-                title3[i].style.width = nLength + '%';
-            }
-        }
-
-        // 点击清除机台
-        var clearEqui = function (ID) {
-            var ulObj = $$(ID);
-            $$('title_3').removeChild(ulObj);
-            calwidth();
-            deleteData(ID);
-        }
-
-        // 如果添加的机台超过7个进行提醒
-        var alert7 = function (ID) {
-            console.log('=====================21212121')
-            var title3len = $$('title_3').children.length;
-            console.log(title3len);
-            console.log('===-------------=====')
-            var iFlag = false;
-            if (title3len >= 7) {
-                console.log('========')
-                iFlag = true;
-            }
-            return iFlag
-        }
-
-        // 增加待选择选项
-        var addWait = function (ID) {
-
-        }
-
-        // 清除机台的同时,删除下面的详细信息
-        var deleteData = function (ID) {
-            // var sectionList = $$('dragslot').children;
-            var eqID = 'Eq_' + ID.split('_')[2];
-            console.log('============')
-            console.log(eqID)
-            var parentID = $$(eqID).parentNode.id;
-            $$(parentID).removeChild($$(eqID));
-            var ulObj = document.createElement("div");
-            ulObj.innerHTML =
-                ' <input class="title_var" type="text" readonly="true" value="待选择"> \
-                                    <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span>'
-            $$(parentID).appendChild(ulObj);
-        }
-    </script>
-
-    <script>
-        // 选择机台群组
-        var btnEquiModel = function (ID) {
-            addactive(ID);
-            $('#title_2').load('AJAX/equipment/' + ID);
-        }
-
-        // 选择机台
-        var btnEqui = function (ID) {
-            var iFlag = alert7(ID);
-            if (iFlag == true) {
-                alert('不能添加超过七个机台, 请修正');
-                return;
-            } else {
-                console.log('=====================21212121')
-                addactive(ID);
-                var sName = $$(ID).children[0].innerHTML;
-                addEuqi(sName, ID);
-            }
-        }
-    </script>
-
-    <script>
-        // 判断虚拟机台有无洗缸没有进行添加
-        var addClear = function () {
-            var sList = $$('Eq_35').children;
-
-            var ulObj = document.createElement("li");
-            ulObj.className = 'slot-item li_style';
-            ulObj.style = 'line-height: 80px;';
-            ulObj.innerHTML = '<div><div><div><span>空白</span></div></div></div>';
-            if (sList.length < 2) {
-                $$('Eq_35').appendChild(ulObj);
-            }
-        }
-    </script>
-
-    <script>
-        // 保存后更新列
-        var updateCol = function () {
-            console.log('刷新列')
-            var getList = $$('dragslot').children;
-            console.log(getList)
-            for (var i = 0; i < getList.length; i++) {
-                var updateColID = '#' + getList[i].id;
-                var iEquipmentID = getList[i].children[0].id;
-                console.log(updateColID);
-                console.log(iEquipmentID);
-                if (iEquipmentID != '') {
-                    $(updateColID).load('AJAX/Data/' + iEquipmentID);
-                }
-            }
-        }
-    </script>
-
-
-
-    <script>
-        // 保存按钮
-        var saveData = function () {
-            var getList = $$('dragslot').children;
-            var saveList = [];
-            for (var i = 0; i < getList.length; i++) {
-                var sEquipmentNo = getList[i].children[0].id;
-                if (sEquipmentNo.indexOf('待选择') == -1 && sEquipmentNo != '') {
-                    var liList = getList[i].children[0].children;
-                    for (var a = 1; a < liList.length; a++) {
-                        console.log(sEquipmentNo)
-                        var nHDRID = sEquipmentNo.split('_')[1];
-                        var tTime = GetDate();
-                        var id = liList[a].id.split('_')[1];
-                        var sCardNo = liList[a].children[0].children[0].children[0].children[0].innerText;
-                        var sDict = {
-                            'id': id,
-                            'nHDRID': nHDRID,
-                            'sCardNo': sCardNo,
-                            'nRowNumber': a,
-                            'tUpdateTime': tTime,
-                        }
-                        saveList.push(sDict);
-                    }
-                }
-            }
-            console.log(saveList);
-            $.ajax({
-                type: 'POST',
-                url: 'AJAXPOST',
-                data: JSON.stringify(saveList),
-                contentType: 'application/json; charset=UTF-8',
-                dataType: 'json',
-                success: function (data) {
-                    alert('保存成功!!');
-                    updateCol();
-                },
-                error: function (data) {
-                    alert('保存失败!!');
-                }
-            });
-        }
-    </script>
-
-    <script>
-        // 机台中未有数据的写空机台
-        var addEmpty = function () {
-            var lotList = $$('dragslot').children;
-            for (var i = 0; i < lotList.length; i++) {
-                var eachList = lotList[i].children[0].children;
-                if (eachList.length < 2) {
-                    var ulObj = document.createElement("li");
-                    ulObj.className = 'slot-item li_style';
-                    ulObj.style = 'line-height: 80px;';
-                    ulObj.innerHTML = '<div><div><div><span>空机台</span></div></div></div>';
-                    $$('dragslot').children[i].children[0].appendChild(ulObj);
-                    ulObj = undefined;
-                }
-            }
-        }
-    </script>
-
+    <script type="text/javascript" src="/static/PlanDye/js/dragslot.js"></script>
+    <script type="text/javascript" src="/static/PlanDye/js/PMC_Search.js"></script>
+    <script type="text/javascript" src="/static/PlanDye/js/PMC_addEqui.js"></script>
+    <script type="text/javascript" src="/static/PlanDye/js/PMC_Save.js"></script>
+    <script type="text/javascript" src="/static/PlanDye/js/PMC_export.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/basics.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script>
 
     {% block js %}{% endblock %}
 

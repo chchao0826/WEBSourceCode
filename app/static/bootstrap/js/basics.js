@@ -44,3 +44,20 @@ window.onresize = function () {
 var Refresh = function () {
     location.reload();
 }
+
+
+//获取当前时间
+var getDateTime = function () {
+    var myDate = new Date()
+    var myDay = myDate.getDate();
+    var myMonth = myDate.getMonth() + 1;
+    var myYear = myDate.getFullYear();
+    if (myDay.toString().length < 2) {
+        myDay = 0 + myDay.toString();
+    }
+    if (myMonth.toString().length < 2) {
+        myMonth = 0 + (myMonth + 1).toString();
+    }
+    var DataTime = myYear + '-' + myMonth + '-' + myDay;
+    return DataTime
+}

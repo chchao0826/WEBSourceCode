@@ -1,9 +1,9 @@
 {% extends 'PlanDye/base.html' %}
 
-{% block title %}染色预排_群组{% endblock %}
+{% block title %}染色预排_染化{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href=" {{url_for('static',filename='PlanDye/css/planDye.css')}} ">
+<link rel="stylesheet" href=" {{url_for('static',filename='PlanDye/css/planDye_HYS.css')}} ">
 {% endblock %}
 
 
@@ -11,7 +11,7 @@
 <div class="htmleaf-container">
     <section class="">
         <div id="dragslot" class="dragslot">
-            {% for Eq in range(7)%}
+            {% for Eq in range(4)%}
             <div class="section" id="section_{{Eq}}">
                 <ul class="slot-list">
                     <div>
@@ -19,22 +19,9 @@
                         <span class="input-group-addon title_span_var"
                             style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span>
                     </div>
-                    <li class="slot-item XG_li" id="Card_{{0-Eq}}">
-                        <div class="clearfix XG_div">
-                            <div>
-                                <div>
-                                    <span>洗缸</span>
-                                </div>
-                                <div>
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                 </ul>
             </div>
             {% endfor %}
-
         </div>
     </section>
 </div>
@@ -42,6 +29,16 @@
 
 
 {% block js %}
+
+<script>
+    jQuery(function ($) {
+        $('#dragslot').dragslot({
+            dropCallback: function (el) {
+                //	alert(el);
+            }
+        });
+    });
+</script>
 
 
 <script>
@@ -71,10 +68,16 @@
 
     // 修改屏幕尺寸后进行div的更新
     window.onresize = function () {
-        addClear();
-        addEmpty();
+        // addClear();
+        // addEmpty();
     }
 
+    // 页面初始
+    window.onload = function () {
+        // addClear();
+        // addEmpty();
+        // calWidth();
+    }
 
     // 获取时间
     var GetDate = function () {
@@ -104,47 +107,6 @@
         return dateTime
     }
 </script>
-
-<script>
-    jQuery(function ($) {
-        $('#dragslot').dragslot({
-            dropCallback: function (el) {
-                //	alert(el);
-            }
-        });
-    });
-</script>
-
-
-<!-- <script>
-    var calWidth = function () {
-        var sEqList = _$('section');
-        var nEqCount = sEqList.length;
-        var title_spanList = _$('title_span_var');
-
-        var nWidth = document.body.clientWidth;
-        var nEachWidth = (nWidth - 12) / nEqCount;
-
-        for (var i = 0; i < nEqCount; i++) {
-            sEqList[i].style.width = nEachWidth + 'px';
-            title_spanList[i].style.width = nEachWidth - 20 + 'px';
-        }
-
-        sEqList, nEqCount, nWidth, nEachWidth = undefined;
-
-    }
-</script> -->
-
-<script>
-    // 页面初始
-    window.onload = function () {
-        addClear();
-        addEmpty();
-        // calWidth();
-    }
-</script>
-
-
 
 
 
