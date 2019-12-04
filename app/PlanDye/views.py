@@ -65,7 +65,7 @@ def Equipment(equipmentNo):
                             </div> \
                         </div> \
                     </div> \
-                </li>'%(i['ID'])
+                </li>' % (i['ID'])
         else:
             returnHTML += ' \
                     <li class="slot-item li_style" id="Card_%s" \
@@ -212,6 +212,7 @@ def SearchUpdateRightEqui(inputValue):
     return returnHTML
 
 
+# 导出表格
 @PlanDye.route('AJAXExport')
 def AJAXExport():
     returnData = DyeingData()
@@ -237,7 +238,7 @@ def AJAXExport():
                     </tr>'
     a = 0
     for i in returnData:
-        returnHTML +=' \
+        returnHTML += ' \
                 <tr> \
                     <td>%s</td> \
                     <td>%s</td> \
@@ -255,7 +256,7 @@ def AJAXExport():
                     <td>%s</td> \
                     <td>%s</td> \
                     <td>%s</td> \
-                </tr>'%(i['sEquipmentNo'], i['sPlanEquipmentNo'], i['sOverTime'], i['sCustomerName'], i['sCardNo'], i['sMaterialNo'], i['sMaterialLot'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['nDyeingTime'], i['sLocation'], i['sRemark'], i['sOrderNo'])
+                </tr>' % (i['sEquipmentNo'], i['sPlanEquipmentNo'], i['sOverTime'], i['sCustomerName'], i['sCardNo'], i['sMaterialNo'], i['sMaterialLot'], i['sColorNo'], i['nFactInputQty'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['nDyeingTime'], i['sLocation'], i['sRemark'], i['sOrderNo'])
         a += 1
     returnHTML += '</table>'
     print(a)
