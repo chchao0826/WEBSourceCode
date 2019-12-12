@@ -20,6 +20,7 @@ class PlanDyeDTL(base):
     tUpdateTime = Column(DateTime, nullable=True)
     sType = Column(String, nullable=True)
     bUsable = Column(Boolean, nullable=True)
+    bISCheck = Column(Boolean, nullable=True)
 
     def __str__(self):
         return self.id
@@ -27,7 +28,6 @@ class PlanDyeDTL(base):
 
 # 更新Dtl数据
 def UpdateDtl_PMC(data):
-
     ID = data['id']
     nHDRID = data['nHDRID']
     nRowNumber = data['nRowNumber']
@@ -92,7 +92,5 @@ def DeleteXG_PMC(data):
     ses.close()
 
 
-
-    
 
 

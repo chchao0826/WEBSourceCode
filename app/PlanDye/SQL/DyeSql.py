@@ -42,23 +42,29 @@ def allDyeingSql(sEquipmentModelName):
     LEFT JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].[ppTrackJob] B ON A.uppTrackJobGUID = B.uGUID \
     LEFT JOIN [dbo].[pbCommonDataProductionSchedulingBase] C ON C.upsWorkFlowCardGUID = B.upsWorkFlowCardGUID \
     LEFT JOIN [dbo].[pbCommonDataProductionSchedulingDyeingHDR] D ON A.nHDRID = D.ID \
-    WHERE A.bUsable = 1 AND D.sEquipmentModelName LIKE '%%%s%%' \
+    WHERE A.bUsable = 1 AND D.sEquipmentModelName LIKE '%%%s%%' AND A.bISCheck = 1\
     ORDER BY A.nRowNumber, C.sWorkRow"%(sEquipmentModelName)
 
 
 # 染色机台
 def DyeingEquipmentSql(sEquipmentModelName):
-    return "SELECT \
+        return "SELECT \
         A.ID,A.sEquipmentNo,A.sEquipmentName \
-        ,CONVERT(INT,NULL) AS nCardCount \
+        ,CONVERT(INT,NULL) AS nCardCount  \
+        ,CONVERT(INT,NULL) AS nCheckCount \
+        ,CONVERT(INT,NULL) AS nNoCheckCount \
         INTO #TEMP \
         FROM [pbCommonDataProductionSchedulingDyeingHDR] A  \
         WHERE A.sEquipmentModelName LIKE '%%%s%%'   \
         UPDATE #TEMP \
         SET nCardCount = B.nCardCount \
+        ,nCheckCount = B.nCheckCount \
+        ,nNoCheckCount = B.nNoCheckCount \
         FROM #TEMP A \
         JOIN ( \
         SELECT A.nHDRID, COUNT(*)  AS nCardCount \
+        ,SUM(CASE WHEN A.bISCheck = 1 THEN 1 ELSE 0 END) AS nCheckCount\
+        ,SUM(CASE WHEN A.bISCheck = 0 THEN 1 ELSE 0 END) AS nNoCheckCount \
         FROM [dbo].[pbCommonDataProductionSchedulingDyeingDTL] A \
         JOIN #TEMP B ON A.nHDRID = B.ID \
         WHERE A.bUsable = 1 \
@@ -111,7 +117,7 @@ def IDGetDataSql(ID):
     LEFT JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].[ppTrackJob] B ON A.uppTrackJobGUID = B.uGUID \
     LEFT JOIN [dbo].[pbCommonDataProductionSchedulingBase] C ON C.upsWorkFlowCardGUID = B.upsWorkFlowCardGUID \
     LEFT JOIN [dbo].[pbCommonDataProductionSchedulingDyeingHDR] D ON A.nHDRID = D.ID \
-    WHERE A.bUsable = 1 AND D.ID =  '%s' \
+    WHERE A.bUsable = 1 AND D.ID =  '%s' AND A.bISCheck = 1\
     ORDER BY A.nRowNumber, C.sWorkRow"%(ID)
 
 
@@ -119,15 +125,21 @@ def IDGetDataSql(ID):
 def IDGetEquipmentSql(ID):
     return "SELECT \
         A.ID,A.sEquipmentNo,A.sEquipmentName \
-        ,CONVERT(INT,NULL) AS nCardCount \
+        ,CONVERT(INT,NULL) AS nCardCount  \
+        ,CONVERT(INT,NULL) AS nCheckCount \
+        ,CONVERT(INT,NULL) AS nNoCheckCount \
         INTO #TEMP \
         FROM [pbCommonDataProductionSchedulingDyeingHDR] A  \
         WHERE A.ID = '%s'  \
         UPDATE #TEMP \
         SET nCardCount = B.nCardCount \
+        ,nCheckCount = B.nCheckCount \
+        ,nNoCheckCount = B.nNoCheckCount \
         FROM #TEMP A \
         JOIN ( \
         SELECT A.nHDRID, COUNT(*)  AS nCardCount \
+        ,SUM(CASE WHEN A.bISCheck = 1 THEN 1 ELSE 0 END) AS nCheckCount\
+        ,SUM(CASE WHEN A.bISCheck = 0 THEN 1 ELSE 0 END) AS nNoCheckCount \
         FROM [dbo].[pbCommonDataProductionSchedulingDyeingDTL] A \
         JOIN #TEMP B ON A.nHDRID = B.ID \
         WHERE A.bUsable = 1 \

@@ -39,17 +39,7 @@ var addEuqi = function (sName, iID) {
     }
 }
 
-// 增加机台的同时,下方数据列进行AJAX更新
-var addData = function (ID) {
-    var sectionList = $$('dragslot').children;
-    for (var i = 0; i < sectionList.length; i++) {
-        var varID = '#' + sectionList[i].id;
-        if (sectionList[i].children[0].id == '' && sectionList[i].children[0].id.indexOf('-') == -1) {
-            $(varID).load('AJAX/Data/' + ID);
-            break;
-        }
-    }
-}
+
 
 // 重新计算width
 var calwidth = function () {
@@ -82,10 +72,6 @@ var alert7 = function (ID) {
     return iFlag
 }
 
-// 增加待选择选项
-var addWait = function (ID) {
-
-}
 
 // 清除机台的同时,删除下面的详细信息
 var deleteData = function (ID) {
@@ -138,5 +124,56 @@ var btnEqui = function (ID) {
         addactive(ID);
         var sName = $$(ID).children[0].innerHTML;
         addEuqi(sName, ID);
+        UpdateSection();
     }
 }
+
+
+
+
+// 保存点击的机台, 放进cookie中, 开启网址后自动执行
+var UpdateSection = function () {
+    var dragslotList = $$('dragslot').children;
+    for (var i = 0; i < dragslotList.length; i++) {
+        var sesID = dragslotList[i].id;
+        var nHDRID = dragslotList[i].children[0].id.split('_')[1];
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = sesID + '=' + nHDRID + ';expires = ' + exp.toGMTString();
+    }
+    console.log(document.cookie);
+}
+
+// cookie 读取sesID
+var getSesCookie = function () {
+    var cookieList = document.cookie.split(';');
+    var nHDRIDList = ''
+    for (var i = 0; i < cookieList.length; i++) {
+        var cookies = cookieList[i].replace(/\s/ig, '');
+        if (cookies.indexOf('section') != -1) {
+            var sectionID = cookies.split('=')[0];
+            var nHDRID = cookies.split('=')[1];
+            var sWidth = Get_ID_Width('eq_' + nHDRID).split('_')[1];
+            if (nHDRID != 'undefined'){
+                nHDRIDList = nHDRIDList + nHDRID + ','
+                $('#' + sectionID).load('SplitArea/AJAX/equipment/' + String(nHDRID) + '_' + String(sWidth));
+            }
+        }
+    }
+    console.log(nHDRIDList)
+    console.log('=================')
+    Update_Title_3(nHDRIDList);
+}
+
+// 更新 title_3 cookie中的机台信息
+var Update_Title_3 = function(nHDRIDList){
+    console.log('=----===');
+    console.log(nHDRIDList);
+    $('#title_3').load('SplitArea/Title3/' + nHDRIDList)
+}
+
+
+
+// 
+

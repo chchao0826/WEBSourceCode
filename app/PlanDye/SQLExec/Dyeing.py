@@ -71,6 +71,8 @@ def DyeingEquipment(sEquipmentModelName):
             'sEquipmentNo': row[1],
             'sEquipmentName': row[2],
             'nCardCount': row[3],
+            'nCheckCount': row[4],
+            'nNoCheckCount': row[5],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
@@ -135,6 +137,8 @@ def IDGetEquipment(ID):
             'sEquipmentNo' : row[1],
             'sEquipmentName' : row[2],
             'nCardCount' : row[3],
+            'nCheckCount': row[4],
+            'nNoCheckCount': row[5],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()

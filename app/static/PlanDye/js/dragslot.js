@@ -83,6 +83,15 @@
 				dragItem.addClass("currentli")
 				dragItem.removeClass("clearli")
 			}
+			var sDragText = target.context.innerHTML;
+			if (sDragText.indexOf('洗缸') != -1){
+				// 更新成洗缸
+				updateXGBtn(sDragText);
+			}
+			else{
+				// 不是洗缸是否是插入 不是进行修正
+				console.log(sDragText);
+			}
 		},
 		_dragMove: function (e) {
 			var newClientX = e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft),
@@ -146,7 +155,6 @@
 				self.slotlist.closest('.' + self.options.slotClass).addClass(self.options.emptySlotClass);
 				self.slotlist[0].parentNode.removeChild(self.slotlist[0]);
 			}
-			addClear();
 
 		}
 	}

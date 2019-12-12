@@ -33,7 +33,14 @@ var getScreen = function () {
 window.onload = function () {
     getScreen();
     getCount();
+
 }
+
+
+$(document).ready(function(){ 
+    getSesCookie();
+});
+
 
 // 修改屏幕尺寸后进行div的更新
 window.onresize = function () {

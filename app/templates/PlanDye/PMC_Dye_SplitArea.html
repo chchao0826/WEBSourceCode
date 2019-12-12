@@ -1,9 +1,9 @@
 {% extends 'PlanDye/base.html' %}
 
-{% block title %}染色预排_染化{% endblock %}
+{% block title %}染色预排_分区{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href=" {{url_for('static',filename='PlanDye/css/planDye_HYS.css')}} ">
+<link rel="stylesheet" href=" {{url_for('static',filename='PlanDye/css/PMC_Dye_SplitArea.css')}} ">
 {% endblock %}
 
 
@@ -11,17 +11,37 @@
 <div class="htmleaf-container">
     <section class="">
         <div id="dragslot" class="dragslot">
-            {% for Eq in range(4)%}
+            {% for Eq in range(6)%}
             <div class="section" id="section_{{Eq}}">
                 <ul class="slot-list">
                     <div>
                         <input class="title_var" type="text" readOnly="true" value=待选择>
                         <span class="input-group-addon title_span_var"
-                            style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span>
+                            style="background-color:#FFFF00; width:282px; font-size: 12px;" id="basic-addon1">待选择</span>
+                    </div>
+                    <div class="Top_Div" id="Top_Div_{{Eq}}">
+                        <li class="slot-item XG_li" id="XG_{{Eq}}"> 
+                            <div class="clearfix XG_div"> 
+                                <div> 
+                                    <div> 
+                                        <span>洗缸</span> 
+                                    </div> 
+                                    <div> 
+                                        <span></span> 
+                                    </div> 
+                                </div> 
+                            </div> 
+                        </li>
+                    </div>
+                    <div class="Split_Span" id="split_span_{{Eq}}" onmousedown="mouseDownMove('split_span_{{Eq}}')">
+                    </div>
+                    <div class="Bottom_Area">
+
                     </div>
                 </ul>
             </div>
             {% endfor %}
+
         </div>
     </section>
 </div>
@@ -29,16 +49,8 @@
 
 
 {% block js %}
-
-<script>
-    jQuery(function ($) {
-        $('#dragslot').dragslot({
-            dropCallback: function (el) {
-                //	alert(el);
-            }
-        });
-    });
-</script>
+<script type="text/javascript" src="/static/PlanDye/js/PMC_Dye_SplitArea.js"></script>
+<script type="text/javascript" src="/static/PlanDye/js/PlanDye_Search.js"></script>
 
 
 <script>
@@ -68,16 +80,10 @@
 
     // 修改屏幕尺寸后进行div的更新
     window.onresize = function () {
-        // addClear();
-        // addEmpty();
+        addClear();
+        addEmpty();
     }
 
-    // 页面初始
-    window.onload = function () {
-        // addClear();
-        // addEmpty();
-        // calWidth();
-    }
 
     // 获取时间
     var GetDate = function () {
@@ -106,7 +112,29 @@
         var dateTime = sYear + "-" + sMonth + "-" + sDate + ' ' + sHour + ':' + sMin + ':' + sSec;
         return dateTime
     }
+
 </script>
+
+<script>
+    jQuery(function ($) {
+        $('#dragslot').dragslot({
+            dropCallback: function (el) {
+                //	alert(el);
+            }
+        });
+    });
+</script>
+
+<script>
+    // 页面初始
+    window.onload = function () {
+        addClear();
+        addEmpty();
+        // calWidth();
+    }
+</script>
+
+
 
 
 

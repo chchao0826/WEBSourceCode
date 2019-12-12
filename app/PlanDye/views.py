@@ -5,6 +5,8 @@ from flask import render_template, Flask, request, jsonify, json
 from app.PlanDye.SQLExec.Dyeing import DyeingData, DyeingEquipment, IDGetData, IDGetEquipment, searchValue
 from app.PlanDye.Models.PlanDyeing import UpdateDtl_PMC, UpdateXG_PMC, DeleteXG_PMC, IsHaveXG
 from app.PlanDye.SQLExec.DyeingExport import DyeingData
+from app.PlanDye.SQLExec.SplitArea import IDGetNotCheckData, IDGetCheckData
+from app.PlanDye.Models.PlanDye_split import UpdateDtl_Split, InsertDtl_Split, DeleteDtl_Split, UpdataXGMain
 import time
 import os
 
@@ -144,12 +146,6 @@ def AJAXPost():
     return '123'
 
 
-# 化验室区分
-@PlanDye.route('/HYS')
-def HYS():
-    return render_template('PlanDye/PMC_Dye_HYS.html')
-
-
 # 搜索更新标题栏
 @PlanDye.route('/Search/<inputValue>')
 def Search(inputValue):
@@ -261,6 +257,218 @@ def AJAXExport():
     returnHTML += '</table>'
     print(a)
     return returnHTML
+
+
+# 划分区域
+@PlanDye.route('/SplitArea')
+def SplitArea():
+    return render_template('PlanDye/PMC_Dye_SplitArea.html')
+
+
+# 根据字典函数得到数据列表
+def FromDictToHTML(i):
+    print(i)
+    returnHTML = ''
+    if str(i['sType']).find('洗缸') != -1:
+        returnHTML += '\
+                <li class="slot-item XG_li" id="Card_%s"> \
+                    <div class="clearfix XG_div"> \
+                        <div> \
+                            <div> \
+                                <span>%s</span> \
+                            </div> \
+                            <div> \
+                                <span></span> \
+                            </div> \
+                        </div> \
+                    </div> \
+                </li>' % (i['ID'], i['sType'])
+    else:
+        returnHTML += ' \
+                <li class="slot-item li_style" id="Card_%s" \
+                    style="border-left:10px solid %s; border-right:10px solid %s; background-color: %s"> \
+                    <div class="clearfix"> \
+                        <div class="float_left left_div border_right"> \
+                            <div type="text" class="left_1 hover border_bottom" style="background-color: %s;"> \
+                                <span>%s</span> \
+                            </div> \
+                            <div class="left_2 border_bottom"> \
+                                <span>%s</span> \
+                            </div> \
+                            <div class="left_3 border_bottom"> \
+                                <span>%s</span> \
+                            </div> \
+                        </div> \
+                        <div class="float_left right_div"> \
+                            <div class="right_1"> \
+                                <div class=" border_bottom border_right float_left right_1_left" style="background-color: %s; "> <span>%s</span> </div> \
+                                <div class=" border_bottom border_right float_left right_1_mid" style="background-color: %s; "> <span>%s</span> </div> \
+                                <div class=" border_bottom border_right float_left right_1_right" style="background-color:%s"> <span>%s</span> </div> \
+                            </div> \
+                            <div class="right_2 border_bottom" style="width: 100%%;"> \
+                                <div class="float_left" style="width: 54%%; border-right:1px solid #ccc; border-bottom:1px solid #ccc;"> \
+                                    <span>投:%s</span> \
+                                </div> \
+                                <div class="float_left" style="width: 46%%; border-bottom:1px solid #ccc;"> \
+                                    <span>滞:%s</span> \
+                                </div> \
+                            </div> \
+                            <div class="right_3 border_bottom" style="width: 100%%;"> \
+                                <span>%s</span> \
+                            </div> \
+                            <div class="right_4 border_bottom" style="width: 100%%;"> \
+                                <span>%s</span> \
+                            </div> \
+                        </div> \
+                        <div class="bottom_div"> \
+                            <div class="bottom_left_1 float_left"> \
+                                <span>%s --> %s --> %s</span> \
+                            </div> \
+                            <div class="bottom_left_2 float_left"> \
+                                <span>交:%s</span> \
+                            </div> \
+                            <div class="bottom_left_3 float_left" style="background-color: %s"> \
+                                <span>%s</span> \
+                            </div> \
+                        </div> \
+                </li> ' % (i['ID'], i['sWorkCode'], i['sColorCode'], i['sIsStart'], i['bISCheck'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sPSColor'], i['sISHasDX'], i['sIsHYS'], i['sISHasHYS'], i['sDyeingColor'], i['sDyeingCount'], i['nFactInputQty'], i['sOverTime'], i['sCustomerName'], i['sRemark'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['dDeliveryDate'], i['sIsRushColor'], i['sIsRush'])
+
+    return returnHTML
+
+
+# SplitArea 点击机台群组进行更新
+@PlanDye.route('/SplitArea/AJAX/equipment/<sEquipmentNo>')
+def SplitArea_sEq(sEquipmentNo):
+    ID = sEquipmentNo.split('_')[0]
+    sSplitWidth = sEquipmentNo.split('_')[1]
+    # print(ID)
+    returnEquipment = IDGetEquipment(ID)
+    returnDataNoCheck = IDGetNotCheckData(ID)
+    returnDataCheck = IDGetCheckData(ID)
+    returnHTML = ''
+    for i in returnEquipment:
+        returnHTML += ' <ul class="slot-list" id="Eq_%s"> \
+                            <div> \
+                                <input class="title_var" type="text" readOnly="true" value=%s> \
+                                <div style="width: 310px;"> \
+                                    <div class ="float_left" style="width: 115px; border-right:1px solid #ccc;"> \
+                                        <span class="input-group-addon title_span_var" style="background-color:#FFFF00; font-size: 12px;" id="basic-addon1">%s</span> \
+                                    </div> \
+                                    <div class ="float_left" style="width: 60px; border-right:1px solid #ccc;"> \
+                                        <span class="input-group-addon title_span_var" style="background-color:#FFFF00; font-size: 12px;" id="basic-addon1">已: %s</span> \
+                                    </div> \
+                                    <div class ="float_left" style="width: 60px; border-right:1px solid #ccc;"> \
+                                        <span class="input-group-addon title_span_var" style="background-color:#FFFF00; font-size: 12px;" id="basic-addon1">未: %s</span> \
+                                    </div> \
+                                    <div class ="float_left" style="width: 60px; border-right:1px solid #ccc;""> \
+                                        <span class="input-group-addon title_span_var" style="background-color:#FFFF00; font-size: 12px;" id="basic-addon1">共: %s</span> \
+                                    </div> \
+                                </div> \
+                            </div>\
+                            <div class="Top_Div" id="Top_Div_%s" style="height: %spx; width: 310px;">' % (i['ID'], i['sEquipmentNo'], i['sEquipmentName'], i['nCheckCount'], i['nNoCheckCount'], i['nCardCount'], i['ID'], sSplitWidth)
+
+    returnHTML += ''
+    if returnDataCheck == []:
+        returnHTML += ' \
+                <li class="slot-item li_style"> \
+                    <div class="clearfix XG_div"> \
+                        <div> \
+                            <div> \
+                                <span>未预排数据</span> \
+                            </div> \
+                            <div> \
+                                <span></span> \
+                            </div> \
+                        </div> \
+                    </div> \
+                </li> '
+    else:
+        for i in returnDataCheck:
+            returnHTML += FromDictToHTML(i)
+
+    returnHTML += '</div>'
+
+    for i in returnEquipment:
+        returnHTML += '<div class="Split_Span" id="split_span_%s" onmousedown="mouseDownMove(\'split_span_%s\')"></div> \
+            <div class="Bottom_Area">' % (i['ID'], i['ID'])
+
+    for i in returnDataNoCheck:
+        returnHTML += FromDictToHTML(i)
+    returnHTML += '</div> </ul>'
+    return returnHTML
+
+
+# 保存数据
+@PlanDye.route('/SplitArea/AJAXPOST', methods=['GET', 'POST'])
+def SplitArea_POST():
+    data_byte = request.get_data()
+    data_str = data_byte.decode()
+    data_List = json.loads(data_str)
+    UpdateDtl_Split(data_List)
+    # print(data_List)
+    return 'a123'
+
+
+# 下方数据往上更新
+@PlanDye.route('/SplitArea/AJAXInsert', methods=['GET', 'POST'])
+def SplitArea_Insert():
+    data_byte = request.get_data()
+    data_str = data_byte.decode()
+    data_List = json.loads(data_str)
+    InsertDtl_Split(data_List)
+    # print(data_List)
+    return 'a123'
+
+
+# 取消预排 - 上方的数据往下走
+@PlanDye.route('/SplitArea/AJAXDelete', methods=['GET', 'POST'])
+def SplitArea_Delete():
+    data_byte = request.get_data()
+    data_str = data_byte.decode()
+    data_List = json.loads(data_str)
+    DeleteDtl_Split(data_List)
+    # print(data_List)
+    return 'a123'
+
+
+# 标题更新
+@PlanDye.route('/SplitArea/Title3/<sHDRIDValues>')
+def SplitArea_title3(sHDRIDValues):
+    returnHtml = ''
+    sHDRIDList = sHDRIDValues.split(',')
+    sWidth = 99 / (len(sHDRIDList) - 1)
+    for i in sHDRIDList:
+        getEuqList = IDGetEquipment(i)
+        for a in getEuqList:
+            returnHtml += ' \
+            <li style = "width: %s%%;" id = "addEuqi_equ_%s"> \
+                <a onclick = "clearEqui(\'addEuqi_equ_%s\')">%s</a> \
+            </li > ' % (sWidth, a['ID'], a['ID'], a['sEquipmentNo'])
+
+    return returnHtml
+
+
+# 洗缸更新
+@PlanDye.route('/SplitArea/InsertXG', methods=['GET', 'POST'])
+def SplitArea_InsertXG():
+    data_byte = request.get_data()
+    data_str = data_byte.decode()
+    data_List = json.loads(data_str)
+    print('========================')
+    print(data_List)
+    UpdataXGMain(data_List)
+    print('========================')
+    return 'a123'
+
+
+# <ul class = "nav navbar-nav" id = "title_3" >
+#     <li style = "width: 49.5%;" id = "addEuqi_equ_6" >
+#         <a onclick = "clearEqui('addEuqi_equ_6')" > A001 < /a >
+#     </li >
+#     <li style = "width: 49.5%;" id = "addEuqi_equ_7" >
+#         <a onclick = "clearEqui('addEuqi_equ_7')" > A002 < /a >
+#     </li >
+# </ul >
 
 
 # # 根据机台号AJAX数据
