@@ -57,15 +57,20 @@
 var ClearSearch = function () {
     var dragslotList = $$('dragslot').children;
     for (var i = 0; i < dragslotList.length; i++) {
-        var childrenList = dragslotList[i].children[0].children;
-        for (var a = 1; a < childrenList.length; a++) {
-            document.documentElement.scrollTop = 0;
-            var sClassName = childrenList[a].className;
-            if (sClassName.indexOf('search_get') != -1) {
-                childrenList[a].className = 'slot-item li_style'
-                $$('search_value').innerHTML = ''
+        var childrenList1 = dragslotList[i].children[0].children[1].children;
+        var childrenList2 = dragslotList[i].children[0].children[3].children;
+        function regChild(childrenList){
+            for (var a = 0; a < childrenList.length; a++) {
+                document.documentElement.scrollTop = 0;
+                var sClassName = childrenList[a].className;
+                if (sClassName.indexOf('search_get') != -1) {
+                    childrenList[a].className = 'slot-item li_style'
+                    $$('search_value').innerHTML = ''
+                }
             }
         }
+        regChild(childrenList1);
+        regChild(childrenList2);
     }
 }
 
@@ -88,8 +93,10 @@ var GetHeight = function (id) {
 var SearchMain = function (value, sList, sType, sEquipmentID) {
     var iFlag = 0;
     for (var a = 0; a < sList.length; a++) {
-        var sCardNo = sList[a].children[0].children[0].children[0].children[0].innerHTML;
-        var sMaterialNo = sList[a].children[0].children[0].children[1].children[0].innerHTML;
+        console.log(sList[a])
+        var sCardNo = sList[a].children[1].children[0].children[0].children[0].innerHTML
+        console.log(sCardNo)
+        var sMaterialNo = sList[a].children[1].children[0].children[1].children[0].innerHTML;
         if (sMaterialNo.indexOf(value) != -1 || sCardNo.indexOf(value) != -1) {
             var nHeight = GetHeight(sEquipmentID)
             sList[a].className += ' search_get';
@@ -121,7 +128,9 @@ var SearchPage = function (value) {
             var sBottomList = childrenList[3].children;
             var sTopValue = SearchMain(value, sTopList, 'Top', sEquipmentID);
             var sBootomValue = SearchMain(value, sBottomList, 'Bottom', sEquipmentID);
-
+            console.log(sEquipmentID)
+            console.log(sTopValue)
+            console.log('---===---')
             if (sTopValue != 0) {
                 var sTopScroll = sTopValue;
                 childrenList[1].scrollTop = sTopScroll;

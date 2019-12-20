@@ -4,7 +4,7 @@
 from sqlalchemy import or_, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
-from app.PlanDye.SQL.SplitAreaSql import IDGetCheckDataSql, IDGetNotCheckDataSql
+from app.PlanDye.SQL.SplitAreaSql import IDGetCheckDataSql, IDGetNotCheckDataSql, IDGetAllDataSql
 from app.config import engine, connect
 
 
@@ -40,7 +40,7 @@ def DyeingData(sSQL):
             'sColorCode': row[14],
             'nRowNumber': row[15],
             'sType': row[16],
-            'sIsStart': row[17],
+            'sIsStartColor': row[17],
             'sPSColor': row[18],
             'sDyeingCount': row[19],
             'sDyeingColor': row[20],
@@ -57,22 +57,35 @@ def DyeingData(sSQL):
             'sISHasHYS': row[31],
             'sISHasDX': row[32],
             'sIsRushColor': row[33],
+            'sOrderNo' : row[34],
+            'sColorName' : row[35],
+            'tPlanTime' : row[36],
+            'sCheckColor' : row[37],
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()
     cursor.close()
+    print('================21111111111111==============')
+    print(ReturnData)
     return ReturnData
 
 
-# 未预排数据执行
+# 已预排数据执行
 def IDGetCheckData(sEquipmentNo):
     sSql = IDGetCheckDataSql(sEquipmentNo)
     returnData = DyeingData(sSql)
     return returnData
 
 
-# 已预排数据执行
+# 未预排数据执行
 def IDGetNotCheckData(sEquipmentNo):
     sSql = IDGetNotCheckDataSql(sEquipmentNo)
+    returnData = DyeingData(sSql)
+    return returnData
+
+
+# 所有数据执行
+def IDGetAllData(sEquipmentNo):
+    sSql = IDGetAllDataSql(sEquipmentNo)
     returnData = DyeingData(sSql)
     return returnData

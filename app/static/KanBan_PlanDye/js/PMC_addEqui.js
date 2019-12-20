@@ -1,5 +1,5 @@
- // 增加活动标识
- var addactive = function (ID) {
+// 增加活动标识
+var addactive = function (ID) {
     var chidList = $$(ID).parentNode.children;
     for (var i = 0; i < chidList.length; i++) {
         if (chidList[i].className.indexOf('active') != -1) {
@@ -23,7 +23,6 @@ var addEuqi = function (sName, iID) {
         }
     }
 
-
     if (iFlag == true) {
         alert('已经添加该机台,请确认!');
     } else {
@@ -39,17 +38,7 @@ var addEuqi = function (sName, iID) {
     }
 }
 
-// 增加机台的同时,下方数据列进行AJAX更新
-var addData = function (ID) {
-    var sectionList = $$('dragslot').children;
-    for (var i = 0; i < sectionList.length; i++) {
-        var varID = '#' + sectionList[i].id;
-        if (sectionList[i].children[0].id == '' && sectionList[i].children[0].id.indexOf('-') == -1) {
-            $(varID).load('AJAX/Data/' + ID);
-            break;
-        }
-    }
-}
+
 
 // 重新计算width
 var calwidth = function () {
@@ -99,21 +88,21 @@ var deleteData = function (ID) {
     var ulObj = document.createElement("ul");
     ulObj.className = 'slot-list';
     sHtml = '<div> \
-                <input class="title_var" type="text" readOnly="true" value=待选择> \
-                <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span> \
-            </div> \
-            <li class="slot-item XG_li" id="Card_' + VarID + '"> \
-                <div class="clearfix XG_div"> \
+            <input class="title_var" type="text" readOnly="true" value=待选择> \
+            <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span> \
+        </div> \
+        <li class="slot-item XG_li" id="Card_' + VarID + '"> \
+            <div class="clearfix XG_div"> \
+                <div> \
                     <div> \
-                        <div> \
-                            <span>洗缸</span> \
-                        </div> \
-                        <div> \
-                            <span></span> \
-                        </div> \
+                        <span>洗缸</span> \
+                    </div> \
+                    <div> \
+                        <span></span> \
                     </div> \
                 </div> \
-            </li>';
+            </div> \
+        </li>';
     console.log(sHtml);
     ulObj.innerHTML = sHtml;
 
@@ -140,3 +129,4 @@ var btnEqui = function (ID) {
         addEuqi(sName, ID);
     }
 }
+

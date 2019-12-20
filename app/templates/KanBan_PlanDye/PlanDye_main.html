@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>染色预排看板-业务</title>
+    <title>染色预排看板</title>
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/dragslot.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='KanBan/css/planDye.css')}} ">
@@ -72,10 +72,10 @@
                                     id="basic-addon1">待选择</span>
                             </div>
                             <li class="slot-item XG_li" id="Card_{{0-Eq}}">
-                                <div class="clearfix XG_div">
+                                <div class="clearfix">
                                     <div>
                                         <div>
-                                            <span>洗缸</span>
+                                            <span></span>
                                         </div>
                                         <div>
                                             <span></span>
@@ -92,7 +92,7 @@
         </div>
     </div>
     <nav class="navbar-fixed-bottom bottom_Search">
-        <div class="container" id="search_value">
+        <div class="container" id="search_value" name="search_value">
         </div>
     </nav>
 
@@ -102,13 +102,13 @@
 
     <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="/static/bootstrap/js/jQuery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/basics.js"></script>
+
     <script type="text/javascript" src="/static/PlanDye/js/dragslot.js"></script>
     <script type="text/javascript" src="/static/PlanDye/js/PMC_Search.js"></script>
     <script type="text/javascript" src="/static/PlanDye/js/PMC_addEqui.js"></script>
-    <script type="text/javascript" src="/static/PlanDye/js/PMC_Save.js"></script>
-    <script type="text/javascript" src="/static/PlanDye/js/PMC_export.js"></script>
-    <script type="text/javascript" src="/static/bootstrap/js/basics.js"></script>
-    <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script>
+    <script type="text/javascript" src="/static/KanBan_PlanDye/js/planDye_main.js"></script>
 
 
     <script>
@@ -127,21 +127,11 @@
             return document.getElementsByName(id);
         }
 
-        // // 尺寸修改
-        // var getScreen = function () {
-        //     var nWidth = document.body.clientWidth;
-        //     var nHeight = document.documentElement.clientHeight;
-        //     var content = $$('body');
-        //     content.style.width = nWidth + 'px';
-        //     content.style.height = nHeight + 150 + 'px';
-        // }
-
         // 修改屏幕尺寸后进行div的更新
         window.onresize = function () {
             addClear();
             addEmpty();
         }
-
 
         // 获取时间
         var GetDate = function () {

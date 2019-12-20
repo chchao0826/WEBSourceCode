@@ -86,20 +86,26 @@ var deleteData = function (ID) {
     ulObj.className = 'slot-list';
     sHtml = '<div> \
                 <input class="title_var" type="text" readOnly="true" value=待选择> \
-                <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:250px; font-size: 12px;" id="basic-addon1">待选择</span> \
+                    <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:310px; font-size: 12px;" id="basic-addon1">待选择</span> \
             </div> \
-            <li class="slot-item XG_li" id="Card_' + VarID + '"> \
-                <div class="clearfix XG_div"> \
-                    <div> \
+            <div class="Top_Div"> \
+                <li class="slot-item XG_li"> \
+                    <div class="clearfix XG_div"> \
                         <div> \
-                            <span>洗缸</span> \
-                        </div> \
-                        <div> \
-                            <span></span> \
+                            <div> \
+                                <span></span> \
+                            </div> \
+                            <div> \
+                                <span></span> \
+                            </div> \
                         </div> \
                     </div> \
-                </div> \
-            </li>';
+                </li> \
+            </div> \
+            <div class="Split_Span" id="split_span_{{Eq}}"> \
+            </div> \
+            <div class="Bottom_Area"></div>';
+    
     console.log(sHtml);
     ulObj.innerHTML = sHtml;
 

@@ -33,7 +33,6 @@ var getScreen = function () {
 window.onload = function () {
     getScreen();
     getCount();
-
 }
 
 

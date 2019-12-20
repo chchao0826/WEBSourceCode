@@ -116,9 +116,10 @@ var UpdataPage = function () {
 var saveData = function () {
     // 得到上方的数据
     var dragslotList = $$('dragslot').children;
-    var sList = []
-    var sUpdateTime = GetDate()
+    var sList = [];
+    var sUpdateTime = GetDate();
     for (var i = 0; i < dragslotList.length; i++) {
+        var nRowNumber = 0
         var nHDRID = dragslotList[i].children[0].id.split('_')[1];
         var topList = dragslotList[i].children[0].children[1].children;
         for (var a = 0; a < topList.length; a++) {
@@ -126,11 +127,12 @@ var saveData = function () {
             var sDict = {
                 'nHDRID': nHDRID,
                 'ID': LiID,
-                'nRowNumber': a,
+                'nRowNumber': nRowNumber,
                 'tUpdateTime': sUpdateTime,
             }
             if (LiID != '' && nHDRID != undefined && LiID != undefined) {
                 sList.push(sDict);
+                nRowNumber += 1
             }
         }
     }

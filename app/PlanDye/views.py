@@ -269,6 +269,8 @@ def SplitArea():
 def FromDictToHTML(i):
     print(i)
     returnHTML = ''
+    print('===========')
+    print(i['sType'])
     if str(i['sType']).find('洗缸') != -1:
         returnHTML += '\
                 <li class="slot-item XG_li" id="Card_%s"> \
@@ -285,53 +287,50 @@ def FromDictToHTML(i):
                 </li>' % (i['ID'], i['sType'])
     else:
         returnHTML += ' \
-                <li class="slot-item li_style" id="Card_%s" \
-                    style="border-left:10px solid %s; border-right:10px solid %s; background-color: %s"> \
-                    <div class="clearfix"> \
-                        <div class="float_left left_div border_right"> \
-                            <div type="text" class="left_1 hover border_bottom" style="background-color: %s;"> \
-                                <span>%s</span> \
-                            </div> \
-                            <div class="left_2 border_bottom"> \
-                                <span>%s</span> \
-                            </div> \
-                            <div class="left_3 border_bottom"> \
-                                <span>%s</span> \
-                            </div> \
-                        </div> \
-                        <div class="float_left right_div"> \
-                            <div class="right_1"> \
-                                <div class=" border_bottom border_right float_left right_1_left" style="background-color: %s; "> <span>%s</span> </div> \
-                                <div class=" border_bottom border_right float_left right_1_mid" style="background-color: %s; "> <span>%s</span> </div> \
-                                <div class=" border_bottom border_right float_left right_1_right" style="background-color:%s"> <span>%s</span> </div> \
-                            </div> \
-                            <div class="right_2 border_bottom" style="width: 100%%;"> \
-                                <div class="float_left" style="width: 54%%; border-right:1px solid #ccc; border-bottom:1px solid #ccc;"> \
-                                    <span>投:%s</span> \
+                        <li class="slot-item li_style" id="Card_%s" style="background-color: %s"> \
+                            <div class="float_left border_div" style="background-color: %s;"></div> \
+                            <div class="float_left" style="width: 263px; border-right: 1px solid #ccc;"> \
+                                <div class="float_left left_div border_right"> \
+                                    <div type="text" class="left_1 hover border_bottom" style="background-color: %s;"> \
+                                        <span>%s</span> \
+                                    </div> \
+                                    <div class="left_2 border_bottom"> <span>%s</span> </div> \
+                                    <div class="left_3 border_bottom"> <span>%s</span> </div> \
                                 </div> \
-                                <div class="float_left" style="width: 46%%; border-bottom:1px solid #ccc;"> \
-                                    <span>滞:%s</span> \
+                                <div class="float_left right_div" > \
+                                    <div class="right_1"> \
+                                        <div class=" border_bottom border_right float_left right_1_left" style="background-color: %s; "> \
+                                            <span>%s</span> </div> \
+                                        <div class=" border_bottom border_right float_left right_1_mid" style="background-color: %s; "> \
+                                            <span>%s</span> </div> \
+                                        <div class=" border_bottom float_left right_1_right" style="background-color: %s"> \
+                                            <span>%s</span> </div> \
+                                    </div> \
+                                    <div class="right_2 border_bottom" style="width: 100%%;"> \
+                                        <div class="float_left" style="width: 54%%; border-right:1px solid #ccc; border-bottom:1px solid #ccc;"> \
+                                            <span>投:%s</span> </div> \
+                                        <div class="float_left" style="width: 46%%; border-bottom:1px solid #ccc;"> \
+                                            <span>滞:%s</span> </div> \
+                                    </div> \
+                                    <div class="right_3 border_bottom" style="width: 100%%;"> <span>%s</span> \
+                                    </div> \
+                                    <div class="right_4 border_bottom" style="width: 100%%;"> <span>%s</span> \
+                                    </div> \
+                                </div> \
+                                <div class="bottom_div" > \
+                                    <div class="bottom_left_1 float_left"> \
+                                        <span>%s --&gt; %s --&gt; %s</span> \
+                                    </div> \
+                                    <div class="bottom_left_2 float_left"> \
+                                        <span>交:%s</span> </div> \
+                                    <div class="bottom_left_3 float_left" style="background-color:%s;">  \
+                                        <span>%s</span> \
+                                    </div> \
                                 </div> \
                             </div> \
-                            <div class="right_3 border_bottom" style="width: 100%%;"> \
-                                <span>%s</span> \
-                            </div> \
-                            <div class="right_4 border_bottom" style="width: 100%%;"> \
-                                <span>%s</span> \
-                            </div> \
-                        </div> \
-                        <div class="bottom_div"> \
-                            <div class="bottom_left_1 float_left"> \
-                                <span>%s --> %s --> %s</span> \
-                            </div> \
-                            <div class="bottom_left_2 float_left"> \
-                                <span>交:%s</span> \
-                            </div> \
-                            <div class="bottom_left_3 float_left" style="background-color: %s"> \
-                                <span>%s</span> \
-                            </div> \
-                        </div> \
-                </li> ' % (i['ID'], i['sWorkCode'], i['sColorCode'], i['sIsStart'], i['bISCheck'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sPSColor'], i['sISHasDX'], i['sIsHYS'], i['sISHasHYS'], i['sDyeingColor'], i['sDyeingCount'], i['nFactInputQty'], i['sOverTime'], i['sCustomerName'], i['sRemark'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['dDeliveryDate'], i['sIsRushColor'], i['sIsRush'])
+                            <div class="float_right border_div" style="background-color: %s;"></div> \
+                        </li> \
+                ' % (i['ID'], i['sIsStart'], i['sWorkCode'], i['bISCheck'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sPSColor'], i['sISHasDX'], i['sIsHYS'], i['sISHasHYS'], i['sDyeingColor'], i['sDyeingCount'], i['nFactInputQty'], i['sOverTime'], i['sCustomerName'], i['sRemark'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'], i['dDeliveryDate'], i['sIsRushColor'], i['sIsRush'], i['sColorCode'])
 
     return returnHTML
 
@@ -365,7 +364,7 @@ def SplitArea_sEq(sEquipmentNo):
                                     </div> \
                                 </div> \
                             </div>\
-                            <div class="Top_Div" id="Top_Div_%s" style="height: %spx; width: 310px;">' % (i['ID'], i['sEquipmentNo'], i['sEquipmentName'], i['nCheckCount'], i['nNoCheckCount'], i['nCardCount'], i['ID'], sSplitWidth)
+                            <div class="Top_Div" id="Top_Div_%s" style="height: %spx; width: 305px;">' % (i['ID'], i['sEquipmentNo'], i['sEquipmentName'], i['nCheckCount'], i['nNoCheckCount'], i['nCardCount'], i['ID'], sSplitWidth)
 
     returnHTML += ''
     if returnDataCheck == []:
@@ -405,7 +404,8 @@ def SplitArea_POST():
     data_str = data_byte.decode()
     data_List = json.loads(data_str)
     UpdateDtl_Split(data_List)
-    # print(data_List)
+    print(data_List)
+    print('===================')
     return 'a123'
 
 
@@ -416,7 +416,8 @@ def SplitArea_Insert():
     data_str = data_byte.decode()
     data_List = json.loads(data_str)
     InsertDtl_Split(data_List)
-    # print(data_List)
+    print(data_List)
+    print('---------------')
     return 'a123'
 
 

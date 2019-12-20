@@ -660,4 +660,6 @@ def jSAJAX(CardList):
 
     return returnHtml
 
-    
+
+
+

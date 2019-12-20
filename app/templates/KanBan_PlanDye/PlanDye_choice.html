@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>染色预排看板_选择数据</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/dragslot.css')}} ">
+</head>
+
+<body>
+    <table class="table table-striped" id="choiceTable">
+        <tr>
+            <th>订单号</th>
+            <th>工卡号</th>
+            <th>胚布编号</th>
+            <th>预排机台</th>
+            <th>是否预排</th>
+            <th>选择</th>
+            <th class="hidden">工卡ID</th>
+            <th class="hidden">机台ID</th>
+        </tr>
+        {% for i in returnList %}
+        <tr>
+            <td>{{i.sOrderNo}}</td>
+            <td>{{i.sCardNo}}</td>
+            <td>{{i.sMaterialNo}}</td>
+            <td>{{i.sEquipmentNo}}</td>
+            <td>{{i.sCheckType}}</td>
+            <td><input type="checkbox"> </td>
+            <td class="hidden">{{i.ID}}</td>
+            <td class="hidden">{{i.nHDRID}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <nav aria-label="Page navigation" style="text-align: center;">
+        <ul class="pagination" style="margin: 0;">
+            {% for i in range(nPage) %}
+            <li id="page_{{i + 1}}"><a onclick="btnPage('page_{{i + 1}}')">{{i + 1}}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <nav aria-label="Page navigation">
+        <ul class="pager" style="margin: 0;">
+            <li><a style="background-color:aquamarine; color: #111; height: 25x; width: 100px; font-size: 20px;" onclick="btnConfirm()">确认</a></li>
+        </ul>
+    </nav>
+</body>
+
+<script type="text/javascript" src="/static/bootstrap/js/jQuery-2.2.0.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap/js/basics.js"></script>
+<script type="text/javascript" src="/static/KanBan_PlanDye/js/PlanDye_Choice.js"></script>
+<script type="text/javascript" src="/static/KanBan_PlanDye/js/PlanDye_Page.js"></script>
+
+
+</html>

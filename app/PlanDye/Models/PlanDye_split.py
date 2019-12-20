@@ -81,9 +81,13 @@ def UpdateDtl_Split(data):
 # 得到该机台最大的nRowNumber
 def GetMaxNumber(nHDRID):
     nMaxNumber = 0
-    for i in ses.query(PlanDyeDTL).filter(and_(PlanDyeDTL.nHDRID == nHDRID, PlanDyeDTL.bISCheck == 1)).all():
+    for i in ses.query(PlanDyeDTL).filter(and_(PlanDyeDTL.nHDRID == nHDRID, PlanDyeDTL.bISCheck == 1, PlanDyeDTL.bUsable == 1)).all():
         if i.nRowNumber > nMaxNumber:
             nMaxNumber = i.nRowNumber
+    print('================')
+    print(nHDRID)
+    print('========2121========')
+    print(nMaxNumber)
     return nMaxNumber
 
 
@@ -95,7 +99,7 @@ def InsertDtl_Split(data):
         nHDRID = i['nHDRID']
         nRowNumber = i['nRowNumber']
         tUpdateTime = i['tUpdateTime']
-        nMaxNumber = -1
+        nMaxNumber = 0
         if nEquipmentID != nHDRID:
             nEquipmentID = nHDRID
             nMaxNumber = GetMaxNumber(nHDRID)
@@ -134,14 +138,14 @@ def DeleteDtl_Split(data):
 def IsXG(ID):
     iFlag = False
     for i in ses.query(PlanDyeDTL).filter(PlanDyeDTL.id == ID).all():
-        sType = i.sType
+        sType = str(i.sType)
         if sType.find('洗缸') != -1:
             iFlag = True
             target = ses.query(PlanDyeDTL).filter(PlanDyeDTL.id == ID).first()
             target.bUsable = 0
             target.bISCheck = 0
-            ses.commit()
-            ses.close()
+        ses.commit()
+        ses.close()
     return iFlag
 
 
@@ -149,8 +153,9 @@ def IsXG(ID):
 # 判断洗缸的序号
 def SearchXG(nHDRID):
     returnData = []
-    for i in ses.query(PlanDyeDTL).filter(and_(PlanDyeDTL.nHDRID == nHDRID, PlanDyeDTL.bISCheck == 1)).order_by(PlanDyeDTL.nRowNumber.desc()).all():
-        sType = i.sType
+    for i in ses.query(PlanDyeDTL).filter(and_(PlanDyeDTL.nHDRID == nHDRID, PlanDyeDTL.bISCheck == 1, PlanDyeDTL.bUsable == 1)).order_by(PlanDyeDTL.nRowNumber.desc()).all():
+        sType = i.sType;
+        print(sType)
         if sType == None:
             sType = ''
         if sType.find('洗缸') != -1:
@@ -185,8 +190,11 @@ def UpdataXGMain(data):
 # 更新洗缸
 def UpdateXG_PMC(SearchXGData, nHDRID, nRowNumber, tUpdateTime, sEquipmentNo):
     print('=======数据库中有资料进行更新==========')
-    sType = ''
+    sType = sEquipmentNo + '_洗缸_1'
+    iFlag = False
+    print(SearchXGData)
     for i in SearchXGData:
+        iFlag = True
         if i['nRowNumber'] > nRowNumber:
             sTypeList = str(i['sType']).split('_')
 
@@ -201,9 +209,14 @@ def UpdateXG_PMC(SearchXGData, nHDRID, nRowNumber, tUpdateTime, sEquipmentNo):
             target.sType = sType2
             ses.commit()
             ses.close()
-
-    print('==========插入更新后的数据===========')
-    InsertXG_PMC(nHDRID, nRowNumber, tUpdateTime, sType)
+        else:
+            sTypeList = str(i['sType']).split('_')
+            sType = sTypeList[0] + '_' + sTypeList[1] + \
+                '_' + str((int(sTypeList[2]) + 1))
+            InsertXG_PMC(nHDRID, nRowNumber, tUpdateTime, sType)
+    if iFlag == False:
+        print('==========插入更新后的数据===========')
+        InsertXG_PMC(nHDRID, nRowNumber, tUpdateTime, sType)
 
     return '更新洗缸完成'
 

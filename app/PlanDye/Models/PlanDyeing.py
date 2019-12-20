@@ -17,10 +17,13 @@ class PlanDyeDTL(base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nHDRID = Column(Integer, nullable=True)
     nRowNumber = Column(Integer, nullable=True)
+    tCreateTime = Column(DateTime, nullable=True)
     tUpdateTime = Column(DateTime, nullable=True)
-    sType = Column(String, nullable=True)
     bUsable = Column(Boolean, nullable=True)
     bISCheck = Column(Boolean, nullable=True)
+    sType = Column(String, nullable=True)
+    sPlanDX = Column(String, nullable=True)
+    sPlanDye = Column(String, nullable=True)
 
     def __str__(self):
         return self.id
