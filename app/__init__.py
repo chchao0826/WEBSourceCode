@@ -26,6 +26,11 @@ app.register_blueprint(planDye_blueprint, url_prefix = '/PlanDye/')
 from app.CheckData import CheckData as checkData_blueprint
 app.register_blueprint(checkData_blueprint, url_prefix = '/CheckData/')
 
+
+# ERP
+from app.ERP import ERP as ERP_blueprint
+app.register_blueprint(ERP_blueprint, url_prefix = '/ERP/')
+
 # # CheckFabric
 # from app.CheckFabric import CheckFabric as CheckFabric_blueprint
 # app.register_blueprint(CheckFabric_blueprint, url_prefix = '/CheckFabric/')

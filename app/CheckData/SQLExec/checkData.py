@@ -64,12 +64,11 @@ def JSSearchData(*args):
             sMaterialNo9 = i
         nNumber += 1                  
 
-
-
     sSQL = JSSearchDataSQL(sWorkingProcedureName, sMaterialNo1, sMaterialNo2, sMaterialNo3, sMaterialNo4, sMaterialNo5, sMaterialNo6, sMaterialNo7, sMaterialNo8, sMaterialNo9)
     cursor = connect.cursor()
     # 创建一个游标对象,python里的sql语句都要通过cursor来执行
     cursor.execute(sSQL)
+    print(sSQL)
     # 执行sql语句
     row = cursor.fetchone()
     varList0 = []
@@ -84,25 +83,39 @@ def JSSearchData(*args):
     varList9 = []
     returnList = []
     while row:
+        print('3222222222222222222222222222')
+        print(row)
+        print(len(row))
         varList0.append(row[0])
         varList1.append(row[1])
         varList2.append(row[2])
         varList3.append(row[3])
         if len(row) >= 5:
+            print('==============5')
             varList4.append(row[4])
         if len(row) >= 6:
+            print('==============6')
             varList5.append(row[5])
-        if len(row) >= 9:
+        if len(row) >= 7:
+            print('==============7')
             varList6.append(row[6])
-            varList7.append(row[7])
+        if len(row) >= 8:
+            print('==============8')
+            varList7.append(row[7])                                 
+        if len(row) >= 9:
+            print('==============9')
             varList8.append(row[8])
         if len(row) >= 10:
+            print('==============10')
             varList9.append(row[9])        
         row = cursor.fetchone()
     cursor.close()
 
     nNumber = len(varList0)
-
+    print('==========1212121=========3232')
+    print(varList0)
+    print(len(varList0))
+    print('==========q3212121=========3232')
     if nNumber == 1:
         for i in range(9):
             varList0.append('')

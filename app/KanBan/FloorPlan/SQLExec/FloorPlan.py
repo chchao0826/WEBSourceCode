@@ -7,7 +7,7 @@ from sqlalchemy import or_, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
-from app.KanBan.SQL.FloorPlan import equipmentStatusSQL, storeStatusSQL, WorkingStatusSQL
+from app.KanBan.FloorPlan.SQL.FloorPlan import equipmentStatusSQL, storeStatusSQL, WorkingStatusSQL
 
 import re
 
@@ -17,7 +17,7 @@ base = declarative_base()
 session = sessionmaker(bind=engine)
 ses = session()
 
-
+  
 # 机台状态
 def emStatus():
     # 执行SQL语句转为List-详细

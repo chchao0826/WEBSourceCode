@@ -22,13 +22,13 @@ def JSSearchDataSQL(sWorkingProcedureName, sMaterialNo1, sMaterialNo2, sMaterial
         SET @sMaterialNo9 = '%s' \
         IF @sWorkingProcedureName = 'title' \
         BEGIN \
-        SELECT A.sCardNo,A.sMaterialNo,A.sFellNo \
+        SELECT A.sCardNo,A.sMaterialNo,ISNULL(A.sFellNo,'') AS sFellNo \
         ,CONVERT(NVARCHAR(100),NULL) AS sSourceName \
         ,CONVERT(NVARCHAR(100),NULL) AS sMaterialLot \
         ,CONVERT(NVARCHAR(200),NULL) AS sMaterialProperty \
         INTO #TEMPTABLE \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND bIsOk = 1 \
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> ''  AND ISNULL(bIsOK,0) != 1 \
         UPDATE #TEMPTABLE \
         SET sMaterialLot = B.sMaterialLot \
         ,sSourceName = E.sProviderName \
@@ -43,59 +43,65 @@ def JSSearchDataSQL(sWorkingProcedureName, sMaterialNo1, sMaterialNo2, sMaterial
         END \
         IF @sWorkingProcedureName = 'PR' \
         BEGIN \
-        SELECT A.iIden,A.nPRWidth,A.nPRYardWeight \
-        ,'左: ' + ISNULL(A.sPRWeftDensityLeft,'') + '中: ' + ISNULL(A.sPRWeftDensityIn, '') + '右: '+ ISNULL(A.sPRWeftDensityRight, '') AS sPRWeftDensity \
-        ,'左: ' + ISNULL(A.nPRGMWTLeft,'') + '中: ' + ISNULL(A.nPRGMWTIn, '') + '右: '+ ISNULL(A.nPRGMWTRight, '') AS nPRGMWT \
+        SELECT A.iIden,ISNULL(A.nPRWidth, '') AS nPRWidth,ISNULL(A.nPRYardWeight,'') AS nPRYardWeight \
+        ,ISNULL('左: ' + A.sPRWeftDensityLeft,'') + ISNULL('; 中: ' + A.sPRWeftDensityIn, '') + ISNULL('; 右: '+ A.sPRWeftDensityRight, '') AS sPRWeftDensity \
+        ,ISNULL('克重: ' + A.nPRGMWT + '; ','') + ISNULL('左: ' + A.nPRGMWTLeft + '; ','') + ISNULL('中: ' + A.nPRGMWTIn + '; ', '') + ISNULL('右: '+ A.nPRGMWTRight, '') AS nPRGMWT \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND sOKMan = 'OK' AND bIsOk = 1 \
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> ''  AND ISNULL(bIsOK,0) != 1 \
         END \
         IF @sWorkingProcedureName = 'FS' \
         BEGIN \
-        SELECT A.iIden,A.nFSPRWidth,A.nFSYardWeight \
-        ,'左: ' + ISNULL(A.nFSGMWTLeft,'') + '中: ' + ISNULL(A.nFSGMWTIn, '') + '右: '+ ISNULL(A.nFSGMWTRight, '') AS nFSGMWT \
-        ,'左: ' + ISNULL(A.sFSWeftDensityLeft,'') + '中: ' + ISNULL(A.sFSWeftDensityIn, '') + '右: '+ ISNULL(A.sFSWeftDensityRight, '') AS sFSWeftDensity \
+        SELECT A.iIden,ISNULL(A.nFSPRWidth,'') AS nFSPRWidth,ISNULL(A.nFSYardWeight,'') AS nFSYardWeight \
+        ,ISNULL('克重: ' + A.nFSGMWT+ '; ','') + ISNULL('左: ' + A.nFSGMWTLeft+ '; ','') + ISNULL( '中: ' + A.nFSGMWTIn+ '; ', '') + ISNULL( '右: '+ A.nFSGMWTRight, '') AS nFSGMWT \
+        ,ISNULL('左: ' + A.sFSWeftDensityLeft+ '; ','') + '中: ' + ISNULL(A.sFSWeftDensityIn+ '; ', '') + '右: '+ ISNULL(A.sFSWeftDensityRight, '') AS sFSWeftDensity \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND bIsOk = 1 \
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> '' AND ISNULL(bIsOK,0) != 1 \
         END \
         IF @sWorkingProcedureName = 'SC' \
         BEGIN \
-        SELECT A.iIden,A.sSCMachineNo,A.nSCSpeed,A.sSCTension \
-        ,'1: ' + ISNULL(A.nSCTempIn,'') + '; 2: ' + ISNULL(A.nSCTempIn2,'') AS nSCTemp \
+        SELECT A.iIden,ISNULL(A.sSCMachineNo,'') AS sSCMachineNo,ISNULL(A.nSCSpeed,'') AS nSCSpeed,ISNULL(A.sSCTension,'') AS sSCTension \
+        ,ISNULL('1: ' + A.nSCTempIn+ '; ','') + ISNULL('2: ' + A.nSCTempIn2,'') AS nSCTemp \
         ,A.nSCPRWidth,A.nSCYardWeight \
-        ,'左: ' + ISNULL(A.sSCWeftDensityLeft,'') + '中: ' + ISNULL(A.sSCWeftDensityIn, '') + '右: '+ ISNULL(A.sSCWeftDensityRight, '') AS sSCWeftDensity \
-        ,A.sSCGMWT \
+        ,ISNULL('左: ' + A.sSCWeftDensityLeft+ '; ','') +ISNULL( '中: ' + A.sSCWeftDensityIn+ '; ', '') + ISNULL('右: '+ A.sSCWeftDensityRight, '') AS sSCWeftDensity \
+        ,ISNULL('克重: ' + A.sSCGMWT+ '; ','') + ISNULL( '左: ' + A.sSCGMWTLeft+ '; ','') + ISNULL('中: ' + A.sSCGMWTIn+ '; ', '') + ISNULL('右: '+ A.sSCGMWTRight, '') AS sSCGMWT \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND bIsOk = 1 \
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> '' AND ISNULL(bIsOK,0) != 1 \
         END \
         IF @sWorkingProcedureName = 'PS' \
         BEGIN \
-        SELECT A.iIden,A.sPSMachineNo,A.nPSSpeed \
-        ,'1:' + ISNULL(A.nPSTemp,'') + '; 2:' + ISNULL(A.nPSTemp2,'') + '; 3-7:' + ISNULL(A.nPSTemp3_7,'') + '; 8:' + ISNULL(A.nPSTemp8,'') AS nPSTemp \
-        ,A.sPSWidthSet,A.sPSWidth,A.nPSYardWeight \
-        ,'左: ' + ISNULL(A.sPSWeftDensityLeft,'') + '中: ' + ISNULL(A.sPSWeftDensityIn, '') + '右: '+ ISNULL(A.sPSWeftDensityRight, '') AS sPSWeftDensity \
-        ,A.sPSGMWT \
-        ,'左: ' + ISNULL(A.sPSGMWTLeft,'') + '中: ' + ISNULL(A.sPSGMWTIn, '') + '右: '+ ISNULL(A.sPSGMWTRight, '') AS sPSGMWT \
+        SELECT A.iIden,ISNULL(A.sPSMachineNo,'') AS sPSMachineNo,ISNULL(A.nPSSpeed,'') AS nPSSpeed \
+        ,'1: ' + ISNULL(A.nPSTemp,'') + '; 2: ' + ISNULL(A.nPSTemp2,'') + '; 3-7: ' + ISNULL(A.nPSTemp3_7,'') + '; 8: ' + ISNULL(A.nPSTemp8,'') AS nPSTemp \
+        ,ISNULL(A.sPSWidthSet,'') AS sPSWidthSet,ISNULL(A.sPSWidth,'') AS sPSWidth,ISNULL(A.nPSYardWeight,'') AS nPSYardWeight \
+        ,ISNULL('左: ' + A.sPSWeftDensityLeft+ '; ','') + ISNULL('中: ' + A.sPSWeftDensityIn+ '; ', '') + ISNULL('右: '+ A.sPSWeftDensityRight+ '; ', '') AS sPSWeftDensity \
+        ,ISNULL('克重: ' + A.sPSGMWT+ '; ','') + ISNULL( '左: ' + A.sPSGMWTLeft+ '; ','') + ISNULL('中: ' + A.sPSGMWTIn+ '; ', '') + ISNULL('右: '+ A.sPSGMWTRight+ '; ', '') AS sPSGMWT \
+        ,sPSAidRecipe \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND bIsOk = 1 \
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> '' AND ISNULL(bIsOK,0) != 1 \
         END \
         IF @sWorkingProcedureName = 'DY' \
         BEGIN \
-        SELECT A.iIden,A.sDYMachineNo,A.sDYVSTempAid,A.nDYTemp,A.sDYAid,A.nDYPRWidth,A.nDYYardWeight,A.sDYGMWT \
-        ,'左: ' + ISNULL(A.sDYWeftDensityLeft,'') + '中: ' + ISNULL(A.sDYWeftDensityIn, '') + '右: '+ ISNULL(A.sDYWeftDensityRight, '') AS sDYWeftDensity \
-        ,'左: ' + ISNULL(A.sDYGMWTLeft,'') + '中: ' + ISNULL(A.sDYGMWTIn, '') + '右: '+ ISNULL(A.sDYGMWTRight, '') AS sDYGMWT \
+        SELECT A.iIden,ISNULL(A.sDYMachineNo,'') AS sDYMachineNo \
+		,ISNULL(A.sDYVSTempAid,'') AS sDYVSTempAid \
+        ,ISNULL(A.nDYTemp,'') AS nDYTemp \
+		,ISNULL(A.sDYAid,'') AS sDYAid \
+        ,ISNULL(A.nDYPRWidth,'') AS nDYPRWidth \
+		,ISNULL(A.nDYYardWeight,'') AS nDYYardWeight \
+        ,ISNULL('左: ' + A.sDYWeftDensityLeft+ '; ','') + ISNULL('中: ' + A.sDYWeftDensityIn+ '; ', '') + ISNULL('右: '+ A.sDYWeftDensityRight+ '; ', '') AS sDYWeftDensity \
+        ,+ISNULL('克重: ' + A.sDYGMWT+ '; ','') + ISNULL('左: ' + A.sDYGMWTLeft+ '; ','') + ISNULL('中: ' + A.sDYGMWTIn+ '; ', '') + ISNULL('右: '+ A.sDYGMWTRight, '') AS sDYGMWT \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A  \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND bIsOk = 1 \
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> '' AND ISNULL(bIsOK,0) != 1 \
         END \
         IF @sWorkingProcedureName = 'SE' \
         BEGIN \
-        SELECT A.iIden,A.sSEMachineNo,A.nSESpeed \
-        ,'1:' + ISNULL(A.nSETemp,'') + '; 2:' + ISNULL(A.nSETemp2,'') + '; 3-7:' + ISNULL(A.nSETemp3_7,'') + '; 8:' + ISNULL(A.nSETemp8,'') AS nSETemp \
-        ,A.sSEAidRecipe,A.sSEWidthSet,A.sSEPRWidth,A.nSEYardWeight \
-        ,'左: ' + ISNULL(A.sSEWeftDensityLeft,'') + '中: ' + ISNULL(A.sSEWeftDensityIn, '') + '右: '+ ISNULL(A.sSEWeftDensityRight, '') AS sSEWeftDensity \
-        ,'克重: ' + ISNULL(sSEGMWT,'') + '左: ' + ISNULL(A.sSEGMWTLeft,'') + '中: ' + ISNULL(A.sSEGMWTIn, '') + '右: '+ ISNULL(A.sSEGMWTRight, '') AS sSEGMWT \
+        SELECT A.iIden,ISNULL(A.sSEMachineNo,'') AS sSEMachineNo,ISNULL(A.nSESpeed,'') AS nSESpeed \
+        ,'1: ' + ISNULL(A.nSETemp,'') + '; 2: ' + ISNULL(A.nSETemp2,'') + '; 3-7: ' + ISNULL(A.nSETemp3_7,'') + '; 8: ' + ISNULL(A.nSETemp8,'') AS nSETemp \
+        ,ISNULL(A.sSEAidRecipe,'') AS sSEAidRecipe,ISNULL(A.sSEWidthSet,'') AS sSEWidthSet \
+        ,ISNULL(A.sSEPRWidth,'') AS sSEPRWidth,ISNULL(A.nSEYardWeight,'') AS nSEYardWeight \
+        ,ISNULL('左: ' + A.sSEWeftDensityLeft+ '; ','') + ISNULL('中: ' + A.sSEWeftDensityIn+ '; ', '') + ISNULL('右: '+ A.sSEWeftDensityRight+ '; ', '') AS sSEWeftDensity \
+        ,ISNULL('克重: ' + sSEGMWT+ '; ','') + ISNULL('左: ' + A.sSEGMWTLeft+ '; ','') + ISNULL('中: ' + A.sSEGMWTIn+ '; ', '') + ISNULL('右: '+ A.sSEGMWTRight+ '; ', '') AS sSEGMWT \
         FROM [198.168.6.253].[HSWarpERP_NJYY].[dbo].pbCommonTestFabricTrackHdr A \
-        WHERE sMaterialNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) AND bIsOk = 1 \
-        END" % (sWorkingProcedureName, sMaterialNo1, sMaterialNo2, sMaterialNo3, sMaterialNo4, sMaterialNo5, sMaterialNo6, sMaterialNo7, sMaterialNo8, sMaterialNo9)
+        WHERE (sCardNo IN (@sMaterialNo1, @sMaterialNo2, @sMaterialNo3, @sMaterialNo4, @sMaterialNo5, @sMaterialNo6, @sMaterialNo7, @sMaterialNo8, @sMaterialNo9) ) AND ISNULL(sMaterialNo,'') <> ''  AND ISNULL(sCardNo,'') <> '' AND ISNULL(bIsOK,0) != 1 \
+        END"% (sWorkingProcedureName, sMaterialNo1, sMaterialNo2, sMaterialNo3, sMaterialNo4, sMaterialNo5, sMaterialNo6, sMaterialNo7, sMaterialNo8, sMaterialNo9)
 
 
 

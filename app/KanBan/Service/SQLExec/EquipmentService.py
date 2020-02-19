@@ -1,3 +1,4 @@
+
 # -*-coding:utf-8-*-
 from flask import render_template, Flask, request
 from sqlalchemy import or_, and_
@@ -5,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
 # 故障看板
-from app.KanBan.SQL.EquipmentService import equipmentServiceSQL
+from app.KanBan.Service.SQL.EquipmentService import equipmentServiceSQL
 
 import re
 

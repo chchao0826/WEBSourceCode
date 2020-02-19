@@ -26,11 +26,9 @@ def jSAJAX(CardList):
     GetData = JSSearchData(sWorkingProcedureName, ToList)
     print(GetData)
     returnHtml = ''   
-    returnHtml += ' <tbody> \
-                        <tr>'
     if sWorkingProcedureName == 'title':
         returnHtml += ' <tbody> \
-                    <tr>'
+                    <tr id="sCardNo">'
         returnHtml += '<td>卡号</td>'
         nNumber = 0
         for i in GetData:
@@ -59,7 +57,7 @@ def jSAJAX(CardList):
                                 <td id="9" onclick="SignMain(\'9\')" >%s</td> \
                             </tr> \
                             <tr> \
-                                <td>来源名称</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
+                                <td>手感号</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
             elif nNumber == 2:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -72,8 +70,34 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>规格</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
+                                <td>来源名称</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
             elif nNumber == 3:
+                returnHtml += ' <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                            </tr> \
+                            <tr> \
+                                <td>LOT号</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])        
+            elif nNumber == 4:
+                returnHtml += ' <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                            </tr> \
+                            <tr> \
+                                <td>原料</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])                                                           
+            elif nNumber == 5:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
                                 <td>%s</td> \
@@ -117,7 +141,7 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>纬密 CPI</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
+                                <td>纬密</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
             elif nNumber == 3:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -175,7 +199,7 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>纬密 CPI</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
+                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
             elif nNumber == 3:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -188,7 +212,7 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
+                                <td>纬密</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
             elif nNumber == 4:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -208,6 +232,9 @@ def jSAJAX(CardList):
         returnHtml += '<td>机号</td>'
         nNumber = 0
         for i in GetData:
+            print('1111111111111111111111110-0-0-')
+            print(nNumber)
+            print(i)
             if nNumber == 1:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -273,19 +300,6 @@ def jSAJAX(CardList):
                             </tr> \
                             <tr> \
                                 <td>码重 g/y</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])                                
-            elif nNumber == 5:
-                returnHtml += ' <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                            </tr> \
-                            <tr> \
-                                <td>纬密CPI</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
             elif nNumber == 6:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -298,8 +312,21 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
+                                <td>纬密</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
             elif nNumber == 7:
+                returnHtml += ' <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                            </tr> \
+                            <tr> \
+                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
+            elif nNumber == 8:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
                                 <td>%s</td> \
@@ -383,19 +410,6 @@ def jSAJAX(CardList):
                             </tr> \
                             <tr> \
                                 <td>码重 g/y</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])                                
-            elif nNumber == 5:
-                returnHtml += ' <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                                <td>%s</td> \
-                            </tr> \
-                            <tr> \
-                                <td>纬密CPC</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
             elif nNumber == 6:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -408,8 +422,34 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
+                                <td>纬密</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
             elif nNumber == 7:
+                returnHtml += ' <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                            </tr> \
+                            <tr> \
+                                <td>克重 g/m²</td>'%(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
+            elif nNumber == 8:
+                returnHtml += ' <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                                <td>%s</td> \
+                            </tr> \
+                            <tr> \
+                                <td>助剂配方</td>'%(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])                                
+            elif nNumber == 9:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
                                 <td>%s</td> \
@@ -505,7 +545,7 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>纬密CPC</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
+                                <td>纬密</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
             elif nNumber == 7:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -518,7 +558,7 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
+                                <td>克重 g/m²</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])
             elif nNumber == 8:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \
@@ -628,7 +668,7 @@ def jSAJAX(CardList):
                                 <td>%s</td> \
                             </tr> \
                             <tr> \
-                                <td>纬密 CPC</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
+                                <td>纬密</td>' %(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8])     
             elif nNumber == 8:
                 returnHtml += ' <td>%s</td> \
                                 <td>%s</td> \

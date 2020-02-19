@@ -370,7 +370,8 @@ def SplitArea_sEq(sEquipmentNo):
     if returnDataCheck == []:
         returnHTML += ' \
                 <li class="slot-item li_style"> \
-                    <div class="clearfix XG_div"> \
+                    <div></div> \
+                    <div class="clearfix"> \
                         <div> \
                             <div> \
                                 <span>未预排数据</span> \

@@ -184,8 +184,10 @@ var AJAXSave = function () {
     return saveList;
 }
 
+
 // 点击table tr 后增加选中效果
 var onclicktr = function (trVar) {
+
     var trValue = $$(trVar);
     var trClass = trValue.className;
     if (trClass == 'currentli') {
@@ -218,6 +220,7 @@ var GetAJAXData = function () {
     }
     if (EqVar == '') {
         alert('未选择机台号');
+        return;
     }
     // 左侧主表的数据
     var trList = $$('dataTable').children[0].children;
@@ -315,6 +318,7 @@ var thisEqFun = function () {
     }
     if (sEqList == '') {
         alert('未选择机台');
+        return;
     }
     return sEqList;
 }
@@ -491,7 +495,7 @@ var ExportExcel = function () {
     var sWork = GetThisWork();
     var sthisEqFun = thisEqFun()[0]['sEquipmentName'];
     var aoa = [];
-    var excelT = [sWork + sthisEqFun + '预排',,,,];
+    var excelT = [sWork + sthisEqFun + '预排', , , , ];
     aoa.push(excelT);
 
     var excelTitle = ['序号', '卡号', '物料编号', '色号', '幅宽', '克重', '投胚量', '预计花费时间', '温度', '速度', '工段', '类别'];
@@ -557,12 +561,12 @@ var checkMasterialType = function (sType) {
 }
 
 // 定型预排过的数据前端清空
-var AJAXClearDtl = function(){
+var AJAXClearDtl = function () {
     $('#SedData').load('AJAXClearDtl');
 }
 
 // AJAX更新数据
-var ClearData = function(){
+var ClearData = function () {
     console.log('----o0-212')
     var returnData;
     $.ajax({

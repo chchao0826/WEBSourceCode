@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ERP_试布数据对比</title>
+    <style>
+        #content {
+            text-align: center;
+            line-height: 340px;
+            font-size: 70px;
+            font-weight: 600px;
+            font-family: '宋体';
+        }
+
+        #body {
+            width: 658px;
+            height: 340px;
+        }
+    </style>
+
+</head>
+
+<body id="body">
+    <h1 id="content">请关闭当前页面!</h1>
+</body>
+
+<script src="{{url_for('static',filename='ERP/js/IsIeBrowser.js')}}"></script>
+
+{% block js %}
+{% endblock %}
+
+<script>
+    function content(sUrl) {
+        var iFlag = findBrowser();
+        if (iFlag == true) {
+            document.getElementById('content').innerHTML = '请联系资讯部门!!'
+        } else {
+            openNewWindow(sUrl);
+        }
+    }
+
+    main();
+</script>
+
+
+
+
+
+
+</html>

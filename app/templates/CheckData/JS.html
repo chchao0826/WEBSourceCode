@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="renderer" content="webkit"> 
     <title>卡号工艺对比</title>
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} ">
@@ -22,6 +23,18 @@
             background-color: #FAFAD2;
             /* font-size: 30px; */
             font-weight: 800;
+        }
+
+        .big {
+            background-color: #F00;
+        }
+
+        .small {
+            background-color: #FF0;
+        }
+
+        .eq {
+            background-color: #0F0;
         }
     </style>
 
@@ -51,10 +64,11 @@
             <div class="row" style="margin: -30px;" id="tableData">
                 <div class="col-md-12">
                     <div class="box box-defult box_center">
+                        <div></div>
                         <div class="box-body">
                             <table class="table table-striped table-bordered" id="mainTable">
                                 <tbody>
-                                    <tr>
+                                    <tr id="sCardNo">
                                         <td>卡号</td>
                                         <td></td>
                                         <td></td>
@@ -79,6 +93,18 @@
                                         <td id="9" onclick="SignMain('9')"></td>
                                     </tr>
                                     <tr>
+                                        <td>手感号</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
                                         <td>来源名称</td>
                                         <td></td>
                                         <td></td>
@@ -91,7 +117,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>规格</td>
+                                        <td>LOT号</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -102,6 +128,18 @@
                                         <td></td>
                                         <td></td>
                                     </tr>
+                                    <tr>
+                                        <td>来源名称</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>                                                                        
                                 </tbody>
                             </table>
                         </div>
@@ -174,7 +212,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="box box-warning collapsed-box box_center">
+                    <div class="box box-warning box_center collapsed-box">
                         <div class="box-header with-border">
                             <h3 class="box-title">沸缩</h3>
                             <div class="box-tools pull-right">
@@ -240,7 +278,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="box box-success collapsed-box box_center">
+                    <div class="box box-success box_center collapsed-box">
                         <div class="box-header with-border">
                             <h3 class="box-title">精练</h3>
                             <div class="box-tools pull-right">
@@ -354,7 +392,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="box box-warning collapsed-box box_center">
+                    <div class="box box-warning box_center collapsed-box">
                         <div class="box-header with-border">
                             <h3 class="box-title">预定</h3>
                             <div class="box-tools pull-right">
@@ -462,13 +500,25 @@
                                         <td></td>
                                         <td></td>
                                     </tr>
+                                    <tr>
+                                        <td>助剂配方</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="box box-success collapsed-box box_center">
+                    <div class="box box-success box_center collapsed-box">
                         <div class="box-header with-border">
                             <h3 class="box-title">染色</h3>
                             <div class="box-tools pull-right">
@@ -480,7 +530,7 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table class="table table-striped table-bordered" id="DYTable">
+                            <table class="table table-striped table-bordered" id="DYTable" name="Datatable">
                                 <tbody>
                                     <tr>
                                         <td>机台号</td>
@@ -555,7 +605,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>纬密 CPC</td>
+                                        <td>克重 g/m²</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -567,7 +617,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>克重 g/m²</td>
+                                        <td>纬密 CPC</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -585,7 +635,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="box box-warning collapsed-box box_center">
+                    <div class="box box-warning box_center collapsed-box">
                         <div class="box-header with-border">
                             <h3 class="box-title">成定型</h3>
                             <div class="box-tools pull-right">
@@ -595,7 +645,7 @@
                             </div>
                         </div>
                         <div class="box-body">
-                            <table class="table table-striped table-bordered" id="SETable">
+                            <table class="table table-striped table-bordered" id="SETable" name="Datatable">
                                 <tbody>
                                     <tr>
                                         <td>机台号</td>
@@ -734,11 +784,16 @@
 <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/jQuery-2.2.0.min.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/app.min.js')}}"></script>
+<script type="text/javascript" src="/static/CheckData/js/xlsx.full.min.js"></script>
+<!-- <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script> -->
+<script type="text/javascript" src="/static/CheckData/js/xlsx.extendscript.js"></script>
+<script type="text/javascript" src="/static/CheckData/js/export.js"></script>
+
 
 <script>
     var AddData = function () {
         var GetInput = $$('inputVar').value;
-        var tdList = $$('sMaterialNo').children;
+        var tdList = $$('sCardNo').children;
         var sMaterialNoList = [];
         for (var i = 1; i < tdList.length; i++) {
             var sMaterialNo = tdList[i].innerHTML;
@@ -777,7 +832,6 @@
         }
     }
 
-
     // 更改颜色函数
     var changeColor = function (MainData, ID) {
         var TdList = MainData.children;
@@ -791,10 +845,9 @@
         }
     }
 
-
     // 标记对比主体
     var ExecFun = function (TableName, ID) {
-        var TableData = $$(TableName).children[1].children;
+        var TableData = $$(TableName).children[0].children;
         // console(TableData)
         console.log(TableData);
         console.log(TableData);
@@ -806,7 +859,6 @@
             changeColor(TableData[i], ID);
         }
     }
-
 
     // 表单颜色更新
     var SignMain = function (ID) {
@@ -830,30 +882,225 @@
 
         console.log('SETable');
         ExecFun('SETable', ID);
+        checkDataMain();
     }
 
-
     // 数据对比
-    var checkData = function () {
-        var TableData = $$('PSTable').children[1].children;
-        for (var i = 0; i < TableData.length; i++) {
-            var nMainValue = ''
-            var TDList = TableData[i].children;
-            for (var a = 0; a < TDList.length; a++) {
-                if (TDList[a].className == 'currentLi') {
-                    nMainValue = TDList[a].innerHTML;
-                } else {
-                    var GetValue = TDList[a].innerHTML;
-                    if (GetValue.indexOf('中:') != -1) {
-                        var GetValue = parseFloat(GetValue.split('中:')[1]);
-                        console.log(GetValue);
+    var checkDataMain = function () {
+        // 增加背景颜色方法 大于红色 大于黄色
+        var IsBigOrSmall = function (trList, nCurrent, nVar, trNum) {
+            var nVarNumber = parseInt(nVar);
+            var nCurrentNumber = parseInt(nCurrent);
+            if (nVar.indexOf(': ') != -1) {
+                nVarNumber = parseInt(nVar.split(': ')[2]);
+            }
+            if (nCurrent.indexOf(': ') != -1) {
+                nCurrentNumber = parseInt(nCurrent.split(': ')[2]);
+            }
+            console.log(nVarNumber)
+            if (nVar != NaN && nCurrentNumber != NaN) {
+                if (nVarNumber > nCurrentNumber) {
+                    trList[trNum].className = 'big';
+                } else if (nVarNumber < nCurrentNumber) {
+                    trList[trNum].className = 'small';
+                } else if (nCurrent == nVar && trList[trNum].className != 'currentLi' && trList[trNum]
+                    .innerHTML != '') {
+                    trList[trNum].className = 'eq';
+                }
+            } else {
+                if (nCurrent != nVar) {
+                    trList[trNum].className = 'big';
+                }
+            }
+
+        }
+        // 清除背景颜色
+        var clearClassName = function (tdList) {
+            if (tdList.className.indexOf('currentLi') == -1) {
+                tdList.className = '';
+            }
+        }
+        var tableList = $$('tableData').children;
+        for (var tableNum = 0; tableNum < tableList.length; tableNum++) {
+            var trList = tableList[tableNum].children[0].children[1].children[0].children[0].children;
+            for (var trNum = 0; trNum < trList.length; trNum++) {
+                var tdList = trList[trNum].children;
+                var td1, td2, td3, td4, td5, td6, td7, td8, td9, currentVar;
+                for (var tdNum = 1; tdNum < tdList.length; tdNum++) {
+                    clearClassName(tdList[tdNum]);
+                    switch (tdNum) {
+                        case 1:
+                            td1 = tdList[tdNum].innerHTML;
+                            break;
+                        case 2:
+                            td2 = tdList[tdNum].innerHTML;
+                            break;
+                        case 3:
+                            td3 = tdList[tdNum].innerHTML;
+                            break;
+                        case 4:
+                            td4 = tdList[tdNum].innerHTML;
+                            break;
+                        case 5:
+                            td5 = tdList[tdNum].innerHTML;
+                            break;
+                        case 6:
+                            td6 = tdList[tdNum].innerHTML;
+                            break;
+                        case 7:
+                            td7 = tdList[tdNum].innerHTML;
+                            break;
+                        case 8:
+                            td8 = tdList[tdNum].innerHTML;
+                            break;
+                        case 9:
+                            td9 = tdList[tdNum].innerHTML;
+                            break;
+                    }
+                    if (tdList[tdNum].className == 'currentLi') {
+                        currentVar = tdList[tdNum].innerHTML;
+                    }
+
+                }
+                IsBigOrSmall(tdList, currentVar, td1, 1);
+                IsBigOrSmall(tdList, currentVar, td2, 2);
+                IsBigOrSmall(tdList, currentVar, td3, 3);
+                IsBigOrSmall(tdList, currentVar, td4, 4);
+                IsBigOrSmall(tdList, currentVar, td5, 5);
+                IsBigOrSmall(tdList, currentVar, td6, 6);
+                IsBigOrSmall(tdList, currentVar, td7, 7);
+                IsBigOrSmall(tdList, currentVar, td8, 8);
+                IsBigOrSmall(tdList, currentVar, td9, 9);
+            }
+
+        }
+    }
+
+    // 导出表格
+    var ExportExcel = function() {
+        var aoa = [];
+        var tableList = $$('tableData').children;
+        var sMaterialList = ''
+        var sWorkName2, iFlag = 0;
+        var sListNum;
+        for (var tableNum = 0; tableNum < tableList.length; tableNum++) {
+            var trList = tableList[tableNum].children[0].children[1].children[0].children[0].children;
+            if (tableNum > 0 && tableNum > 0) {
+                var sWorkName = tableList[tableNum].children[0].children[0].children[0].innerHTML;
+            }
+            for (var trNum = 0; trNum < trList.length; trNum++) {
+                var rowList = [];
+                var tdList = trList[trNum].children;
+                for (var tdNum = 0; tdNum < tdList.length; tdNum++) {
+                    var tdVar = tdList[tdNum].innerHTML;
+                    if (tdNum == 0 && tableNum > 0) {
+                        tdVar = sWorkName + '_' + tdVar;
+                    }
+                    stdDict = {
+                        v: tdVar,
+                        s: {
+                            border: {
+                                top: {
+                                    style: 'thin'
+                                },
+                                bottom: {
+                                    style: 'thin'
+                                },
+                                left: {
+                                    style: 'thin'
+                                },
+                                right: {
+                                    style: 'thin'
+                                }
+                            }
+                        },
+                    }
+                    rowList.push(stdDict);
+                    if (trNum == 1 && trNum >= 1 && tdVar != '') {
+                        if (sMaterialList == '') {
+                            sMaterialList += tdVar;
+                        } else {
+                            sMaterialList += '_' + tdVar;
+                        }
                     }
                 }
-                console.log(nMainValue);
-                console.log(GetValue);
+                aoa.push(rowList)
             }
-            console.log('==============');
         }
+        var bHas = 0;
+        var sheet = XLSX2.utils.json_to_sheet(aoa);
+        for (var i = 0; i < aoa.length; i++) {
+            var sWorkName = aoa[i][0]['v'].split('_')[0];
+            var abc = aoa[1]
+            if (i == 1) {
+                var sArray = aoa[i];
+                for (var v = 0; v < sArray.length; v++) {
+                    if (sArray[v]['v'] != '') {
+                        sListNum = v + 1
+                    }
+                }
+            }
+            if (sWorkName == '配检布' || sWorkName == '精练' || sWorkName == '染色') {
+                for (var a = 0; a < sListNum; a++) {
+                    var sCollName = String.fromCharCode(a + 65) + (i + 2).toString();
+                    sheet[sCollName].s = {
+                        fill: {
+                            fgColor: {
+                                rgb: "FFD1D1D1"
+                            }
+                        },
+                        border: {
+                            top: {
+                                style: 'thin'
+                            },
+                            bottom: {
+                                style: 'thin'
+                            },
+                            left: {
+                                style: 'thin'
+                            },
+                            right: {
+                                style: 'thin'
+                            }
+                        }
+                    };
+                }
+            }
+        }
+
+        console.log('-=-=----1212')
+        console.log(sListNum);
+
+        var bIsBig = function (nNum) {
+            if (sListNum >= nNum) {
+                return 250
+            } else {
+                return 40
+            }
+        }
+
+        sheet["!cols"] = [{
+            wpx: 130
+        }, {
+            wpx: bIsBig(2)
+        }, {
+            wpx: bIsBig(3)
+        }, {
+            wpx: bIsBig(4)
+        }, {
+            wpx: bIsBig(5)
+        }, {
+            wpx: bIsBig(6)
+        }, {
+            wpx: bIsBig(7)
+        }, {
+            wpx: bIsBig(8)
+        }, {
+            wpx: bIsBig(9)
+        }, {
+            wpx: bIsBig(10)
+        }]; //单元格列宽
+        openDownloadDialog(sheet2blob(sheet), '试布数据对比.xlsx');
     }
 </script>
 

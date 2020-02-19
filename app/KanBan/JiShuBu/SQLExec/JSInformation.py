@@ -8,8 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
 from app.config import engine_253, connect_253, engine, connect
 
-from app.KanBan.SQL.JSInformation import JSInformationSQL
-
+from app.KanBan.JiShuBu.SQL.JSInformation import JSInformationSQL
 
 
 import re
@@ -19,8 +18,6 @@ base = declarative_base()
 # 236
 session = sessionmaker(bind=engine)
 ses = session()
-
-
 
 
 # 研发看板sql执行

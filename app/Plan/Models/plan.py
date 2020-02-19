@@ -247,7 +247,7 @@ def ClearData():
         # print(i)
 
 
-# 不使用
+# 不使用 以下
 def DeleteDtl(data):
     # 删除数据
     uppTrackJobGUID = data['uppTrackJobGUID']

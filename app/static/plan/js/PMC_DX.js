@@ -211,7 +211,7 @@ var SearchInput = function () {
     // 上部
     var topLi = $$('ul_var').children;
     // 下部
-    var bottomLi = $$('bottom_ul').children;
+    // var bottomLi = $$('bottom_ul').children;
 
     // console.log(inputVar)
     // 初始化颜色
@@ -414,19 +414,9 @@ var ExportExcel = function () {
     }
     console.log(aoa);
     var sheet = XLSX.utils.aoa_to_sheet(aoa);
-    sheet['!merges'] = [
-        // 设置A1-C1的单元格合并
-        {
-            s: {
-                r: 0,
-                c: 0
-            },
-            e: {
-                r: 0,
-                c: 16
-            }
-        }
-    ];
+    sheet["A3"].s = {
+        background: '#efefef';
+    };
     dateTime = getDateTime();
     var excelName = sWork + '排单' + dateTime + '.xlsx';
     openDownloadDialog(sheet2blob(sheet), excelName);
@@ -484,7 +474,7 @@ function importf(obj) {
                     'Data': excelJson,
                 }
                 GetJsonData.push(returnJson);
-            } else if (sSheetName.indexOf('成定型') != -1 ) {
+            } else if (sSheetName.indexOf('成定型') != -1) {
                 var excelJson = XLSX.utils.sheet_to_json(wb.Sheets[sSheetName]);
                 bUable = IsHaveFeild(excelJson);
                 var returnJson = {

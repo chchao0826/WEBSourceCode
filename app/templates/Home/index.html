@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <a onclick="openNewWindow()">染色预排-12121</a>
     <nav class="navbar navbar-default" style="background-color: #fff;">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -93,6 +94,9 @@
                             <li>
                                 <a href=" {{ url_for('PlanDye.SplitArea' ) }} ">染色预排-分区</a>
                             </li>
+                            <li>
+                                <a onclick="openNewWindow()">染色预排-12121</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -135,5 +139,45 @@
 </body>
 <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/jQuery-2.2.0.min.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+
+<script>
+    // var openNewWindow = function () {
+    //     function start(strPath) {
+    //         var objShell = new ActiveXObject("wscript.shell");
+    //         var cmd ="cmd /c start C:/Progra~1/Mozill~1/firefox \"http://www.baidu.com\"";
+    //         var f = objShell.Run(cmd, 0);
+    //         objShell = null;
+
+    //     }
+    //     start("C:/Progra~1/Mozill~1/firefox"); //应用程序路径
+    // }
+
+    // 查看浏览器的版本
+    // function getThisBrowser() {
+    //     var iFlag = false;
+    //     var sUserAgent = navigator.userAgent;
+    //     if (sUserAgent.indexOf('MSIE') != -1){
+    //         iFlag = true
+    //     }
+    //     return iFlag
+    // }
+
+    function findBrowser() {
+        var iFlag = false;
+        var fso, filespec;
+        filespec = 'C:/Progra~1/Mozill~1/firefox.exe';
+        fso = new ActiveXObject("Scripting.FileSystemObject");
+        if (fso.FileExists(filespec) == false) {
+            alert('无法打开, 请联系资讯部门安装浏览器!!');
+            iFlag = true;
+        }
+        return iFlag
+    }
+
+
+
+
+
+</script>
 
 </html>
