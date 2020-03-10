@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    <a onclick="openNewWindow()">染色预排-12121</a>
     <nav class="navbar navbar-default" style="background-color: #fff;">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -28,8 +27,7 @@
                     <li><a href="#">主页</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                            aria-expanded="false">
-                            染整看板<span class="caret"></span>
+                            aria-expanded="false"> 染整看板<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
@@ -57,6 +55,10 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href=" {{ url_for('KanBan.DXKanBan') }} ">定型预排看板</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href=" {{ url_for('KanBan.DXKanBan_Plan') }} ">定型预排查询</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
@@ -93,9 +95,6 @@
                             <li role="separator" class="divider"></li>
                             <li>
                                 <a href=" {{ url_for('PlanDye.SplitArea' ) }} ">染色预排-分区</a>
-                            </li>
-                            <li>
-                                <a onclick="openNewWindow()">染色预排-12121</a>
                             </li>
                         </ul>
                     </li>
@@ -173,11 +172,6 @@
         }
         return iFlag
     }
-
-
-
-
-
 </script>
 
 </html>

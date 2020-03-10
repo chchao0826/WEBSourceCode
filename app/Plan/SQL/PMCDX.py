@@ -51,6 +51,7 @@ def GetData_NoPlan(sWorkingProcedureName):
         DROP TABLE #TEMPTABLE" % (sWorkingProcedureNameNoNumber, sWorkingProcedureNameNoNumber)
 
 
+# 正在使用
 # SQL: 已预排的数据
 def GetData_Plan(sWorkingProcedureName):
     return "DECLARE @sType NVARCHAR(100), @tTime DATETIME \
@@ -65,18 +66,34 @@ def GetData_Plan(sWorkingProcedureName):
             WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) <=24 THEN '12-24' \
             WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) <=72 THEN '24-72' \
             WHEN DATEDIFF(HOUR,B.tFactEndTimeLast,GETDATE()) >72 THEN '72' END AS  sOverTime \
-            ,B.sCustomerName  \
+            ,B.sCustomerName \
             ,B.sLocation,B.sMaterialNo,B.sMaterialLot,B.sCardNo,B.sColorNo,B.nFactInputQty  \
             ,B.sWorkingProcedureNameLast,B.sWorkingProcedureNameCurrent,B.sWorkingProcedureNameNext  \
-            ,B.dReplyDate,B.dDeliveryDate \
+            ,CONVERT(NVARCHAR(10),B.dReplyDate,120) AS dReplyDate \
+            ,CONVERT(NVARCHAR(10),B.dDeliveryDate,120) AS dDeliveryDate \
             ,B.nTJTime,B.nPSTime,B.nDyeingTime,B.nSETime,B.sSalesGroupName  \
             ,B.sRemark \
             ,CASE WHEN A.bIsFinish = 1 THEN 'sFinish' WHEN A.sLabel = '2' THEN 'sUrgent' WHEN B.sIsRush = '1' or A.sLabel = '1' THEN 'ERPUrgent' ELSE '#FFF' END AS sLabel \
             ,A.uppTrackJobGUID \
+            ,CONVERT(NVARCHAR(16),A.tUpdateTime,120) AS tUpdateTime \
+            ,CONVERT(INT,NULL) AS nRowNumber \
+            ,CONVERT(NVARCHAR(20),NULL) AS sEquipmentNo \
+            ,CONVERT(DATETIME,NULL) AS tPlanTime \
+            iNTO #TEMP \
             FROM [WebDataBase].[dbo].[pbCommonDataProductionScheduling] A \
             JOIN [WebDataBase].[dbo].pbCommonDataProductionSchedulingBase B ON A.sCardNo = B.sCardNo \
             WHERE A.sType = @sType AND A.tUpdateTime = @tTime \
-            ORDER BY bIsFinish,nRowNumber" % (sWorkingProcedureName)
+            ORDER BY bIsFinish,nRowNumber\
+            UPDATE #TEMP \
+            SET nRowNumber = B.nRowNumber \
+            ,sEquipmentNo = C.sEquipmentNo \
+            ,tPlanTime=B.tPlanTime \
+            FROM #TEMP A \
+            JOIN [WebDataBase].[dbo].pbCommonDataProductionSchedulingDTL B ON A.uppTrackJobGUID = B.uppTrackJobGUID AND B.bUsable = 1 \
+            JOIN [WebDataBase].[dbo].pbCommonDataProductionSchedulingHDR C ON C.ID = B.nHDRID \
+            WHERE B.bUsable = 1 \
+            SELECT *FROM #TEMP \
+            DROP TABLE #TEMP" % (sWorkingProcedureName)
 
 
 # SQL: 查找没有的数据

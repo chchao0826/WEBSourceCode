@@ -30,7 +30,7 @@ def IDGetCheckDataSql(ID):
              WHEN RIGHT(A.sPlanDye,1) = 3 THEN '#90EE90' END ELSE NULL END AS sDyeingColor /*中控是否排染色*/ \
     ,CASE WHEN C.sWorkCode IS NULL THEN NULL ELSE C.sWorkCode END AS  sWorkCode/*工段颜色*/ \
     ,CASE WHEN C.bISHYS = 1 THEN '#83C75D' ELSE NULL END AS sIsHYS \
-    ,CASE WHEN A.nRowNumber = 999 THEN '#98FB98' ELSE NULL END AS bISCheck \
+    ,CASE WHEN A.bISChange = 1 THEN '#98FB98' ELSE NULL END AS bISCheck \
     ,CASE WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 24 THEN '#5BBD2B' \
         WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 48 THEN '#00B2BF' \
         WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 72 THEN '#FCF54C' \
@@ -89,7 +89,7 @@ def IDGetNotCheckDataSql(ID):
              WHEN RIGHT(A.sPlanDye,1) = 3 THEN '#90EE90' END ELSE NULL END AS sDyeingColor /*中控是否排染色*/ \
     ,CASE WHEN C.sWorkCode IS NULL THEN NULL ELSE C.sWorkCode END AS  sWorkCode/*工段颜色*/ \
     ,CASE WHEN C.bISHYS = 1 THEN '#83C75D' ELSE NULL END AS sIsHYS \
-    ,CASE WHEN A.nRowNumber = 999 THEN '#98FB98' ELSE NULL END AS bISCheck \
+    ,CASE WHEN A.bISChange = 1 THEN '#98FB98' ELSE NULL END AS bISCheck \
     ,CASE WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 24 THEN '#5BBD2B' \
         WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 48 THEN '#00B2BF' \
         WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 72 THEN '#FCF54C' \
@@ -148,7 +148,7 @@ def IDGetAllDataSql(ID):
              WHEN RIGHT(A.sPlanDye,1) = 3 THEN '#90EE90' END ELSE NULL END AS sDyeingColor /*中控是否排染色*/ \
     ,CASE WHEN C.sWorkCode IS NULL THEN NULL ELSE C.sWorkCode END AS  sWorkCode/*工段颜色*/ \
     ,CASE WHEN C.bISHYS = 1 THEN '#83C75D' ELSE NULL END AS sIsHYS \
-    ,CASE WHEN A.nRowNumber = 999 THEN '#98FB98' ELSE NULL END AS bISCheck \
+    ,CASE WHEN A.bISChange = 1 THEN '#98FB98' ELSE NULL END AS bISCheck \
     ,CASE WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 24 THEN '#5BBD2B' \
         WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 48 THEN '#00B2BF' \
         WHEN CONVERT(INT,CONVERT(DECIMAL(18,2),DATEDIFF(MINUTE,C.tFactEndTimeLast,GETDATE())) / 60) <= 72 THEN '#FCF54C' \
@@ -173,3 +173,34 @@ def IDGetAllDataSql(ID):
 	LEFT JOIN [198.168.6.253].[HSWarpERP_NJYY].[dbo].[pbWorkingProcedure] E ON E.sWorkingProcedureName = C.sWorkingProcedureNameCurrent \
     WHERE A.bUsable = 1 AND D.ID =  '%s' AND ISNULL(C.sStatus,'') NOT IN ('取消','中止') \
     ORDER BY A.bISCheck DESC ,CASE WHEN A.bISCheck = 1 THEN A.nRowNumber ELSE 999 END ,C.sWorkRow ,B.tFactStartTime DESC, ISNULL(C.tFactEndTimeLast,GETDATE())" % (ID)
+
+
+# 在点击保存的时候更新机台回253Sql
+def UpdateEquipmentTo253Sql(ID):
+    print(ID)
+    return "SELECT A.uppTrackJobGUID,A.nHDRID,B.sEquipmentNo,B.sEquipmentName,B.uemEquipmentGUID \
+        iNTO #TEMPTABLE1 \
+        FROM [198.168.6.236].[WebDataBase].[dbo].pbCommonDataProductionSchedulingDyeingDTL A \
+        JOIN [198.168.6.236].[WebDataBase].[dbo].pbCommonDataProductionSchedulingDyeingHDR B ON A.nHDRID = B.ID \
+        WHERE A.ID = '%s' \
+        SELECT A.uGUID AS uppTrackJobGUID,B.uGUID AS upsWorkFlowCardGUID, B.sEquipmentPrepareName, B.sEquipmentPrepareNo, B.uemEquipmentPrepareGUID \
+        INTO #TEMPTABLE2 \
+        FROM [HSWarpERP_NJYY].[dbo].ppTrackJob A \
+        JOIN [HSWarpERP_NJYY].[dbo].psWorkFlowCard B ON A.upsWorkFlowCardGUID = B.uGUID \
+        WHERE A.uGUID IN (SELECT uppTrackJobGUID FROM #TEMPTABLE1) \
+        UPDATE #TEMPTABLE2 \
+        SET sEquipmentPrepareName = B.sEquipmentName \
+        ,sEquipmentPrepareNo = B.sEquipmentNo \
+        ,uemEquipmentPrepareGUID = B.uemEquipmentGUID \
+        FROM #TEMPTABLE2 A \
+        JOIN #TEMPTABLE1 B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
+        WHERE sEquipmentPrepareNo != B.sEquipmentNo \
+        UPDATE [HSWarpERP_NJYY].[dbo].psWorkFlowCard \
+        SET sEquipmentPrepareName = B.sEquipmentPrepareName \
+        ,sEquipmentPrepareNo = B.sEquipmentPrepareNo \
+        ,uemEquipmentPrepareGUID = B.uemEquipmentPrepareGUID \
+        FROM [HSWarpERP_NJYY].[dbo].psWorkFlowCard A \
+        JOIN #TEMPTABLE2 B ON A.uGUID = B.upsWorkFlowCardGUID \
+        SELECT * FROM #TEMPTABLE2 \
+        DROP TABLE #TEMPTABLE1 \
+        DROP TABLE #TEMPTABLE2 " %(ID)

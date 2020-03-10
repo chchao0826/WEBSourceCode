@@ -1,6 +1,7 @@
 # -*- Coding:utf-8 -*-
 
 
+# 准备导出数据
 def ExportSQL():
     return "SELECT \
     B.sEquipmentNo,E.sEquipmentPrepareNo AS sPlanEquipmentNo, \

@@ -1,0 +1,65 @@
+#PageHeader>ul>li {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#PageHeader {
+    height: 58px;
+    border-bottom: 4px solid #BBB;
+}
+
+th,
+td {
+    white-space: nowrap;
+    text-align: center;
+}
+
+
+.ThTr {
+    background-color: #DDD;
+}
+
+.ThTr>th {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.ThTr>th,
+tr>td {
+    border-right: 2px solid #BBB;
+    border-bottom: 2px solid #BBB;
+    font-family: 微软雅黑;
+}
+
+tr>td {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+/* ERP急件效果 */
+.ERPUrgent {
+    background-color: #FFFF00 !important
+}
+
+/* 标记特急效果 */
+.sUrgent {
+    background-color: #FFA54F !important;
+}
+
+/* 完成标记 */
+.sFinish {
+    background-color: #7FFFAA !important;
+}
+
+/* 搜索找到效果 */
+.findOut {
+    background-color: palevioletred !important;
+}
+
+.search-li {
+    top: 10px;
+    right: 8px;
+    left: 10px;
+    width: 170px;
+}

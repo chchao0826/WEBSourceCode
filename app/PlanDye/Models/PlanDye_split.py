@@ -4,6 +4,7 @@ from sqlalchemy import Table, MetaData, Column, Integer, ForeignKey, DateTime, N
 from sqlalchemy.orm import sessionmaker, relationship, query
 from flask import Flask, render_template, request
 from app.PlanDye.Models.PlanDyeing import PlanDyeDTL
+from app.PlanDye.SQLExec.SplitArea import UpdateEquipmentTo253
 from app.config import engine
 
 
@@ -43,6 +44,8 @@ def UpdateCheckTrue(data):
     target.nRowNumber = nRowNumber
     target.tUpdateTime = tUpdateTime
     target.bISCheck = 1
+    print('-更新 bISChange-')
+    target.bISChange = 0
     ses.commit()
     ses.close()
 
@@ -51,11 +54,7 @@ def UpdateCheckTrue(data):
 def POSTNotInSqlData(nHDRID, Data):
     SqlData = GetCheckData(nHDRID)
     for a in SqlData:
-        print(a)
-        print(Data)
         if str(a) not in Data:
-            print(a)
-            print('====================')
             UpdateCheckFalse(a)
 
 
@@ -64,11 +63,15 @@ def UpdateDtl_Split(data):
     sHDRIDList = []
     nHDRID = ''
     for i in data:
+        print('====fff=-========')
+        print(i['ID'])
+        UpdateEquipmentTo253(i['ID'])
         nHDRID = i['nHDRID']
         if nHDRID not in sHDRIDList:
             sHDRIDList.append(nHDRID)
         # 确定信息更新
         UpdateCheckTrue(i)
+
     for i in sHDRIDList:
         DataList = []
         for a in data:
@@ -102,16 +105,20 @@ def InsertDtl_Split(data):
         nMaxNumber = 0
         if nEquipmentID != nHDRID:
             nEquipmentID = nHDRID
+            # 更新数据回ERP
             nMaxNumber = GetMaxNumber(nHDRID)
         print(nRowNumber)
         print(nMaxNumber)
         nRowNumber = int(nRowNumber) + int(nMaxNumber)
         print(nRowNumber)
+        print('====fff=-========')
+        UpdateEquipmentTo253(ID)
         target = ses.query(PlanDyeDTL).filter(PlanDyeDTL.id == ID).first()
         target.nHDRID = nHDRID
         target.nRowNumber = nRowNumber
         target.tUpdateTime = tUpdateTime
         target.bISCheck = 1
+        target.bISChange = 0
         ses.commit()
         ses.close()
 
@@ -130,6 +137,7 @@ def DeleteDtl_Split(data):
             target.nHDRID = nHDRID
             target.tUpdateTime = tUpdateTime
             target.bISCheck = 0
+            target.bISChange = 0
             ses.commit()
             ses.close()
 

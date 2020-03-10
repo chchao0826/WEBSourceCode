@@ -23,9 +23,9 @@ def PMCIndex(sWorkingProcedureName):
     sWorkingName = GetWorking(sWorkingProcedureName)[0] + str(nCount)
 
     # NoPlanData = Data_NoPlan(sWorkingName)
-
+    print('=======232======')
     PlanData = Data_Plan(sWorkingName)
-    return render_template('plan/PMC_DX.html', PlanData=PlanData)
+    return render_template('Plan/PMC_DX.html', PlanData=PlanData)
 
 
 # 生管预排搜索数据库中的数据
@@ -131,6 +131,8 @@ def PMC_Operation():
 @Plan.route('/PMC/ImportData', methods=['GET', 'POST'])
 def PMC_ImportData():
     data = request.get_json()
+    print('================')
+    print(data)
     importData_PMC(data)
     # print(data)
     return '导入成功'

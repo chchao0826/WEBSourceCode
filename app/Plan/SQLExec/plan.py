@@ -91,6 +91,19 @@ def Data_Plan(sWorkingProcedureName):
     cursor.execute(sSQL)
     row = cursor.fetchone()
     while row:
+        tPlanTime = row[24]
+        sEquipmentNo = row[23]
+        nRowNumber = row[22]
+        if tPlanTime == None and sEquipmentNo != None:
+            tPlanTime = '未开机'
+        if nRowNumber != None:
+            nRowNumber = int(nRowNumber) + 1
+        else:
+            nRowNumber = ''
+        if tPlanTime == None:
+            tPlanTime = ''
+        if sEquipmentNo == None:
+            sEquipmentNo = ''          
         dictVar = {
             'nOverTime': row[0],
             'sCustomerName': row[1],
@@ -113,6 +126,10 @@ def Data_Plan(sWorkingProcedureName):
             'sRemark': row[18],
             'sLabel': row[19],
             'uppTrackJobGUID': row[20],
+            'tUpdateTime': row[21],
+            'nRowNumber': nRowNumber,
+            'sEquipmentNo': sEquipmentNo,
+            'tPlanTime': tPlanTime,
         }
         ReturnData.append(dictVar)
         row = cursor.fetchone()

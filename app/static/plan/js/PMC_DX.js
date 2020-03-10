@@ -166,29 +166,45 @@ var DeleteLabelData = function () {
 
 
 // 查找数据函数
-var findInBrowser = function (findData, inputVar, sFlag) {
-    var iFlag = 0
+var findInBrowser = function (findData, inputVar) {
+    var findColor = function (inputVar, findData, i) {
+        $$('showviews').innerHTML = inputVar + '已经找到';
+        findData.className += ' findOut';
+        scrollTop =  (i - 5) * 40
+        window.scrollBy(0, scrollTop)
+    }
+
+    var clearColor = function (findData) {
+        findData.children[8].className = '';
+        findData.children[6].className = '';
+        findData.children[17].className = '';
+        findData.children[4].className = '';
+    }
+
+    var iFlag = 0;
+
     for (var i = 0; i < findData.length; i++) {
         findData[i].classList.remove('findOut');
     }
+
     for (var i = 0; i < findData.length; i++) {
-        var sCardNo = findData[i].children[0].children[0].children[0].children[0].children[0].children[5].innerHTML;
-        var sMaterialNo = findData[i].children[0].children[0].children[0].children[0].children[0].children[3].innerHTML;
-        var sWoring = findData[i].children[0].children[0].children[0].children[0].children[0].children[9].innerHTML;
-        var sSalesGroupName = findData[i].children[0].children[0].children[0].children[0].children[0].children[14].innerHTML;
-        if (sCardNo.indexOf(inputVar) != -1 || sMaterialNo.indexOf(inputVar) != -1 ||
-            sWoring.indexOf(inputVar) != -1 || sSalesGroupName.indexOf(inputVar) != -1) {
-            if (sFlag == 'top') {
-                $$('showviews').innerHTML = sCardNo + '已预排'
-                findData[i].className += ' findOut';
-                $$('top-div').scrollTop = (i - 5) * 40;
-                iFlag = 1
-            } else if (sFlag == 'bottom') {
-                $$('showviews').innerHTML = sCardNo + '未预排'
-                findData[i].className += ' findOut';
-                $$('bottom-div').scrollTop = (i - 5) * 40;
-                iFlag = 1
-            }
+        var sCardNo = findData[i].children[8].innerHTML;
+        var sMaterialNo = findData[i].children[6].innerHTML;
+        var sSalesGroupName = findData[i].children[17].innerHTML;
+        var sCustomerName = findData[i].children[4].innerHTML;
+        clearColor(findData[i]);
+        if (sCardNo.indexOf(inputVar) != -1) {
+            findColor(inputVar, findData[i].children[8], i);
+            iFlag = 1;
+        } else if (sMaterialNo.indexOf(inputVar) != -1) {
+            findColor(inputVar, findData[i].children[6], i);
+            iFlag = 1;
+        } else if (sCustomerName.indexOf(inputVar) != -1) {
+            findColor(inputVar, findData[i].children[4], i);
+            iFlag = 1;
+        } else if (sSalesGroupName.indexOf(inputVar) != -1) {
+            findColor(inputVar, findData[i].children[17], i);
+            iFlag = 1;
         }
     }
     return iFlag
@@ -209,34 +225,32 @@ var SearchInput = function () {
     // 搜索按钮事件
     var inputVar = $$('sSearchInput').value;
     // 上部
-    var topLi = $$('ul_var').children;
-    // 下部
-    // var bottomLi = $$('bottom_ul').children;
+    var trList = $$('table-div').children[0].children[0].children;
 
-    // console.log(inputVar)
-    // 初始化颜色
+    var iFlag = 0;
 
-    var iflag = 0
     // 已经预排的数据
-    var iflag = findInBrowser(topLi, inputVar, 'top');
+    iFlag = findInBrowser(trList, inputVar);
+
+    if (iFlag == 0) {
+        $$('showviews').innerHTML = inputVar + '未找到!!!';
+    }
 
     // 未预排的数据
-    var iflag = findInBrowser(bottomLi, inputVar, 'bottom');
+    // var iflag = findInBrowser(bottomLi, inputVar, 'bottom');
 
     // 数据里面的数据
-    console.log(inputVar)
-    if (iflag == 0) {
-        $('#bottom-div').load('Search/' + inputVar + '_' + thisWorking);
-        var Exec = function (bottomLi) {
-            var sCardNo = GetLastCardNo(bottomLi)
-            $$('showviews').innerHTML = sCardNo + '未预排'
-            $$('bottom-div').scrollTo(0, 40 * bottomLi.length + 40);
+    // console.log(inputVar)
+    // if (iflag == 0) {
+    //     $('#bottom-div').load('Search/' + inputVar + '_' + thisWorking);
+    //     var Exec = function (bottomLi) {
+    //         var sCardNo = GetLastCardNo(bottomLi)
+    //         $$('showviews').innerHTML = sCardNo + '未预排'
+    //         $$('bottom-div').scrollTo(0, 40 * bottomLi.length + 40);
 
-        }
-        var t = setTimeout(Exec(bottomLi), 50000);
-    }
-    // 重新计数
-    getScreen();
+    //     }
+    //     var t = setTimeout(Exec(bottomLi), 50000);
+    // }
 }
 
 // 点击备注按钮
@@ -415,7 +429,7 @@ var ExportExcel = function () {
     console.log(aoa);
     var sheet = XLSX.utils.aoa_to_sheet(aoa);
     sheet["A3"].s = {
-        background: '#efefef';
+        background: '#efefef'
     };
     dateTime = getDateTime();
     var excelName = sWork + '排单' + dateTime + '.xlsx';

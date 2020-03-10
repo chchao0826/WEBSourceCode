@@ -1,5 +1,5 @@
- // 增加活动标识
- var addactive = function (ID) {
+// 增加活动标识
+var addactive = function (ID) {
     var chidList = $$(ID).parentNode.children;
     for (var i = 0; i < chidList.length; i++) {
         if (chidList[i].className.indexOf('active') != -1) {
@@ -23,7 +23,6 @@ var addEuqi = function (sName, iID) {
         }
     }
 
-
     if (iFlag == true) {
         alert('已经添加该机台,请确认!');
     } else {
@@ -38,8 +37,6 @@ var addEuqi = function (sName, iID) {
         addData(iID);
     }
 }
-
-
 
 // 重新计算width
 var calwidth = function () {
@@ -85,27 +82,27 @@ var deleteData = function (ID) {
     var ulObj = document.createElement("ul");
     ulObj.className = 'slot-list';
     sHtml = '<div> \
-                <input class="title_var" type="text" readOnly="true" value=待选择> \
-                    <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:310px; font-size: 12px;" id="basic-addon1">待选择</span> \
-            </div> \
-            <div class="Top_Div"> \
-                <li class="slot-item XG_li"> \
-                    <div class="clearfix XG_div"> \
+            <input class="title_var" type="text" readOnly="true" value=待选择> \
+                <span class="input-group-addon title_span_var" style="background-color:#FFFF00; width:310px; font-size: 12px;" id="basic-addon1">待选择</span> \
+        </div> \
+        <div class="Top_Div"> \
+            <li class="slot-item XG_li"> \
+                <div class="clearfix XG_div"> \
+                    <div> \
                         <div> \
-                            <div> \
-                                <span></span> \
-                            </div> \
-                            <div> \
-                                <span></span> \
-                            </div> \
+                            <span></span> \
+                        </div> \
+                        <div> \
+                            <span></span> \
                         </div> \
                     </div> \
-                </li> \
-            </div> \
-            <div class="Split_Span" id="split_span_{{Eq}}"> \
-            </div> \
-            <div class="Bottom_Area"></div>';
-    
+                </div> \
+            </li> \
+        </div> \
+        <div class="Split_Span" id="split_span_{{Eq}}"> \
+        </div> \
+        <div class="Bottom_Area"></div>';
+
     console.log(sHtml);
     ulObj.innerHTML = sHtml;
 
@@ -134,9 +131,6 @@ var btnEqui = function (ID) {
     }
 }
 
-
-
-
 // 保存点击的机台, 放进cookie中, 开启网址后自动执行
 var UpdateSection = function () {
     var dragslotList = $$('dragslot').children;
@@ -161,7 +155,7 @@ var getSesCookie = function () {
             var sectionID = cookies.split('=')[0];
             var nHDRID = cookies.split('=')[1];
             var sWidth = Get_ID_Width('eq_' + nHDRID).split('_')[1];
-            if (nHDRID != 'undefined'){
+            if (nHDRID != 'undefined') {
                 nHDRIDList = nHDRIDList + nHDRID + ','
                 $('#' + sectionID).load('SplitArea/AJAX/equipment/' + String(nHDRID) + '_' + String(sWidth));
             }
@@ -173,7 +167,7 @@ var getSesCookie = function () {
 }
 
 // 更新 title_3 cookie中的机台信息
-var Update_Title_3 = function(nHDRIDList){
+var Update_Title_3 = function (nHDRIDList) {
     console.log('=----===');
     console.log(nHDRIDList);
     $('#title_3').load('SplitArea/Title3/' + nHDRIDList)
@@ -182,4 +176,3 @@ var Update_Title_3 = function(nHDRIDList){
 
 
 // 
-

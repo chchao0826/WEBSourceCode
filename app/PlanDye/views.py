@@ -101,7 +101,7 @@ def Equipment(equipmentNo):
                     </li> ' % (i['ID'], i['sWorkCode'], i['sColorCode'], i['bISCheck'], i['sCardNo'], i['sMaterialNo'], i['sColorNo'], i['sPSColor'], i['sIsHYS'], i['sDyeingColor'], i['sDyeingCount'], i['nFactInputQty'], i['sOverTime'], i['sCustomerName'], i['sWorkingProcedureNameLast'], i['sWorkingProcedureNameCurrent'], i['sWorkingProcedureNameNext'])
     returnHTML += '</ul>'
 
-    print(returnHTML)
+    # print(returnHTML)
     return returnHTML
 
 
@@ -134,8 +134,8 @@ def AJAXPost():
         iFlag = False
         returnData = IsHaveXG(i)
         print('------------=============------------121')
-        print(returnData)
-        print(sXGList)
+        # print(returnData)
+        # print(sXGList)
         for i in returnData:
             if i not in sXGList:
                 print('==================')
@@ -405,7 +405,7 @@ def SplitArea_POST():
     data_str = data_byte.decode()
     data_List = json.loads(data_str)
     UpdateDtl_Split(data_List)
-    print(data_List)
+    # print(data_List)
     print('===================')
     return 'a123'
 
@@ -417,7 +417,7 @@ def SplitArea_Insert():
     data_str = data_byte.decode()
     data_List = json.loads(data_str)
     InsertDtl_Split(data_List)
-    print(data_List)
+    # print(data_List)
     print('---------------')
     return 'a123'
 
@@ -457,7 +457,7 @@ def SplitArea_InsertXG():
     data_str = data_byte.decode()
     data_List = json.loads(data_str)
     print('========================')
-    print(data_List)
+    # print(data_List)
     UpdataXGMain(data_List)
     print('========================')
     return 'a123'

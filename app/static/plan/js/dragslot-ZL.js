@@ -149,17 +149,16 @@
 		}
 	}
 
-
 	$.fn.dragslot = function (options) {
 		new Dragslot(this, options);
 	}
 
 	var AJAXData = function (el) {
 		var LiData = $$('SedData').children;
-		var sDateTime = GetDate()
-		var returnList = []
+		var sDateTime = GetDate();
+		var returnList = [];
 		var ThisEq = $$('eqLi').children;
-		var EqVar = ''
+		var EqVar = '';
 		for (var i = 0; i < ThisEq.length; i++) {
 			if (ThisEq[i].classList == 'active') {
 				EqVar = ThisEq[i].children[0].id;
@@ -175,7 +174,6 @@
 				'nRowNumber' : i,
 				'uppTrackJobGUID' : uppTrackJobGUID,
 				'tTime': sDateTime,
-
 			}
 			if (returnList.indexOf(sDict) == -1){
 				returnList.push(sDict);
@@ -183,15 +181,12 @@
 		}
 		$.ajax({
 			type: 'POST',
-			url: 'AJAXUpdata',
+			url: 'AJAXSave',
 			data: JSON.stringify(returnList),
 			contentType: 'application/json; charset=UTF-8',
 			dataType: 'json',
 			success: function (data) {},
 		});
-
 		console.log(returnList)
 	}
-
-
 })(window.jQuery, window, document);

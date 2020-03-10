@@ -43,10 +43,9 @@ def DXPlanSQL(nHDRID):
     return "SELECT uppTrackJobGUID,MAX(tUpdateTime) AS tUpdateTime \
             iNTO #TEMP \
             FROM [pbCommonDataProductionScheduling] \
-            WHERE ISNULL(bIsFinish,0) = 0 \
             GROUP BY uppTrackJobGUID \
             SELECT \
-            CASE WHEN sISRush = 1 OR C.sLabel = '1' THEN '#FFFF00' WHEN C.sLabel = '#FFA54F' OR C.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
+            CASE WHEN C.bIsFinish = 1 THEN '#00FF00' WHEN sISRush = 1 OR C.sLabel = '1' THEN '#FFFF00' WHEN C.sLabel = '#FFA54F' OR C.sLabel = '2' THEN  '#FFA54F'  ELSE '#FFFFFF' END AS sBorderColor \
             ,D.sCardNo,sMaterialNo,sMaterialLot,sColorNo,nFactInPutQty \
             ,sCustomerName,sSalesGroupName \
             ,CASE WHEN C.sType IN ('预定','水洗1','水洗2') THEN nPSTemp ELSE nSETemp END nTemp \
@@ -61,6 +60,6 @@ def DXPlanSQL(nHDRID):
             JOIN [dbo].[pbCommonDataProductionScheduling] C ON A.uppTrackJobGUID = C.uppTrackJobGUID \
             JOIN [dbo].pbCommonDataProductionSchedulingBase D ON C.sCardNo = D.sCardNo  \
             JOIN #TEMP E ON E.uppTrackJobGUID = C.uppTrackJobGUID AND E.tUpdateTime = C.tUpdateTime \
-            WHERE ISNULL(C.bIsFinish,0) = 0 AND A.nHDRID IN ('%s', '%s', '%s', '%s', '%s') AND A.bUsable = 1 \
+            WHERE A.nHDRID IN ('%s', '%s', '%s', '%s', '%s') AND A.bUsable = 1 \
             ORDER BY A.nRowNumber \
             DROP TABLE #TEMP " % (nHDRID1, nHDRID2, nHDRID3, nHDRID4, nHDRID5)

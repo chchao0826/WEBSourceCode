@@ -3,47 +3,57 @@ ul li {
     margin: 0 auto;
     padding: 0;
 }
-ul > div {
+
+ul>div {
     margin-left: -40px;
 }
-.main_var{
+
+.main_var {
     margin-top: -20px;
 }
-.border-left{
+
+.border-left {
     border-left: 2px solid#CDC9C9;
 }
-.height40{
+
+.height40 {
     height: 40px;
 }
-body{
+
+body {
     font-size: 1.9em;
     font-weight: 600;
 }
 
-.hover_PMC {
-    display: block;
-    width: 100px;
-    line-height: 30px;
-    height: 30px;
-    overflow: hidden;
-    position: relative;
-}
-
-.hover_PMC:hover {
-    overflow: visible;
-}
-
-.hover_PMC .ex_PMC {
-    position: absolute;
-    left: 80px;
-    top: 0;
-    width: 200px;
-    line-height: 30px;
-    text-align: center;
-    background-color: #333;
-    font-size: 15px;
-}
 .ex {
     margin-left: 240px;
     margin-top: -20px;
+}
+
+
+tr>th,
+tr>td {
+    border-right: 3px solid #CCC;
+    text-align: center;
+}
+
+tr {
+    border-bottom: 3px solid #CCC;
+    height: 30px;
+}
+
+th,
+td {
+    white-space: nowrap
+}
+
+.table-sum>td {
+    color: #F00;
+    line-height: 0.5 !important;
+}
+
+.table-sum {
+    height: 10px;
+    font-weight: 600;
+    font-size: 1em;
 }

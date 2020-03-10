@@ -9,8 +9,8 @@
     <title>定型预排生管排单</title>
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} ">
-    <link rel="stylesheet" href=" {{url_for('static',filename='plan/css/dragslot.css')}} ">
-    <link rel="stylesheet" href=" {{url_for('static',filename='plan/css/plan_PMC.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='Plan/css/dragslot.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='Plan/css/Plan_PMC.css')}} ">
 
     <style type="text/css">
         /* 选中效果 */
@@ -69,19 +69,17 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a>|</a></li>
-                    <li><a href="#" onclick="GetLabel()">标记&取消特急</a></li>
-                    <li><a>|</a></li>
+                    <!-- <li><a href="#" onclick="GetLabel()">标记&取消特急</a></li>
+                    <li><a>|</a></li> -->
                     <!-- <li><a href="#" onclick="ToPlan()">标记预排</a></li> -->
-                    <li><a href="#" onclick="DeleteLabelData()">取消预排</a></li>
+                    <!-- <li><a href="#" onclick="DeleteLabelData()">取消预排</a></li>
                     <li><a>|</a></li>
                     <li><a href="#" onclick="unCheck('up')">选中</a></li>
                     <li><a>|</a></li>
                     <li><a href="#" style="color : perus;" onclick="saveData()">确定</a></li>
+                    <li><a>|</a></li> -->
+                    <li><a href="#" onclick="ExportExcel()">导出</a></li> 
                     <li><a>|</a></li>
-                    <li><a href="#" onclick="ExportExcel()">导出</a></li>
-                    <li><a>|</a></li>
-                    <li><a href="#" onclick="btnPrint()">打印</a></li>
-                    <li><a href="#" onclick="btnRemark()">说明</a></li>
                     <li><input style="margin-top: 10px; width: 200px;" type="file" onchange="importf(this)" /></li>
                 </ul>
                 <div class="navbar-form navbar-left">
@@ -90,141 +88,91 @@
                     </div>
                     <button type="" class="btn btn-default" onclick="SearchInput()">搜索数据</button>
                 </div>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a style="color: palevioletred; font-size: 12px;" id="showviews"></a></li>
+                <ul class="nav navbar-nav">
+                    <li><a style="color: palevioletred; font-size: 1em;" id="showviews"></a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="main_var">
+    <div class="main_var" id="main_var">
         <div class="outer_div">
             <div class="htmleaf-container">
-                <div style="position:inherit; height: 40px; text-align: center; overflow-y:scroll;">
-                    <table class="table" style="height: 40px; width:100%; z-index:2; overflow-y:scroll;">
+                <div style="position:inherit;text-align: center; overflow-y: scroll;" id="table-div">
+                    <table class="table"
+                        style="width:100%; z-index:2; overflow-y:scroll; empty-cells:show; width:auto;" id="tableViews">
                         <tbody>
                             <tr style="background-color:#EEE0E5;">
-                                <td style="width: 4%; line-height: 25px;" class="border-left">超时</td>
-                                <td style="width: 10%; line-height: 25px;" class="border-left">客户名称</td>
-                                <td style="width: 5%; line-height: 25px;" class="border-left">布车号</td>
-                                <td style="width: 8%; line-height: 25px;" class="border-left">物料编号</td>
-                                <td style="width: 3%; line-height: 25px;" class="border-left">LOT</td>
-                                <td style="width: 8%; line-height: 25px;" class="border-left">卡号</td>
-                                <td style="width: 9%; line-height: 25px;" class="border-left">色号</td>
-                                <td style="width: 5%; line-height: 25px;" class="border-left">投胚</td>
-                                <td style="width: 5%; line-height: 25px;" class="border-left">上工段</td>
-                                <td style="width: 5%; line-height: 25px;" class="border-left">现工段</td>
-                                <td style="width: 5%; line-height: 25px;" class="border-left">下工段</td>
-                                <td style="width: 4%; line-height: 25px;" class="border-left">生交期</td>
-                                <td style="width: 4%; line-height: 25px;" class="border-left">业交期</td>
-                                <td style="width: 5%; line-height: 25px;" class="border-left">耗时</td>
-                                <td style="width: 8%; line-height: 25px;" class="border-left">营业课别</td>
-                                <td style="width: 10%; line-height: 25px;" class="border-left">工卡备注</td>
+                                <th>生管上传时间</th>
+                                <th>预排机台</th>
+                                <th>预排回数</th>
+                                <th>预计完成时间</th>
+                                <th>超时</th>
+                                <th>客户名称</th>
+                                <th>布车号</th>
+                                <th>物料编号</th>
+                                <th>LOT</th>
+                                <th>卡号</th>
+                                <th>色号</th>
+                                <th>投胚</th>
+                                <th>上工段</th>
+                                <th>现工段</th>
+                                <th>下工段</th>
+                                <th>生交期</th>
+                                <th>业交期</th>
+                                <th>耗时</th>
+                                <th>营业课别</th>
+                                <th>工卡备注</th>
+                            </tr>
+                            {% for i in PlanData %}
+                            <tr style="text-align: center;" class="{{i.sLabel}}">
+                                <td>{{i.tUpdateTime}}</td>
+                                <td>{{i.sEquipmentNo}}</td>
+                                <td>{{i.nRowNumber}}</td>
+                                <td>{{i.tPlanTime}}</td>
+                                <td>{{i.nOverTime}}</td>
+                                <td>{{i.sCustomerName}}</td>
+                                <td>{{i.sLocation}}</td>
+                                <td>{{i.sMaterialNo}}</td>
+                                <td>{{i.sMaterialLot}}</td>
+                                <td name="sCardNo">{{i.sCardNo}}</td>
+                                <td>{{i.sColorNo}}</td>
+                                <td name="nFactInputQty">{{i.nFactInputQty}}</td>
+                                <td>{{i.sWorkingProcedureNameLast}}</td>
+                                <td>{{i.sWorkingProcedureNameCurrent}}</td>
+                                <td>{{i.sWorkingProcedureNameNext}}</td>
+                                <td>{{i.dReplyDate }}</td>
+                                <td>{{i.dDeliveryDate }}</td>
+                                <td name="nPSTime">{{i.nPSTime}}</td>
+                                <td>{{i.sSalesGroupName}}</td>
+                                <td>{{i.sRemark}}</td>
+                                <td hidden>{{i.uppTrackJobGUID}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr style="text-align: center;" class="table-sum">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td id="cardNum"></td>
+                                <td></td>
+                                <td id="FactInQty"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td id="Time"></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <form action="" method="POST">
-                    <section class="">
-                        <div id="dragslot">
-                            <div class="top-div" id="top-div" style="overflow-y:scroll; ">
-                                <ul id="ul_var" class="" style="padding: 0; ">
-                                    {% for i in PlanData %}
-                                    <li class="slot-item height40 marginLeft40 {{i.sLabel}}" style="padding : 0;">
-                                        <div class="clearfix height40">
-                                            <div class="hover_PMC" style="width:100%;">
-                                                <table class="table">
-                                                    <tr style="text-align: center;">
-                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
-                                                            {{i.nOverTime}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
-                                                            {{i.sCustomerName}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sLocation}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.sMaterialNo}}</td>
-                                                        <td style="width: 3%; line-height: 25px;" class="border-left">
-                                                            {{i.sMaterialLot}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.sCardNo}}</td>
-                                                        <td style="width: 9%; line-height: 25px;" class="border-left">
-                                                            {{i.sColorNo}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.nFactInputQty}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sWorkingProcedureNameLast}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sWorkingProcedureNameCurrent}}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.sWorkingProcedureNameNext}}</td>
-                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
-                                                            {{i.dReplyDate }}</td>
-                                                        <td style="width: 4%; line-height: 25px;" class="border-left">
-                                                            {{i.dDeliveryDate }}</td>
-                                                        <td style="width: 5%; line-height: 25px;" class="border-left">
-                                                            {{i.nPSTime}}</td>
-                                                        <td style="width: 8%; line-height: 25px;" class="border-left">
-                                                            {{i.sSalesGroupName}}</td>
-                                                        <td style="width: 10%; line-height: 25px;" class="border-left">
-                                                            {{i.sRemark}}</td>
-                                                        <td hidden>{{i.uppTrackJobGUID}}</td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div style="margin-left:-40px;">
-                                <ul>
-                                    <li>
-                                        <div class="" style="overflow-y:scroll;">
-                                            <div class="hover_PMC" style="width:100%; overflow-y:scroll;">
-                                                <table class="table" style="background-color:#EEE0E5;">
-                                                    <tr style="text-align: center;">
-                                                        <td style="width: 4%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 10%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 3%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 9%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 4%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 4%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left" id="count_tr"></td>
-                                                        <td style="width: 5%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left" id="sum_time"></td>
-                                                        <td style="width: 8%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        <td style="width: 10%; line-height: 10px; font-size: 0.8em; font-weight: 700"
-                                                            class="border-left"></td>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </section>
-                </form>
             </div>
         </div>
     </div>
@@ -235,7 +183,7 @@
         window.jQuery || document.write('<script src="../static/Plan/js/jQuery-2.2.0.min.js"><\/script>')
     </script>
 
-    <script type="text/javascript" src="/static/Plan/js/dragslot-PMC.js"></script>
+    <!-- <script type="text/javascript" src="/static/Plan/js/dragslot-PMC.js"></script> -->
 
     <script type="text/javascript" src="/static/bootstrap/js/xlsx.core.min.js"></script>
 
@@ -243,11 +191,11 @@
 
     <script type="text/javascript" src="/static/Plan/js/PMC_DX.js"></script>
 
-    <script type="text/javascript" src="/static/bootstrap/js/basics.js"></script>
+    <!-- <script type="text/javascript" src="/static/bootstrap/js/basics.js"></script> -->
 
     <script type="text/javascript" src="/static/bootstrap/js/GetDate.js"></script>
 
-    <script>
+    <!-- <script>
         jQuery(function ($) {
             $('#dragslot').dragslot({
                 dropCallback: function (el) {
@@ -255,8 +203,62 @@
                 }
             });
         });
+    </script> -->
+
+    <script>
+        // ClassName
+        var _$ = function (id) {
+            return document.getElementsByClassName(id);
+        }
+
+        // ID
+        var $$ = function (id) {
+            return document.getElementById(id);
+        }
+
+        // Name
+        var __$ = function (id) {
+            return document.getElementsByName(id);
+        }
+        // 尺寸修改
+        var getScreen = function () {
+            var nWidth = document.body.clientWidth;
+            var nHeight = document.documentElement.clientHeight;
+            var content = $$('body');
+
+            content.style.width = nWidth + 'px';
+            content.style.height = nHeight - 5 + 'px';
+
+            $$('main_var').style.height = nHeight - 60 + 'px';
+            // $$('body').style.height = nHeight - 140 + 'px';
+            $$('table-div').style.height = nHeight - 60 + 'px';
+        }
+
+        // 页面初始
+        window.onload = function () {
+            cal();
+            getScreen();
+        }
     </script>
 
+    <script>
+        function cal() {
+            var sCardNoList = document.getElementsByName('sCardNo');
+            var nFactInputQtyList = document.getElementsByName('nFactInputQty');
+            var nPSTimeList = document.getElementsByName('nPSTime');
+            var sCardNoNum = 1;
+            var nFactInputQty = 0;
+            var nPSTime = 0;
+            for (var i = 0; i < sCardNoList.length; i++) {
+                nFactInputQty = nFactInputQty + parseFloat(nFactInputQtyList[i].innerHTML);
+                nPSTime = nPSTime + parseFloat(nPSTimeList[i].innerHTML);
+                sCardNoNum++;
+            }
+            $$('cardNum').innerHTML = sCardNoNum;
+            $$('FactInQty').innerHTML = nFactInputQty.toFixed(2);
+            $$('Time').innerHTML = nPSTime.toFixed(2);
+        }
+    </script>
 
 </body>
 

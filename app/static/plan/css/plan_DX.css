@@ -1,56 +1,72 @@
-body{
+body {
     margin: 0 auto;
     padding: 0;
 }
-.left-div{
+
+.left-div {
     width: 75%;
     background-color: #f8f8f8;
     height: 100%;
     border-color: #e7e7e7;
 }
-.right-div{
+
+.right-div {
     width: 20%;
 }
-.text-center, tr > th, tr > td{
+
+.text-center,
+tr>th,
+tr>td {
     text-align: center;
 }
-.table-style{
+
+.table-style {
     height: 93%;
 }
-.float-left{
+
+.float-left {
     float: left;
 }
-.right-ul-height, ul > li{
+
+.right-ul-height,
+ul>li {
     height: 60px;
     line-height: 52px;
 }
-.right-ul-height > li > a{
+
+.right-ul-height>li>a {
     height: 52px;
-    padding: 15px 19px !important;  
+    padding: 15px 19px !important;
 }
-.div-card{
+
+.div-card {
     height: 60px;
     border: 1px solid #111;
     /* border-right: 0px; */
 }
-.mid-div{
+
+.mid-div {
     width: 3%;
 }
-div > button{
+
+div>button {
     margin-top: 20px;
 }
 
-ul, li {
+ul,
+li {
     padding: 0;
     margin: 0;
     list-style: none;
 }
+
 .bottom-total {
     background-color: #eee;
     position: fixed;
     bottom: 0;
 }
-.bottom-total > ul >li{
+
+.bottom-total>ul>li {
     line-height: 30px;
     height: 40px;
 }

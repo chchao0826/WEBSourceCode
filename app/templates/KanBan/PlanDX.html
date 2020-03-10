@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定型查询</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='KanBan/css/PlanDX.css')}} ">
+</head>
+
+<body id="body">
+    <div>
+        <div id="PageHeader" style="position: relative;">
+            <ul class="nav nav-pills nav-justified" id="Header_Ul">
+                <li role="presentation" id="LB01" class="active"><a onclick="UpdateData('LB01')">LB01</a></li>
+                <li role="presentation" id="LB02"><a onclick="UpdateData('LB02')">LB02</a></li>
+                <li role="presentation" id="LB03"><a onclick="UpdateData('LB03')">LB03</a></li>
+                <li role="presentation" id="LB04"><a onclick="UpdateData('LB04')">LB04</a></li>
+                <li role="presentation" id="LB05"><a onclick="UpdateData('LB05')">LB05</a></li>
+                <li role="presentation" id="NoPlan"><a onclick="UpdateData('NoPlan')">未预排数据</a></li>
+                <li role="presentation">
+                    <div class="input-group search-li">
+                        <input type="text" class="form-control" id="searchValue" placeholder="卡号 / 布种 / ...">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" onclick="searchBtn()"><span
+                                    class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="position:inherit;text-align: center; overflow-y: scroll;" id="table-div">
+            <table class="table" style="width:100%; z-index:2; overflow-y:scroll; empty-cells:show;" id="tableViews">
+                <tbody>
+                    <tr class="ThTr">
+                        <th>超时</th>
+                        <th>预排机台</th>
+                        <th>预排回数</th>
+                        <th>生管回数</th>
+                        <th>预计完成时间</th>
+                        <th>实际完成时间</th>
+                        <th>生管上传时间</th>
+                        <th>订单号</th>
+                        <th>卡号</th>
+                        <th>客户名称</th>
+                        <th>布车号</th>
+                        <th>物料编号</th>
+                        <th>LOT</th>
+                        <th>色号</th>
+                        <th>投胚</th>
+                        <th>上工段</th>
+                        <th>现工段</th>
+                        <th>下工段</th>
+                        <th>生交期</th>
+                        <th>业交期</th>
+                        <th>耗时</th>
+                        <th>营业课别</th>
+                        <th>工卡备注</th>
+                    </tr>
+                    {% for i in returnData %}
+                    <tr class="{{i.sLabel}}">
+                        <td>{{i.sOverTime}}</td>
+                        <td name="sEquipmentNo">{{i.sEquipmentNo}}</td>
+                        <td>{{i.nRowNumber}}</td>
+                        <td>{{i.nRowNumber}}</td>
+                        <td>{{i.tPlanTime}}</td>
+                        <td>{{i.tPlanTime}}</td>
+                        <td>{{i.tPlanTime}}</td>
+                        <td name="sOrderNo">{{i.sOrderNo}}</td>
+                        <td name="sCardNo">{{i.sCardNo}}</td>
+                        <td>{{i.sCustomerName}}</td>
+                        <td>{{i.sLocation}}</td>
+                        <td name="sMaterialNo">{{i.sMaterialNo}}</td>
+                        <td>{{i.sMaterialLot}}</td>
+                        <td>{{i.sColorNo}}</td>
+                        <td>{{i.nFactInputQty}}</td>
+                        <td>{{i.sWorkingProcedureNameLast}}</td>
+                        <td>{{i.sWorkingProcedureNameCurrent}}</td>
+                        <td>{{i.sWorkingProcedureNameNext}}</td>
+                        <td>{{i.dReplyDate}}</td>
+                        <td>{{i.dDeliveryDate}}</td>
+                        <td>{{i.nTime}}</td>
+                        <td>{{i.sSalesGroupName}}</td>
+                        <td>{{i.sRemark}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/static/bootstrap/js/jQuery-2.2.0.min.js"></script>
+
+    <script>
+        function $$(id) {
+            return document.getElementById(id);
+        }
+
+        function _$(name) {
+            return document.getElementsByName(name);
+        }
+
+        var getScreen = function () {
+            var nWidth = document.body.clientWidth;
+            var nHeight = document.documentElement.clientHeight;
+            var content = $$('body');
+
+            content.style.width = nWidth + 'px';
+            content.style.height = nHeight - 5 + 'px';
+
+            $$('body').style.height = nHeight - 140 + 'px';
+            $$('table-div').style.height = nHeight - 60 + 'px';
+        }
+        window.onload = function () {
+            getScreen();
+        }
+    </script>
+
+    <script>
+        function clearTitleActive() {
+            var ulList = $$('Header_Ul').children;
+            for (var i = 0; i < ulList.length; i++) {
+                console.log(ulList[i].className)
+                ulList[i].className = ''
+            }
+        }
+
+        function UpdateData(sEquipmentNo) {
+            console.log(sEquipmentNo);
+            var liList = $$(sEquipmentNo).parentNode.children;
+            console.log(liList);
+            clearTitleActive();
+            $$(sEquipmentNo).className = 'active'
+            $('#tableViews').load('DX/' + sEquipmentNo);
+        }
+    </script>
+
+    <script>
+        // 清空选定
+        function clearFindOut() {
+            var cardList = _$('sCardNo');
+            var materialNoList = _$('sMaterialNo');
+            for (var i = 0; i < cardList.length; i++) {
+                cardList[i].className = ''
+            }
+            for (var i = 0; i < materialNoList.length; i++) {
+                materialNoList[i].className = ''
+            }
+        }
+
+        // 搜索数据库
+        function searchDataBase(searchValue) {
+            console.log('===========')
+            $('#tableViews').load('DX/Search/' + searchValue);
+
+            $(document).ajaxStop(function () {
+                console.log('==============')
+                var cardList = _$('sCardNo');
+                var materialNoList = _$('sMaterialNo');
+                var orderNoList = _$('sOrderNo');
+                searchPage(cardList, searchValue);
+                searchPage(materialNoList, searchValue);
+                searchPage(orderNoList, searchValue);
+                choose();
+            });
+        }
+
+
+        function choose() {
+            var sEquipmentNo = _$('sEquipmentNo')[0].innerHTML;
+            console.log(sEquipmentNo)
+            if (sEquipmentNo == undefined || sEquipmentNo == '') {
+                sEquipmentNo = 'NoPlan'
+            }
+
+            clearTitleActive();
+
+            $$(sEquipmentNo).className = 'active'
+
+        }
+
+        // 业内搜索
+        function searchPage(sList, searchValue) {
+            var iFlag = 0;
+            for (var i = 0; i < sList.length; i++) {
+                var sListVar = sList[i].innerHTML.toUpperCase();
+                console.log(sListVar)
+                console.log(searchValue)
+                if (sListVar.indexOf(searchValue) != -1) {
+                    sList[i].className = 'findOut';
+                    console.log(iFlag)
+                    iFlag = 1
+                    console.log(iFlag)
+                    console.log('====123===1111==1212=====')
+                }
+            }
+            console.log(iFlag)
+            console.log('=========1212=====')
+            console.log('====123=====1212=====')
+            return iFlag;
+        }
+
+
+        // 搜索主函数
+        function searchMain() {
+            clearFindOut();
+            var searchValue = $$('searchValue').value.toUpperCase();
+            var cardList = _$('sCardNo');
+            var materialNoList = _$('sMaterialNo');
+            var orderNoList = _$('sOrderNo');
+            var iFlag = 0;
+            iFlag = searchPage(cardList, searchValue);
+            if (iFlag == 0) {
+                iFlag = searchPage(materialNoList, searchValue);
+            }
+            if (iFlag == 0) {
+                iFlag = searchPage(orderNoList, searchValue);
+            }
+            if (iFlag == 0) {
+                console.log('=======搜索数据库=======');
+                searchDataBase(searchValue);
+            }
+        }
+
+        // 搜索按钮
+        function searchBtn() {
+            searchMain();
+        }
+
+        // 是否按回车键 
+        $('#searchValue').bind('keydown', function (event) {
+            if (event.keyCode == "13") {
+                searchBtn()
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

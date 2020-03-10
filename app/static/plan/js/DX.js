@@ -167,8 +167,7 @@ var AJAXSave = function () {
         saveList.push(sDict);
     }
 
-    console.log(saveList)
-    console.log(type(saveList))
+    console.log(saveList);
     $.ajax({
         type: 'POST',
         url: 'AJAXSave',

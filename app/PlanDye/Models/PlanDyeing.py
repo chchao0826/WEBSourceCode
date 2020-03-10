@@ -24,6 +24,7 @@ class PlanDyeDTL(base):
     sType = Column(String, nullable=True)
     sPlanDX = Column(String, nullable=True)
     sPlanDye = Column(String, nullable=True)
+    bISChange = Column(Boolean, nullable=True)
 
     def __str__(self):
         return self.id
@@ -83,9 +84,8 @@ def IsHaveXG(nHDRID):
 def DeleteXG_PMC(data):
     nHDRID = data['nHDRID']
     sType = data['sType']
-    print('==================')
+    print('=========删除洗缸数据=========')
     print(nHDRID)
-    print(sType)
 
     target = ses.query(PlanDyeDTL).filter(and_(PlanDyeDTL.nHDRID == nHDRID, PlanDyeDTL.sType == sType, PlanDyeDTL.bUsable == 1)).first()
 

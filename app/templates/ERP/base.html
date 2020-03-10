@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ERP_试布数据对比</title>
+    <title>{% block title %}主页{% endblock %}</title>
     <style>
         #content {
             text-align: center;
@@ -24,7 +24,7 @@
 </head>
 
 <body id="body">
-    <h1 id="content">请关闭当前页面!</h1>
+    <h1 id="content">请关闭当前页面!!</h1>
 </body>
 
 <script src="{{url_for('static',filename='ERP/js/IsIeBrowser.js')}}"></script>
@@ -33,6 +33,20 @@
 {% endblock %}
 
 <script>
+    // 判断系统文件中是否装Firefox
+    function findBrowser() {
+        var iFlag = false;
+        var fso, filespec;
+        filespec = 'C:/Progra~1/Mozill~1/firefox.exe';
+        fso = new ActiveXObject("Scripting.FileSystemObject");
+        if (fso.FileExists(filespec) == false) {
+            alert('无法打开, 请联系资讯部门安装浏览器!!');
+            iFlag = true;
+        }
+        return iFlag
+    }
+
+
     function content(sUrl) {
         var iFlag = findBrowser();
         if (iFlag == true) {

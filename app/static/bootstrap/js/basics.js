@@ -31,6 +31,7 @@ var getScreen = function () {
 
 // 页面初始
 window.onload = function () {
+    cal();
     getScreen();
     getCount();
 }

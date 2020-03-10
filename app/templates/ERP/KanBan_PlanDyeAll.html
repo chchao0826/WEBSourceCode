@@ -1,0 +1,12 @@
+{% extends 'ERP/base.html' %}
+
+{% block title %}看板_染色预排_所有数据{% endblock %}
+
+{% block js %}
+<script>
+function main() {
+    var sUrl = '\"http://198.168.6.56:5000/KanBan/PlanDye/AllData\"'
+    content(sUrl);
+}
+</script>
+{% endblock %}
