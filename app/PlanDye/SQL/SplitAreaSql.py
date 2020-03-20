@@ -11,8 +11,8 @@ def IDGetCheckDataSql(ID):
     ,C.sMaterialNo \
     ,C.sMaterialLot \
     ,C.sColorNo \
-    ,C.sWorkingProcedureNameLast \
-    ,C.sWorkingProcedureNameCurrent \
+    ,CONVERT(NVARCHAR(4),C.sWorkingProcedureNameLast) AS sWorkingProcedureNameLast \
+    ,CONVERT(NVARCHAR(4),C.sWorkingProcedureNameCurrent) AS sWorkingProcedureNameCurrent \
     ,C.nFactInputQty \
     ,C.nDyeingTime \
     ,CONVERT(CHAR(12),C.sCustomerName) AS sCustomerName \
@@ -70,8 +70,8 @@ def IDGetNotCheckDataSql(ID):
     ,C.sMaterialNo \
     ,C.sMaterialLot \
     ,C.sColorNo \
-    ,C.sWorkingProcedureNameLast \
-    ,C.sWorkingProcedureNameCurrent \
+    ,CONVERT(NVARCHAR(4),C.sWorkingProcedureNameLast) AS sWorkingProcedureNameLast \
+    ,CONVERT(NVARCHAR(4),C.sWorkingProcedureNameCurrent) AS sWorkingProcedureNameCurrent \
     ,C.nFactInputQty \
     ,C.nDyeingTime \
     ,CONVERT(CHAR(12),C.sCustomerName) AS sCustomerName \
@@ -176,31 +176,30 @@ def IDGetAllDataSql(ID):
 
 
 # 在点击保存的时候更新机台回253Sql
-def UpdateEquipmentTo253Sql(ID):
-    print(ID)
-    return "SELECT A.uppTrackJobGUID,A.nHDRID,B.sEquipmentNo,B.sEquipmentName,B.uemEquipmentGUID \
-        iNTO #TEMPTABLE1 \
-        FROM [198.168.6.236].[WebDataBase].[dbo].pbCommonDataProductionSchedulingDyeingDTL A \
-        JOIN [198.168.6.236].[WebDataBase].[dbo].pbCommonDataProductionSchedulingDyeingHDR B ON A.nHDRID = B.ID \
-        WHERE A.ID = '%s' \
-        SELECT A.uGUID AS uppTrackJobGUID,B.uGUID AS upsWorkFlowCardGUID, B.sEquipmentPrepareName, B.sEquipmentPrepareNo, B.uemEquipmentPrepareGUID \
-        INTO #TEMPTABLE2 \
-        FROM [HSWarpERP_NJYY].[dbo].ppTrackJob A \
-        JOIN [HSWarpERP_NJYY].[dbo].psWorkFlowCard B ON A.upsWorkFlowCardGUID = B.uGUID \
-        WHERE A.uGUID IN (SELECT uppTrackJobGUID FROM #TEMPTABLE1) \
-        UPDATE #TEMPTABLE2 \
-        SET sEquipmentPrepareName = B.sEquipmentName \
-        ,sEquipmentPrepareNo = B.sEquipmentNo \
-        ,uemEquipmentPrepareGUID = B.uemEquipmentGUID \
-        FROM #TEMPTABLE2 A \
-        JOIN #TEMPTABLE1 B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
-        WHERE sEquipmentPrepareNo != B.sEquipmentNo \
-        UPDATE [HSWarpERP_NJYY].[dbo].psWorkFlowCard \
-        SET sEquipmentPrepareName = B.sEquipmentPrepareName \
-        ,sEquipmentPrepareNo = B.sEquipmentPrepareNo \
-        ,uemEquipmentPrepareGUID = B.uemEquipmentPrepareGUID \
-        FROM [HSWarpERP_NJYY].[dbo].psWorkFlowCard A \
-        JOIN #TEMPTABLE2 B ON A.uGUID = B.upsWorkFlowCardGUID \
-        SELECT * FROM #TEMPTABLE2 \
-        DROP TABLE #TEMPTABLE1 \
-        DROP TABLE #TEMPTABLE2 " %(ID)
+# def UpdateEquipmentTo253Sql():
+#     return "SELECT A.uppTrackJobGUID,A.nHDRID,B.sEquipmentNo,B.sEquipmentName,B.uemEquipmentGUID \
+#         iNTO #TEMPTABLE1 \
+#         FROM [198.168.6.236].[WebDataBase].[dbo].pbCommonDataProductionSchedulingDyeingDTL A \
+#         JOIN [198.168.6.236].[WebDataBase].[dbo].pbCommonDataProductionSchedulingDyeingHDR B ON A.nHDRID = B.ID \
+#         WHERE A.bIScheck = 1 AND A.bUsable = 1 \
+#         SELECT A.uGUID AS uppTrackJobGUID,B.uGUID AS upsWorkFlowCardGUID, B.sEquipmentPrepareName, B.sEquipmentPrepareNo, B.uemEquipmentPrepareGUID \
+#         INTO #TEMPTABLE2  \
+#         FROM #TEMPTABLE1 C \
+# 		JOIN [HSWarpERP_NJYY].[dbo].ppTrackJob A ON C.uppTrackJobGUID = A.uGUID \
+#         JOIN [HSWarpERP_NJYY].[dbo].psWorkFlowCard B ON A.upsWorkFlowCardGUID = B.uGUID \
+#         UPDATE #TEMPTABLE2 \
+#         SET sEquipmentPrepareName = B.sEquipmentName \
+#         ,sEquipmentPrepareNo = B.sEquipmentNo \
+#         ,uemEquipmentPrepareGUID = B.uemEquipmentGUID \
+#         FROM #TEMPTABLE2 A \
+#         JOIN #TEMPTABLE1 B ON A.uppTrackJobGUID = B.uppTrackJobGUID \
+#         WHERE sEquipmentPrepareNo != B.sEquipmentNo \
+#         UPDATE [HSWarpERP_NJYY].[dbo].psWorkFlowCard \
+#         SET sEquipmentPrepareName = B.sEquipmentPrepareName \
+#         ,sEquipmentPrepareNo = B.sEquipmentPrepareNo \
+#         ,uemEquipmentPrepareGUID = B.uemEquipmentPrepareGUID \
+#         FROM [HSWarpERP_NJYY].[dbo].psWorkFlowCard A \
+#         JOIN #TEMPTABLE2 B ON A.uGUID = B.upsWorkFlowCardGUID \
+#         SELECT * FROM #TEMPTABLE2 \
+#         DROP TABLE #TEMPTABLE1 \
+#         DROP TABLE #TEMPTABLE2 "

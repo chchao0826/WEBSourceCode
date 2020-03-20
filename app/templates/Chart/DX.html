@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定型图形看板</title>
+    <link rel="stylesheet" href=" {{url_for('static',filename='Chart/css/Chart.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='Chart/css/Chart.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap-theme.css')}} ">
+    <style>
+        .header {
+            width: 100%;
+            height: 80px;
+            background-color: #F9F9F9;
+        }
+
+        .header-btn {
+            width: 20%;
+            height: 80px;
+        }
+
+        body {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        ul {
+            margin: 0 auto !important;
+        }
+
+        .pager-header>li>a {
+            height: 80px;
+            width: 200px;
+            line-height: 70px;
+            border-radius: 0px;
+            font-size: 20px;
+        }
+
+        .title {
+            font-size: 53px;
+        }
+
+        .top-top {
+            height: 328px;
+            width: 1919px;
+        }
+
+        .top {
+            width: 1919px;
+            height: 345px;
+            background-color: darkkhaki;
+        }
+
+        .top-left,
+        .top-right {
+            height: 328px;
+            background-color: #CCC;
+            border: 1px solid #FFF;
+        }
+
+        .top-left {
+            width: 700px;
+        }
+
+        .top-right {
+            width: 1219px;
+        }
+
+        .top-left,
+        .top-right {
+            float: left;
+        }
+
+        .chart-top-left-title {
+            font-size: 48px;
+            font-weight: 700;
+            padding: 20px;
+        }
+
+        .chart-top-left-title-div {
+            width: 90px;
+            background-color: bisque;
+        }
+
+        .chart-top-left-div,
+        .chart-top-left-title-div {
+            float: left;
+        }
+
+        .top-right-top {
+            height: 80px;
+            background-color: aqua;
+        }
+
+        .top-right-top-left {
+            width: 405px;
+            background-color: aquamarine;
+        }
+
+        .top-right-top-right {
+            width: 406px;
+            background-color: aquamarine;
+        }
+
+        .top-right-top-middle {
+            width: 406px;
+            background-color: beige;
+        }
+
+        .top-right-top-left,
+        .top-right-top-right,
+        .top-right-top-middle {
+            float: left;
+            height: 80px;
+            font-size: 40px;
+            line-height: 80px;
+            text-align: center;
+        }
+
+        .top-right-bottom {
+            width: 1218px;
+            height: 246px;
+            background-color: coral;
+        }
+
+        .top-right-bottom-top-left,
+        .top-right-bottom-top-middle,
+        .top-right-bottom-top-right {
+            float: left;
+        }
+
+        .pager-top-right>li>a {
+            height: 57px;
+            width: 200px;
+            line-height: 45px;
+            border-radius: 0px;
+            font-size: 20px;
+        }
+
+        .title-top-right {
+            font-size: 40px;
+        }
+
+        .top-right-bottom-bottom {
+            height: 190px;
+            width: 1218px;
+            background-color: cornsilk;
+        }
+
+        .top-right-bottom-bottom>ul>li> {
+            width: 100px;
+            height: 10px;
+            background-color: aquamarine;
+        }
+
+        .top-right-bottom-bottom-ul {
+            list-style: none;
+        }
+
+        .top-right-bottom-bottom-ul li {
+            display: inline;
+            font-size: 30px;
+            border-right: 2px solid #111;
+        }
+
+        .top-right-bottom-bottom>.row>.col-md-3 {
+            font-size: 30px;
+            border-left: 2px solid #111;
+            border-bottom: 2px solid #111;
+            text-align: center;
+            height: 47.8px;
+            line-height: 47.8px;
+        }
+
+        .row {
+            margin: 0 !important;
+        }
+
+        .pro-bar {
+            width: 1919px;
+            height: 16px;
+            background-color: #111;
+        }
+
+        .pro-bar>div {
+            height: 100%;
+            float: left;
+        }
+
+        .middle {
+            height: 300px;
+            width: 1919px;
+            background-color: darkseagreen;
+        }
+
+        .middle-left,
+        .middle-middle,
+        .middle-right {
+            width: 33.3%;
+            background-color: antiquewhite;
+            height: 300px;
+            float: left;
+            border-right: 2px solid #FFF;
+        }
+
+        .middle-left-tilte {
+            width: 50px;
+            background-color: cadetblue;
+            font-size: 20px;
+            font-weight: 700;
+            height: 300px;
+            line-height: 100px;
+            text-align: center;
+        }
+
+        .middle-left-tilte,
+        .middle-bar,
+        .middle-chart,
+        .bottom-left-tilte,
+        .bottom-chart {
+            float: left;
+        }
+
+        .middle-bar {
+            height: 60px;
+            width: 587px;
+            background-color: grey;
+        }
+
+        .pager-middle-bar>li>a {
+            width: 100px;
+            height: 60px;
+            line-height: 50px;
+            border-radius: 0;
+        }
+
+        .bottom {
+            height: 257px;
+            width: 1919px;
+            background-color: #FFF;
+        }
+
+        .bottom-left-tilte {
+            width: 50px;
+            background-color: darkseagreen;
+            font-size: 20px;
+            font-weight: 700;
+            height: 258px;
+            line-height: 87px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="main" class="main">
+        <div class="header">
+            <ul class="pager pager-header">
+                <li class="previous">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    </a>
+                </li>
+                <li class="title">LB01</li>
+                <li class="next">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="chart">
+            <div class="top">
+                <div class="top-top">
+                    <div class="top-left">
+                        <div class="chart-top-left-title-div">
+                            <div class="chart-top-left-title"><span>达</span></div>
+                            <div class="chart-top-left-title"><span>成</span></div>
+                            <div class="chart-top-left-title"><span>率</span></div>
+                        </div>
+                        <div id="canvas-holder" class="chart-top-left-div" style="font-size: 30px;">
+                            <canvas id="chart-area" width=600; height=320;></canvas>
+                        </div>
+                    </div>
+                    <div class="top-right">
+                        <div class="top-right-top">
+                            <div class="top-right-top-left">
+                                <span>目标:</span>
+                                <span>42KG</span>
+                            </div>
+                            <div class="top-right-top-middle">
+                                <span>达成:</span>
+                                <span>32KG</span>
+                            </div>
+                            <div class="top-right-top-right">
+                                <span>剩余:</span>
+                                <span>10KG</span>
+                            </div>
+                        </div>
+                        <div class="top-right-bottom">
+                            <div class="top-right-bottom-top">
+                                <ul class="pager pager-top-right">
+                                    <li class="previous">
+                                        <a href="#">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        </a>
+                                    </li>
+                                    <li class="title-top-right">剩余明细</li>
+                                    <li class="next">
+                                        <a href="#">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="top-right-bottom-bottom">
+                                <div class="row">
+                                    <div class="col-md-3" style="background-color: aquamarine;">卡号1</div>
+                                    <div class="col-md-3" style="background-color: bisque;">卡号2</div>
+                                    <div class="col-md-3" style="background-color: chocolate;">卡号3</div>
+                                    <div class="col-md-3" style="background-color: chartreuse;">卡号4</div>
+                                    <div class="col-md-3" style="background-color: cornflowerblue;">卡号5</div>
+                                    <div class="col-md-3" style="background-color: darkolivegreen;">卡号6</div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pro-bar">
+                    <div style="background-color: aquamarine; width: 10%;"></div>
+                    <div style="background-color: bisque; width: 20%;"></div>
+                    <div style="background-color: chocolate; width: 30%;"></div>
+                    <div style="background-color: chartreuse; width: 20%;"></div>
+                    <div style="background-color: cornflowerblue; width: 10%;"></div>
+                    <div style="background-color: darkolivegreen; width: 10%;"></div>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="middle-left">
+                    <div class="middle-left-tilte">
+                        <span>生产</span>
+                        <span>异常</span>
+                        <span>对比</span>
+                    </div>
+                    <!-- <div class="middle-bar">
+                        <ul class="pager pager-middle-bar">
+                            <li class="previous">
+                                <a href="#">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                </a>
+                            </li>
+                            <li class="title-top-right">2020-03-11</li>
+                            <li class="next">
+                                <a href="#">
+                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div> -->
+                    <div class="middle-chart">
+                        <canvas id="chart-Pro-anomaly" width=580px; height=290px;></canvas>
+                    </div>
+                </div>
+                <div class="middle-middle">
+                    <div class="middle-left-tilte">
+                        <span>机台</span>
+                        <span>状态</span>
+                        <span>数据</span>
+                    </div>
+                    <div class="middle-chart">
+                        <canvas id="chart-Equi-Data" width=580px; height=290px;></canvas>
+                    </div>
+                </div>
+                <div class="middle-right">
+                    <div class="middle-left-tilte">
+                        <span>机台</span>
+                        <span>状态</span>
+                        <span>数据</span>
+                    </div>
+                    <div class="middle-chart">
+                        <canvas id="chart-Equi-Using" width=580px; height=290px;></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom" id="bottom">
+                <div class="bottom-left-tilte" id="bottom-left-tilte">
+                    <span>生产</span>
+                    <span>计划</span>
+                    <span>对比</span>
+                </div>
+                <div class="bottom-chart">
+                    <canvas id="chart-Pro-contrast" width=1850px; height=270px;></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="{{url_for('static',filename='Chart/js/Chart.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='Chart/js/Chart.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/jQuery-2.2.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='Chart/js/chartjs-plugin-datalabels.js')}}">
+    </script>
+
+    <script>
+        function $$(ID) {
+            return document.getElementById(ID)
+        }
+
+        function getScreen() {
+            var nWidth = document.body.clientWidth;
+            var nHeight = document.documentElement.clientHeight;
+            $$('main').style.height = nHeight + 'px';
+            $$('main').style.width = 1919 + 'px';
+
+            if (nHeight > 967) {
+                var nDiff = nHeight - 990;
+                $$('bottom').style.height = 257 + nDiff + 'px';
+                $$('bottom-left-tilte').style.height = 257 + nDiff + 'px';
+                $$('bottom-left-tilte').style.lineHeight = 87 + nDiff / 4 + 'px';
+
+                $$("chart-Pro-contrast").setAttribute("height", 257 + nDiff)
+                barChart_Pro_contrastFun()
+            }
+
+        }
+
+        window.onload = function () {
+            getScreen()
+            barChart_Pro_contrastFun()
+        }
+    </script>
+
+    <script>
+        var barChart = new Chart($$("chart-area"), {
+            type: 'doughnut',
+            data: {
+                labels: ["已做", "未做"],
+                datasets: [{
+                    label: '达成率',
+                    data: [32, 10],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        backgroundColor: function (context) {
+                            return context.dataset.backgroundColor;
+                        },
+                        borderColor: 'white',
+                        borderRadius: 25,
+                        borderWidth: 2,
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: Math.round
+                    }
+                }
+            }
+        });
+
+
+        var barChart_ProAnomaly = new Chart($$("chart-Pro-anomaly"), {
+            type: 'polarArea',
+            data: {
+                labels: ["勾纱1", "勾纱2", "勾纱3", "勾纱4"],
+                datasets: [{
+                    label: '生产异常对比',
+                    data: [5, 4, 3, 2],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(54, 162, 135, 0.6)',
+                        'rgba(54, 162, 35, 0.6)',
+                    ]
+                }],
+
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        backgroundColor: function (context) {
+                            return context.dataset.backgroundColor;
+                        },
+                        borderColor: 'white',
+                        borderRadius: 25,
+                        borderWidth: 2,
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: Math.round
+                    }
+                }
+            }
+        })
+
+
+        var barChart_Equi_Data = new Chart($$("chart-Equi-Data"), {
+            type: 'pie',
+            data: {
+                labels: ["正常", "保养", "异常", "停机"],
+                datasets: [{
+                    label: '机台状态图',
+                    data: [60, 20, 10, 10],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(54, 162, 135, 0.6)',
+                        'rgba(54, 162, 35, 0.6)',
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        backgroundColor: function (context) {
+                            return context.dataset.backgroundColor;
+                        },
+                        borderColor: 'white',
+                        borderRadius: 25,
+                        borderWidth: 2,
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: Math.round
+                    }
+                }
+            }
+        })
+
+        var barChart_Equi_Using = new Chart($$("chart-Equi-Using"), {
+            type: 'bar',
+            data: {
+                labels: ["03-07", "03-08", "03-09", "03-10", "03-11", "03-12", "03-13"],
+                datasets: [{
+                    label: '开机率',
+                    data: [80, 82, 83, 71, 90, 85, 82],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(245, 99, 131, 0.6)',
+                        'rgba(235, 99, 130, 0.6)',
+                        'rgba(225, 99, 129, 0.6)',
+                        'rgba(215, 99, 128, 0.6)',
+                        'rgba(205, 99, 137, 0.6)',
+                        'rgba(215, 99, 136, 0.6)',
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        backgroundColor: function (context) {
+                            return context.dataset.backgroundColor;
+                        },
+                        borderColor: 'white',
+                        borderRadius: 25,
+                        borderWidth: 2,
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: Math.round
+                    }
+                }
+            }
+        })
+
+        function barChart_Pro_contrastFun() {
+            var barChart_Pro_contrast = new Chart($$("chart-Pro-contrast"), {
+                type: 'line',
+                data: {
+                    labels: ["03-03", "03-04", "03-05", "03-06", "03-07", "03-08", "03-09", "03-10", "03-11",
+                        "03-12", "03-13"
+                    ],
+                    datasets: [{
+                        label: '生产计划',
+                        borderDash: [5, 5],
+                        backgroundColor: 'rgba(215, 99, 136, 0.6)',
+                        borderColor: 'rgba(215, 99, 136, 0.6)',
+                        data: [8000, 8000, 7000, 8000, 8000, 7000, 8000, 8000, 7000, 8000, 9000],
+                        fill: false,
+                    }, {
+                        label: '实际生产',
+                        fill: false,
+                        backgroundColor: 'rgba(54, 162, 35, 0.6)',
+                        borderColor: 'rgba(54, 162, 35, 0.6)',
+                        data: [6000, 8000, 7000, 8000, 8300, 6000, 6500, 6000, 6800, 7800, 8800],
+                    }]
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+
+
+
+</body>
+
+</html>

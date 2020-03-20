@@ -4,7 +4,7 @@ from sqlalchemy import Table, MetaData, Column, Integer, ForeignKey, DateTime, N
 from sqlalchemy.orm import sessionmaker, relationship, query
 from flask import Flask, render_template, request
 from app.PlanDye.Models.PlanDyeing import PlanDyeDTL
-from app.PlanDye.SQLExec.SplitArea import UpdateEquipmentTo253
+# from app.PlanDye.SQLExec.SplitArea import UpdateEquipmentTo253
 from app.config import engine
 
 
@@ -65,13 +65,11 @@ def UpdateDtl_Split(data):
     for i in data:
         print('====fff=-========')
         print(i['ID'])
-        UpdateEquipmentTo253(i['ID'])
         nHDRID = i['nHDRID']
         if nHDRID not in sHDRIDList:
             sHDRIDList.append(nHDRID)
         # 确定信息更新
         UpdateCheckTrue(i)
-
     for i in sHDRIDList:
         DataList = []
         for a in data:
@@ -79,6 +77,7 @@ def UpdateDtl_Split(data):
                 DataList.append(a['ID'])
         # 取消信息更新
         POSTNotInSqlData(i, DataList)
+    # UpdateEquipmentTo253()
 
 
 # 得到该机台最大的nRowNumber
@@ -112,7 +111,7 @@ def InsertDtl_Split(data):
         nRowNumber = int(nRowNumber) + int(nMaxNumber)
         print(nRowNumber)
         print('====fff=-========')
-        UpdateEquipmentTo253(ID)
+        # UpdateEquipmentTo253()
         target = ses.query(PlanDyeDTL).filter(PlanDyeDTL.id == ID).first()
         target.nHDRID = nHDRID
         target.nRowNumber = nRowNumber

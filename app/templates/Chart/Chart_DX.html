@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定型图形看板</title>
+
+
+    <link rel="stylesheet" href=" {{url_for('static',filename='Chart/css/Chart.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='Chart/css/Chart.min.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
+    <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap-theme.css')}} ">
+    <style>
+        .navbar-header {
+            width: 100%;
+        }
+
+        .navbar-brand {
+            text-align: center;
+            width: 100%;
+            font-size: 30px;
+            color: #666 !important;
+            font-weight: 700;
+        }
+
+        .navbar {
+            width: 100%;
+            margin-bottom: 0;
+            position: fixed;
+            top: 0;
+        }
+
+        .top {
+            height: 300px;
+            background-color: bisque;
+            border-bottom: 2px solid #FFF;
+        }
+
+        .top-div {
+            margin-top: 53px;
+            width: 100%;
+        }
+
+        .equipment {
+            width: 4%;
+            height: 100%;
+            background-color: #BBB;
+            text-align: center;
+        }
+
+        .equipment>span {
+            font-size: xxx-large;
+        }
+
+        .equipment,
+        .done,
+        .abnormal,
+        .state,
+        .startUp,
+        .done-title,
+        .done-chart-div,
+        .abnormal-title,
+        .abnormal-chart-div,
+        .state-title,
+        .state-chart-div,
+        .startUp-title,
+        .startUp-chart-div,
+        .YD,
+        .CD,
+        .YD-title,
+        .YD-chart-div,
+        .CD-title,
+        .CD-chart-div {
+            float: left;
+
+        }
+
+        .done,
+        .abnormal,
+        .state,
+        .startUp {
+            width: 24%;
+            border-right: 2px solid #FFF;
+            height: 100%;
+        }
+
+        .done-title,
+        .abnormal-title,
+        .state-title,
+        .startUp-title,
+        .YD-title,
+        .CD-title {
+            width: 10%;
+            height: 100%;
+            background-color: #DDD;
+            text-align: center;
+        }
+
+        .done-title>span,
+        .abnormal-title>span,
+        .state-title>span,
+        .startUp-title>span,
+        .YD-title,
+        .CD-title {
+            font-size: xx-large;
+        }
+
+        .done-title,
+        .startUp-title {
+            line-height: 6.4em;
+        }
+
+        .done-chart-div,
+        .abnormal-chart-div,
+        .state-chart-div,
+        .startUp-chart-div,
+        .YD-chart-div,
+        .CD-chart-div {
+            width: 90%;
+            height: 100%;
+            background-color: #EEE;
+        }
+
+        .abnormal-title,
+        .state-title {
+            line-height: 4.4em;
+        }
+
+        .bottom-div {
+            height: 400px;
+            width: 100%;
+            background-color: #999;
+        }
+
+        .YD,
+        .CD {
+            width: 50%;
+            height: 100%;
+            border-right: 2px solid #FFF;
+        }
+
+        .YD-title,
+        .CD-title {
+            line-height: 1.75em;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">定 型 图 形 看 板</a>
+            </div>
+        </div>
+    </nav>
+    <div class="top-div">
+        {% for i in range(5) %}
+        <div class="top">
+            <div class="equipment">
+                <span>L</span></p>
+                <span>B</span></p>
+                <span>0</span></p>
+                <span>{{i+1}}</span>
+            </div>
+            <div class="done">
+                <div class="done-title">
+                    <span>达</span></p>
+                    <span>成</span></p>
+                    <span>率</span></p>
+                </div>
+                <div class="done-chart-div">
+                    <canvas id="done-chart-LB0{{i+1}}"></canvas>
+                </div>
+            </div>
+            <div class="abnormal">
+                <div class="abnormal-title">
+                    <span>3</span></p>
+                    <span>日</span></p>
+                    <span>异</span></p>
+                    <span>常</span></p>
+                </div>
+                <div class="abnormal-chart-div">
+                    <canvas id="abnormal-chart-LB0{{i+1}}"></canvas>
+                </div>
+            </div>
+            <div class="state">
+                <div class="state-title">
+                    <span>机</span></p>
+                    <span>台</span></p>
+                    <span>状</span></p>
+                    <span>态</span></p>
+                </div>
+                <div class="state-chart-div">
+                    <canvas id="state-chart-LB0{{i+1}}"></canvas>
+                </div>
+            </div>
+            <div class="startUp">
+                <div class="startUp-title">
+                    <span>开</span></p>
+                    <span>机</span></p>
+                    <span>率</span></p>
+                </div>
+                <div class="startUp-chart-div">
+                    <canvas id="startUp-chart-LB0{{i+1}}"></canvas>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="bottom-div">
+        <div class="YD">
+            <div class="YD-title">
+                <span>预</span></p>
+                <span>定</span></p>
+                <span>生</span></p>
+                <span>产</span></p>
+                <span>对</span></p>
+                <span>比</span></p>
+            </div>
+            <div class="YD-chart-div">
+                <canvas id="YD-chart"></canvas>
+            </div>
+        </div>
+        <div class="CD">
+            <div class="CD-title">
+                <span>成</span></p>
+                <span>定</span></p>
+                <span>生</span></p>
+                <span>产</span></p>
+                <span>对</span></p>
+                <span>比</span></p>
+            </div>
+            <div class="CD-chart-div">
+                <canvas id="CD-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="{{url_for('static',filename='Chart/js/Chart.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='Chart/js/Chart.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/jQuery-2.2.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='Chart/js/chartjs-plugin-datalabels.js')}}">
+    </script>
+
+
+    <script>
+        function $$(ID) {
+            return document.getElementById(ID)
+        }
+
+        function getScreen() {
+            var nWidth = document.body.clientWidth;
+            var nHeight = document.documentElement.clientHeight;
+            $$('body').style.width = nWidth + 'px';
+        }
+
+        function changeChartSize(id) {
+            var nWidth = document.body.clientWidth;
+            var nHeight = 300;
+            var ChartWidth = nWidth * 0.96 / 4 * 0.9;
+            $$(id).setAttribute("height", 300);
+            $$(id).setAttribute("width", ChartWidth);
+        }
+
+        function changeChartBottomSize(id) {
+            var nWidth = document.body.clientWidth;
+            var ChartWidth = nWidth / 2 * 0.9;
+            $$(id).setAttribute("height", 380);
+            $$(id).setAttribute("width", ChartWidth);
+        }
+
+        window.onload = function () {
+            getScreen();
+            doneChartDataFun();
+            Top3ChartDataFun()
+            // for (var i = 0; i < 5; i++) {
+
+            // abnormalChartFun(abnormalID);
+            // var stateID = "state-chart" + i;
+            // changeChartSize(stateID);
+            // stateChartFun(stateID);
+            // var startUpID = "startUp-chart" + i;
+            // changeChartSize(startUpID);
+            // startUpChartFun(startUpID);
+
+            // }
+            changeChartBottomSize('YD-chart');
+            YDChartFun('YD-chart');
+            changeChartBottomSize('CD-chart');
+            YDChartFun('CD-chart');
+
+
+            self_motion_silde();
+        }
+    </script>
+
+    <script>
+        // 达成率
+        function doneChartFun(id, nFinish, nNotFinish) {
+            var doneChart = new Chart($$(id), {
+                type: 'doughnut',
+                data: {
+                    labels: ["已做", "未做"],
+                    datasets: [{
+                        label: '达成率',
+                        data: [nFinish, nNotFinish],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                        ]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            });
+        }
+
+        // 3日异常
+        function abnormalChartFun(id, abnorLabels, abnorData) {
+            var doneChart = new Chart($$(id), {
+                type: 'polarArea',
+                data: {
+                    labels: abnorLabels,
+                    datasets: [{
+                        label: '生产异常对比',
+                        data: abnorData,
+                        backgroundColor: [
+                            'rgba(255,127,36)',
+                            'rgba(255,62,150)',
+                            'rgba(0,100,0)',
+                            'rgba(139,87,66)',
+                            'rgba(171,130,255)',
+                            'rgba(85,107,47)',
+                            'rgba(67,110,238)',
+                        ]
+                    }],
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            });
+        }
+
+        // 机台状态
+        function stateChartFun(id, stateLabels, stateData) {
+            var stateChart = new Chart($$(id), {
+                type: 'pie',
+                data: {
+                    labels: stateLabels,
+                    datasets: [{
+                        label: '机台状态图',
+                        data: stateData,
+                        backgroundColor: [
+                            'rgba(255,127,36)',
+                            'rgba(255,62,150)',
+                            'rgba(0,100,0)',
+                            'rgba(139,87,66)',
+                            'rgba(171,130,255)',
+                            'rgba(85,107,47)',
+                            'rgba(67,110,238)',
+                        ]
+                    }],
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            });
+        }
+
+        // 开机率
+        function startUpChartFun(id, startUpLabels, startUpData) {
+            var doneChart = new Chart($$(id), {
+                type: 'bar',
+                data: {
+                    labels: startUpLabels,
+                    datasets: [{
+                        label: '开机率',
+                        data: startUpData,
+                        backgroundColor: [
+                            'rgba(255,127,36)',
+                            'rgba(255,62,150)',
+                            'rgba(0,100,0)',
+                            'rgba(139,87,66)',
+                            'rgba(171,130,255)',
+                            'rgba(85,107,47)',
+                            'rgba(67,110,238)',
+                        ]
+                    }],
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            });
+        }
+
+        // 预定生产对比
+        function YDChartFun(id) {
+            var doneChart = new Chart($$(id), {
+                type: 'line',
+                data: {
+                    labels: ["03-03", "03-04", "03-05", "03-06", "03-07", "03-08", "03-09", "03-10", "03-11",
+                        "03-12", "03-13"
+                    ],
+                    datasets: [{
+                        label: '生产计划',
+                        borderDash: [5, 5],
+                        backgroundColor: 'rgba(215, 99, 136, 0.6)',
+                        borderColor: 'rgba(215, 99, 136, 0.6)',
+                        data: [8000, 8000, 7000, 8000, 8000, 7000, 8000, 8000, 7000, 8000, 9000],
+                        fill: false,
+                    }, {
+                        label: '实际生产',
+                        fill: false,
+                        backgroundColor: 'rgba(54, 162, 35, 0.6)',
+                        borderColor: 'rgba(54, 162, 35, 0.6)',
+                        data: [6000, 8000, 7000, 8000, 8300, 6000, 6500, 6000, 6800, 7800, 8800],
+                    }],
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            });
+        }
+
+        // 成定生产对比
+        function CDChartFun(id) {
+            var doneChart = new Chart($$(id), {
+                type: 'line',
+                data: {
+                    labels: ["03-03", "03-04", "03-05", "03-06", "03-07", "03-08", "03-09", "03-10", "03-11",
+                        "03-12", "03-13"
+                    ],
+                    datasets: [{
+                        label: '生产计划',
+                        borderDash: [5, 5],
+                        backgroundColor: 'rgba(215, 99, 136, 0.6)',
+                        borderColor: 'rgba(215, 99, 136, 0.6)',
+                        data: [8000, 8000, 7000, 8000, 8000, 7000, 8000, 8000, 7000, 8000, 9000],
+                        fill: false,
+                    }, {
+                        label: '实际生产',
+                        fill: false,
+                        backgroundColor: 'rgba(54, 162, 35, 0.6)',
+                        borderColor: 'rgba(54, 162, 35, 0.6)',
+                        data: [6000, 8000, 7000, 8000, 8300, 6000, 6500, 6000, 6800, 7800, 8800],
+                    }],
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            backgroundColor: function (context) {
+                                return context.dataset.backgroundColor;
+                            },
+                            borderColor: 'white',
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // 达成率数据读取
+        function doneChartDataFun() {
+            $.ajax({
+                type: 'GET',
+                url: 'DoneChart',
+                contentType: 'application/json; charset=UTF-8',
+                success: function (data) {
+                    jsonData = JSON.parse(data);
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var sEquipmentNo = jsonData[i]['sEquipmentNo'];
+                        var nFinish = jsonData[i]['nFinish'];
+                        var nNotFinish = jsonData[i]['nNotFinish'];
+                        var doneID = "done-chart-" + sEquipmentNo;
+                        changeChartSize(doneID);
+                        doneChartFun(doneID, nFinish, nNotFinish);
+                    }
+                    console.log(jsonData);
+                    return jsonData;
+                },
+                error: function (data) {
+                    alert('错误!!')
+                }
+            });
+        }
+
+
+        // 异常 / 机台状态 / 开机率
+        function Top3ChartDataFun() {
+            $.ajax({
+                type: 'GET',
+                url: 'Top3Chart',
+                contentType: 'application/json; charset=UTF-8',
+                success: function (data) {
+                    console.log(data)
+                    jsonData = JSON.parse(data);
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var sType = jsonData[i]['Type']
+                        var Data = jsonData[i]['Data']
+                        if (sType == 'abnormal') {
+                            for (var v = 0; v < Data.length; v++) {
+                                var abnormalData = Data[v];
+                                var abnormalLabels = abnormalData['Labels'];
+                                var abnormalsEquipmentNo = 'abnormal-chart-' + abnormalData['sEquipmentNo'];
+                                var abnormalsData = abnormalData['Data'];
+                                changeChartSize(abnormalsEquipmentNo);
+                                abnormalChartFun(abnormalsEquipmentNo, abnormalLabels, abnormalsData)
+                            };
+                        } else if (sType == 'state') {
+                            for (var v = 0; v < Data.length; v++) {
+                                var stateData = Data[v];
+                                var stateLabels = stateData['Labels'];
+                                var statesEquipmentNo = 'state-chart-' + stateData['sEquipmentNo'];
+                                var stateData = stateData['Data'];
+                                changeChartSize(statesEquipmentNo);
+                                stateChartFun(statesEquipmentNo, stateLabels, stateData)
+                            }
+                        } else if (sType == 'startUp') {
+                            for (var v = 0; v < Data.length; v++) {
+                                var startUpData = Data[v];
+                                var startUpLabels = startUpData['Labels'];
+                                var startUpEquipmentNo = 'startUp-chart-' + startUpData['sEquipmentNo'];
+                                var startUpData = startUpData['Data'];
+                                changeChartSize(startUpEquipmentNo);
+                                startUpChartFun(startUpEquipmentNo, startUpLabels, startUpData)
+                            }
+                        }
+                    }
+                    console.log(jsonData);
+                    return jsonData;
+                },
+                error: function (data) {
+                    alert('错误!!')
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // 滑动条自动滑动
+        function self_motion_silde() {
+            var top = document.documentElement.scrollTop;
+            var nHeight = document.documentElement.scrollTopMax;
+            // 实现滚动效果 
+            const timeTop = setInterval(() => {
+                document.documentElement.scrollTop = top += 10;
+                if (top >= nHeight) {
+                    clearInterval(timeTop);
+                    document.documentElement.scrollTop = 0
+                    window.location.reload();
+                }
+                console.log(document.documentElement.scrollTop);
+            }, 900);
+        }
+    </script>
+
+</body>
+
+</html>

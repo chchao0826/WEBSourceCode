@@ -4,7 +4,7 @@
 from sqlalchemy import or_, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, query
-from app.PlanDye.SQL.SplitAreaSql import IDGetCheckDataSql, IDGetNotCheckDataSql, IDGetAllDataSql, UpdateEquipmentTo253Sql
+from app.PlanDye.SQL.SplitAreaSql import IDGetCheckDataSql, IDGetNotCheckDataSql, IDGetAllDataSql #, UpdateEquipmentTo253Sql
 from app.config import engine, connect, connect_253
 
 
@@ -91,15 +91,15 @@ def IDGetAllData(sEquipmentNo):
 
 
 # 在点击保存的时候更新机台回253执行
-def UpdateEquipmentTo253(ID):
-    sSql = UpdateEquipmentTo253Sql(ID)
-    print('=======更新机台回253=======')
-    print(sSql)
-    cursor = connect_253.cursor()
-    cursor.execute(sSql)
-    row = cursor.fetchone()
-    while row:
-        row = cursor.fetchone()
-    cursor.close()
+# def UpdateEquipmentTo253():
+#     sSql = UpdateEquipmentTo253Sql()
+#     print('=======更新机台回253=======')
+#     print(sSql)
+#     cursor = connect_253.cursor()
+#     cursor.execute(sSql)
+#     row = cursor.fetchone()
+#     while row:
+#         row = cursor.fetchone()
+#     cursor.close()
 
-    return '更新完成'
+#     return '更新完成'
