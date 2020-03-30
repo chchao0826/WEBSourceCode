@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>定型图形看板</title>
 
-
     <link rel="stylesheet" href=" {{url_for('static',filename='Chart/css/Chart.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='Chart/css/Chart.min.css')}} ">
     <link rel="stylesheet" href=" {{url_for('static',filename='bootstrap/css/bootstrap.css')}} ">
@@ -38,7 +37,7 @@
         }
 
         .top-div {
-            margin-top: 53px;
+            margin-top: 89px;
             width: 100%;
         }
 
@@ -51,6 +50,11 @@
 
         .equipment>span {
             font-size: xxx-large;
+        }
+
+
+        .container-fluid {
+            padding: 0;
         }
 
         .equipment,
@@ -71,7 +75,8 @@
         .YD-title,
         .YD-chart-div,
         .CD-title,
-        .CD-chart-div {
+        .CD-chart-div,
+        .title>div {
             float: left;
 
         }
@@ -91,7 +96,7 @@
         .startUp-title,
         .YD-title,
         .CD-title {
-            width: 10%;
+            width: 13%;
             height: 100%;
             background-color: #DDD;
             text-align: center;
@@ -108,7 +113,9 @@
 
         .done-title,
         .startUp-title {
-            line-height: 6.4em;
+            line-height: 1.5em;
+            font-size: larger;
+            font-weight: 600;
         }
 
         .done-chart-div,
@@ -117,14 +124,16 @@
         .startUp-chart-div,
         .YD-chart-div,
         .CD-chart-div {
-            width: 90%;
+            width: 87%;
             height: 100%;
             background-color: #EEE;
         }
 
         .abnormal-title,
         .state-title {
-            line-height: 4.4em;
+            line-height: 1.5em;
+            font-size: larger;
+            font-weight: 600;
         }
 
         .bottom-div {
@@ -144,6 +153,33 @@
         .CD-title {
             line-height: 1.75em;
         }
+
+        .title-1 {
+            width: 4%;
+            border-right: 2px solid #FFF;
+            height: 35px;
+            background-color: #DDD;
+        }
+
+        .title-2 {
+            width: 24%;
+            height: 35px;
+            background-color: #DDD;
+            border-right: 2px solid #FFF;
+            text-align: center;
+            font-size: x-large;
+            font-weight: 600;
+        }
+
+        .done-title>div {
+            height: 20%;
+            border-bottom: 2px solid #FFF;
+        }
+
+        .startUp-title>div {
+            height: 14.28%;
+            line-height: 3em;
+        }
     </style>
 </head>
 
@@ -152,6 +188,21 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">定 型 图 形 看 板</a>
+            </div>
+            <div class="title">
+                <div class="title-1">&ensp;</div>
+                <div class="title-2">
+                    <span>达成率</span>
+                </div>
+                <div class="title-2">
+                    <span>3日异常</span>
+                </div>
+                <div class="title-2">
+                    <span>机台状态</span>
+                </div>
+                <div class="title-2">
+                    <span>开机率</span>
+                </div>
             </div>
         </div>
     </nav>
@@ -166,41 +217,91 @@
             </div>
             <div class="done">
                 <div class="done-title">
-                    <span>达</span></p>
-                    <span>成</span></p>
-                    <span>率</span></p>
+                    <div style="background-color: rgb(255, 99, 132, 0.6);">
+                        <span>已</span></p>
+                        <span>做</span>
+                    </div>
+                    <div style="background-color: rgb(54, 162, 235, 0.6);">
+                        <span>未</span></p>
+                        <span>做</span>
+                    </div>
                 </div>
-                <div class="done-chart-div">
+                <div class="done-chart-div" style="font-size: 30px;">
                     <canvas id="done-chart-LB0{{i+1}}"></canvas>
                 </div>
             </div>
             <div class="abnormal">
-                <div class="abnormal-title">
-                    <span>3</span></p>
-                    <span>日</span></p>
-                    <span>异</span></p>
-                    <span>常</span></p>
+                <div class="abnormal-title" id="abnormal-title-LB0{{i+1}}">
+                    <!-- <div style="background-color: rgb(255,127,36, 0.6);">
+                        <span>幅宽</span></p>
+                        <span>太长</span>
+                    </div>
+                    <div style="background-color: rgb(255,62,150, 0.6);">
+                        <span>克重</span></p>
+                        <span>太轻</span>
+                    </div>
+                    <div style="background-color: rgb(0,100,0, 0.6);">
+                        <span>破</span></p>
+                        <span>洞</span>
+                    </div>
+                    <div style="background-color: rgb(139,87,66, 0.6);">
+                        <span>压</span></p>
+                        <span>痕</span>
+                    </div>
+                    <div style="background-color: rgb(171,130,255, 0.6);">
+                        <span>左右</span></p>
+                        <span>异色</span>
+                    </div> -->
                 </div>
                 <div class="abnormal-chart-div">
                     <canvas id="abnormal-chart-LB0{{i+1}}"></canvas>
                 </div>
             </div>
             <div class="state">
-                <div class="state-title">
-                    <span>机</span></p>
-                    <span>台</span></p>
-                    <span>状</span></p>
-                    <span>态</span></p>
+                <div class="state-title" id="state-title-LB0{{i+1}}">
+
+                    <!-- <div style="background-color: rgb(255,127,36, 0.6);">
+                        <span>布面</span></p>
+                        <span>异常</span>
+                    </div>
+                    <div style="background-color: rgb(255,62,150, 0.6);">
+                        <span>更换</span></p>
+                        <span>退卷架</span>
+                    </div>
+                    <div style="background-color: rgb(0,100,0, 0.6);">
+                        <span>正</span></p>
+                        <span>常</span>
+                    </div> -->
+
                 </div>
                 <div class="state-chart-div">
                     <canvas id="state-chart-LB0{{i+1}}"></canvas>
                 </div>
             </div>
             <div class="startUp">
-                <div class="startUp-title">
-                    <span>开</span></p>
-                    <span>机</span></p>
-                    <span>率</span></p>
+                <div class="startUp-title" id="startUp-title-LB0{{i+1}}">
+                    <!-- <div style="background-color: rgb(255,127,36,0.6);">
+                        <span>16/12</span></p>
+                    </div>
+                    <div style="background-color: rgb(255,62,150,0.6);">
+                        <span>17/12</span></p>
+                    </div>
+                    <div style="background-color: rgb(0,100,0,0.6);">
+                        <span>18/12</span></p>
+                    </div>
+                    <div style="background-color: rgb(139,87,66,0.6);">
+                        <span>19/12</span></p>
+                    </div>
+                    <div style="background-color: rgb(171,130,255,0.6);">
+                        <span>20/12</span></p>
+                    </div>
+                    <div style="background-color: rgb(85,107,47,0.6);">
+                        <span>21/12</span></p>
+                    </div>
+                    <div style="background-color: rgb(67,110,238,0.6);">
+                        <span>22/12</span></p>
+                    </div> -->
+
                 </div>
                 <div class="startUp-chart-div">
                     <canvas id="startUp-chart-LB0{{i+1}}"></canvas>
@@ -309,26 +410,30 @@
                             'rgba(255, 99, 132, 0.6)',
                             'rgba(54, 162, 235, 0.6)',
                         ]
-                    }]
+                    }],
+
                 },
+
                 options: {
                     plugins: {
                         datalabels: {
-                            anchor: 'end',
+                            // anchor: 'end',
                             backgroundColor: function (context) {
                                 return context.dataset.backgroundColor;
                             },
+                            font: 30,
                             borderColor: 'white',
                             borderRadius: 25,
                             borderWidth: 2,
                             color: 'white',
                             font: {
-                                weight: 'bold'
+                                weight: 'bold',
+                                size: 20,
                             },
-                            formatter: Math.round
+                            formatter: Math.round,
                         }
                     }
-                }
+                },
             });
         }
 
@@ -342,13 +447,13 @@
                         label: '生产异常对比',
                         data: abnorData,
                         backgroundColor: [
-                            'rgba(255,127,36)',
-                            'rgba(255,62,150)',
-                            'rgba(0,100,0)',
-                            'rgba(139,87,66)',
-                            'rgba(171,130,255)',
-                            'rgba(85,107,47)',
-                            'rgba(67,110,238)',
+                            'rgba(255,127,36, 0.6)',
+                            'rgba(255,62,150, 0.6)',
+                            'rgba(0,100,0, 0.6)',
+                            'rgba(139,87,66, 0.6)',
+                            'rgba(171,130,255, 0.6)',
+                            'rgba(85,107,47, 0.6)',
+                            'rgba(67,110,238, 0.6)',
                         ]
                     }],
                 },
@@ -383,13 +488,13 @@
                         label: '机台状态图',
                         data: stateData,
                         backgroundColor: [
-                            'rgba(255,127,36)',
-                            'rgba(255,62,150)',
-                            'rgba(0,100,0)',
-                            'rgba(139,87,66)',
-                            'rgba(171,130,255)',
-                            'rgba(85,107,47)',
-                            'rgba(67,110,238)',
+                            'rgba(255, 127 ,36, 0.6)',
+                            'rgba(255, 62, 150, 0.6)',
+                            'rgba(0, 100, 0, 0.6)',
+                            'rgba(139, 87, 66, 0.6)',
+                            'rgba(171, 130, 255, 0.6)',
+                            'rgba(85, 107, 47, 0.6)',
+                            'rgba(67, 110, 238, 0.6)',
                         ]
                     }],
                 },
@@ -424,13 +529,13 @@
                         label: '开机率',
                         data: startUpData,
                         backgroundColor: [
-                            'rgba(255,127,36)',
-                            'rgba(255,62,150)',
-                            'rgba(0,100,0)',
-                            'rgba(139,87,66)',
-                            'rgba(171,130,255)',
-                            'rgba(85,107,47)',
-                            'rgba(67,110,238)',
+                            'rgba(255,127,36, 0.6)',
+                            'rgba(255,62,150, 0.6)',
+                            'rgba(0,100,0, 0.6)',
+                            'rgba(139,87,66, 0.6)',
+                            'rgba(171,130,255, 0.6)',
+                            'rgba(85,107,47, 0.6)',
+                            'rgba(67,110,238, 0.6)',
                         ]
                     }],
                 },
@@ -560,8 +665,9 @@
                         var doneID = "done-chart-" + sEquipmentNo;
                         changeChartSize(doneID);
                         doneChartFun(doneID, nFinish, nNotFinish);
+
                     }
-                    console.log(jsonData);
+                    // console.log(jsonData);
                     return jsonData;
                 },
                 error: function (data) {
@@ -578,7 +684,7 @@
                 url: 'Top3Chart',
                 contentType: 'application/json; charset=UTF-8',
                 success: function (data) {
-                    console.log(data)
+                    // console.log(data)
                     jsonData = JSON.parse(data);
                     for (var i = 0; i < jsonData.length; i++) {
                         var sType = jsonData[i]['Type']
@@ -588,31 +694,43 @@
                                 var abnormalData = Data[v];
                                 var abnormalLabels = abnormalData['Labels'];
                                 var abnormalsEquipmentNo = 'abnormal-chart-' + abnormalData['sEquipmentNo'];
+                                var abnormalsTitle = 'abnormal-title-' + abnormalData['sEquipmentNo']
                                 var abnormalsData = abnormalData['Data'];
+
                                 changeChartSize(abnormalsEquipmentNo);
-                                abnormalChartFun(abnormalsEquipmentNo, abnormalLabels, abnormalsData)
+                                abnormalChartFun(abnormalsEquipmentNo, abnormalLabels, abnormalsData);
+                                console.log(abnormalsTitle)
+                                labelSpanUpdate(abnormalsTitle, abnormalLabels)
                             };
                         } else if (sType == 'state') {
                             for (var v = 0; v < Data.length; v++) {
                                 var stateData = Data[v];
                                 var stateLabels = stateData['Labels'];
                                 var statesEquipmentNo = 'state-chart-' + stateData['sEquipmentNo'];
+                                var stateTitle = 'state-title-' + stateData['sEquipmentNo'];
                                 var stateData = stateData['Data'];
                                 changeChartSize(statesEquipmentNo);
                                 stateChartFun(statesEquipmentNo, stateLabels, stateData)
+                                console.log('===============')
+                                console.log('===============')
+                                console.log(stateTitle)
+                                // labelSpanUpdate(stateTitle, stateLabels)
+
                             }
                         } else if (sType == 'startUp') {
                             for (var v = 0; v < Data.length; v++) {
                                 var startUpData = Data[v];
                                 var startUpLabels = startUpData['Labels'];
                                 var startUpEquipmentNo = 'startUp-chart-' + startUpData['sEquipmentNo'];
+                                var startUpTitle = 'startUp-title-' + startUpData['sEquipmentNo']
                                 var startUpData = startUpData['Data'];
                                 changeChartSize(startUpEquipmentNo);
                                 startUpChartFun(startUpEquipmentNo, startUpLabels, startUpData)
+                                labelSpanUpdate(startUpTitle, startUpLabels)
                             }
                         }
                     }
-                    console.log(jsonData);
+                    // console.log(jsonData);
                     return jsonData;
                 },
                 error: function (data) {
@@ -623,20 +741,65 @@
     </script>
 
     <script>
+        function labelSpanUpdate(ID, LabelList) {
+            var returnHtml = ''
+            var colorList = [
+                'rgba(255,127,36, 0.6)',
+                'rgba(255,62,150, 0.6)',
+                'rgba(0,100,0, 0.6)',
+                'rgba(139,87,66, 0.6)',
+                'rgba(171,130,255, 0.6)',
+                'rgba(85,107,47, 0.6)',
+                'rgba(67,110,238, 0.6)',
+            ]
+            for (var i = 0; i < LabelList.length; i++) {
+                var sLabel = LabelList[i];
+                var sLabel1, sLabel2;
+                if (isNaN(sLabel.substring(0, 2))) {
+                    if (sLabel.length > 2) {
+                        sLabel1 = sLabel.substring(0, 2);
+                        sLabel2 = sLabel.substring(2, sLabel.length);
+                    } else {
+                        sLabel1 = sLabel[0];
+                        sLabel2 = sLabel[1];
+                    }
+                } else {
+                    sLabel1 = sLabel;
+                    sLabel2 = '';
+                }
+                console.log(sLabel1)
+                console.log(sLabel2)
+
+                sHtml = '<div style="background-color: ' + colorList[i] + ';"> \
+                            <span>' + sLabel1 + '</span></p> \
+                            <span>' + sLabel2 + '</span> \
+                        </div>'
+                returnHtml += sHtml
+            }
+            console.log(ID)
+            console.log(returnHtml)
+            console.log(LabelList)
+            console.log('=================')
+            $$(ID).innerHTML = returnHtml;
+        }
+    </script>
+
+
+    <script>
         // 滑动条自动滑动
         function self_motion_silde() {
             var top = document.documentElement.scrollTop;
             var nHeight = document.documentElement.scrollTopMax;
             // 实现滚动效果 
-            const timeTop = setInterval(() => {
-                document.documentElement.scrollTop = top += 10;
-                if (top >= nHeight) {
-                    clearInterval(timeTop);
-                    document.documentElement.scrollTop = 0
-                    window.location.reload();
-                }
-                console.log(document.documentElement.scrollTop);
-            }, 900);
+            // const timeTop = setInterval(() => {
+            //     document.documentElement.scrollTop = top += 10;
+            //     if (top >= nHeight) {
+            //         clearInterval(timeTop);
+            //         document.documentElement.scrollTop = 0
+            //         window.location.reload();
+            //     }
+            //     console.log(document.documentElement.scrollTop);
+            // }, 900);
         }
     </script>
 
